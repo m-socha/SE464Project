@@ -1,0 +1,21 @@
+Name: WatNotes
+
+FPs:
+-upload notes - share them
+  -importing
+  -exporting
+-discovering
+  -search by course, topic, uploader
+  -discussions on notes (e.g. commenting on note, discussion forum for each note set, etc.)
+-editing/collaborating on notes
+  -combining handwritten notes with electronic edits (e.g. comment boxes, Latex comments, etc.) - let's keep this open-ended
+
+Use Scenarios:
+1. Student who needs notes because they missed lecture
+2. Student uploads notes to help people 
+
+NFPs:
+-performant - we're going to be loading moderately-sized files (images, pdfs, etc), and unresponsiveness is known to be detrimental to the user experience.
+-fault-tolerance - save progress of users locally (eduroam sucks, so if it disconnects, we don't want a user comment to be wiped)
+-evolvability - open-ended project, so we will build extensible architecture to accommodate future features
+
