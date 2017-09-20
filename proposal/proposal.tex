@@ -1,30 +1,39 @@
-\documentclass[12pt]{article}
+  \documentclass[12pt]{article}
 
-\usepackage[fleqn]{amsmath}
-\usepackage{color}
-\usepackage{listings}
-\usepackage[margin=1in]{geometry}
+  \usepackage[fleqn]{amsmath}
+  \usepackage{color}
+  \usepackage{listings}
+  \usepackage[margin=1in]{geometry}
+  \usepackage{indentfirst}
 
-\begin{document}
+  \begin{document}
 
-\begin{center}
-\vspace*{\fill}
-{\Large\bf University of Waterloo}\\
-\vspace{3mm}
-{\large\bf SE464 Fall 2017}\\
-\vspace{3mm}
-{\Large\bf Project Proposal - WatNotes}\\
-\vspace{5mm}
-Michael Socha, Mitchell Kember, Do Gyun Kim, Myungheon Chun\\
-\vspace{3mm}
-msocha@edu.uwaterloo.ca, mkember@edu.uwaterloo.ca, dg3kim@edu.uwaterloo.ca, m5chun@edu.uwaterloo.ca\\
-\vspace*{\fill}
-\end{center}
+  \begin{center}
+  \vspace*{\fill}
+  {\Large\bf University of Waterloo}\\
+  \vspace{3mm}
+  {\large\bf SE464 Fall 2017}\\
+  \vspace{3mm}
+  {\Large\bf Project Proposal - WatNotes}\\
+  \vspace{5mm}
+  Michael Socha, Mitchell Kember, Do Gyun Kim, Myungheon Chun\\
+  \vspace{3mm}
+  msocha@edu.uwaterloo.ca, mkember@edu.uwaterloo.ca, dg3kim@edu.uwaterloo.ca, m5chun@edu.uwaterloo.ca\\
+  \vspace*{\fill}
+  \end{center}
 
-\newpage
+  \newpage
 
-\section{Project Overview}
+  \section{Project Overview}
+  Our project is called WatNotes, which is a note sharing platform for students at the University of Waterloo. WatNotes will provide students with a platform to upload their notes, tag them by course and topic, and share them with other students at the University. The tagging of uploaded notes will allow for an effective course-centric search system for finding other students' notes. WatNotes will also allow students to edit uploaded notes (e.g. by adding inline comments), allowing them to refine their notes in a collaborative environment. Although the prototype of WatNotes is targeted specifically for the University of Waterloo, WatNotes is designed to be extensible to other universities or even different types of organizations. \\
 
+  There are existing platforms that facilitate note sharing on a large scale, such as Microsoft OneNote and Google Photos. Likewise, students often already share notes on a small scale within their circle of friends. However, there is a lack of moderate-scale note sharing platforms that bring together people with common learning interests. WatNotes attempts to fill this gap by facilitating the sharing of notes between students learning similar topics who would otherwise likely not meet. \\
+
+  The main reason WatNotes is interesting is that it attempts to solve a real problem at the University of Waterloo. Students who miss class or would like to look over another student's notes will be able to do so in a few clicks instead of making a post on Piazza asking for notes or aimlessly asking random students. Likewise, students who would like to share their notes will be able to reach people beyond their immediate group of friends, since content on WatNotes will be centered around course and subject rather than its authors. \\
+
+WatNotes will be available as both a website as well as a mobile (Android) application. Android was the chosen mobile platform due to its popularity and rapid release cycle, making it good for initial app prototypes. Supporting some sort of mobile platform is critical for the platform's growth, since note uploads are simpler and less time-consuming to perform with mobile devices than through desktop applications. Moreover, for short sessions or casual note searching, accessing WatNotes on a mobile device is the natural choice for users, since mobile sessions are quicker to start and require less commitment and attention compared to desktop sessions. \\
+
+While certain functions of WatNotes can be performed on mobile devices, other actions such as in-depth note studying and collaboration require in-depth concentration from users over long sessions, making a desktop environment essential for WatNotes. Cross-platform support for WatNotes is necessary to allow the majority of the University of Waterloo's student body to access the platform, so the desktop environment will be implemented as a website. \\
 \newpage
 
 \section{Project Properties}
