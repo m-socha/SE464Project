@@ -1,0 +1,33 @@
+Tech Stack:
+  Android:
+    -Java
+    -XML
+  Backend:
+    -Haskell
+    -Postgres
+    -elasticsearch
+  Website:
+    -React, Backbone is second choice
+    -Webpack
+
+Division of Labour:
+  Android:
+    Michael
+  Backend:
+    Justin
+    Mitchell
+  Website:
+    Ray
+    Mitchell
+ 
+Things to do:
+  Android:
+    -take picture
+    -upload
+    -view
+  Backend:
+    -authentication
+    -support for client functionality
+  Website:
+    -upload
+    -view
