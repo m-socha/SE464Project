@@ -12,10 +12,12 @@ import android.view.ViewGroup;
 public abstract class UiFragment extends WatNotesFragment {
 
     protected abstract int getLayoutId();
+    protected abstract void initializeUi(View view);
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(getLayoutId(), container, false);
+        initializeUi(rootView);
         return rootView;
     }
 

@@ -1,11 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <com.example.michael.watnotes.uicomponents.TakePhotoView
+        android:id="@+id/take_photo_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
     <TextView
+        android:id="@+id/or_text_view"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:text="test test" />
+        android:text="@string/or"
+        android:textAllCaps="true" />
+
+    <com.example.michael.watnotes.uicomponents.FileUploadView
+        android:id="@+id/file_upload_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
 </LinearLayout>

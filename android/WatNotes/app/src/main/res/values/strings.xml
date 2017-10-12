@@ -2,6 +2,7 @@
     <string name="app_name">WatNotes</string>
 
     <!-- Common -->
+    <string name="or">Or</string>
 
     <!-- Upload Notes Activity -->
     <string name="upload_notes_title">Upload Notes</string>
