@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">WatNotes</string>
+
+    <!-- Common -->
+
+    <!-- Upload Notes Activity -->
+    <string name="upload_notes_title">Upload Notes</string>
+</resources>
