@@ -1,0 +1,4 @@
+TODO:
+-upload note endpoint
+  -.txt, pdfs, doc, images
+-feed endpoint
