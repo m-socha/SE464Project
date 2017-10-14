@@ -1,3 +1,14 @@
+- Using Python + Flask, not Haskell
+- Report details on LEARN: SE 464 -> Project -> Deliverable 2
+  - status update (2 pages), due Monday, 16 Oct
+  - demo to TA (still need to schedule)
+
+- Michael: android app
+- Ray: frontend
+- Mitchell: backend/frontend
+- Justin: backend
+- See Sep29Meetings.txt for more details
+
 TODO:
 -upload note endpoint
   -.txt, pdfs, doc, images
