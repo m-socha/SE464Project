@@ -7,3 +7,9 @@ __pycache__/
 
 # Postgres
 backend/database/data/
+
+# Node
+node_modules
+
+# Frontend
+frontend/dist
