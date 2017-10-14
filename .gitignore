@@ -1,3 +1,9 @@
+# General
+*.log
+
 # Python
 __pycache__/
 *.pyc
+
+# Postgres
+backend/database/data/

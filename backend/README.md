@@ -5,16 +5,15 @@ the Watnotes website, and provides endpoints used by the website and mobile app.
 
 ## Setup
 
-First, install Python 3.6:
+Run `./install_deps.sh` to install all dependencies.
 
-```
-$ python3 --version
-Python 3.6.2
-```
+If the script doesn't work, manually install the following using your favourite
+package manager:
 
-On macOS, you can do with [Homebrew][] by running `brew install python3`.
+- Python 3.6
+- PostgreSQL 9.6
 
-Second, install the Python requirements:
+Then, install the Python dependencies:
 
 ```
 $ pip3 install -r requirements.txt
