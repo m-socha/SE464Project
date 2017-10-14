@@ -1,8 +1,9 @@
 # Watnotes backend
 
-The Watnotes backend serves pages for the Watnotes website, and provides
-endpoints used by the website and mobile app. It is written in Python, and it
-uses [Flask][] as its web framework and [PostgreSQL][] for its database.
+The Watnotes backend implements the core logic and data management for the
+Watnotes application. It provides APIs, used by the website and mobile app, for
+accessing and manipulating users, notes, and other data. It is written in Python
+and uses [Flask][] and [PostgreSQL][].
 
 ## Setup
 
