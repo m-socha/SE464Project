@@ -15,11 +15,11 @@ die() {
 }
 
 say() {
-    echo "* $*"
+    echo " * $*"
 }
 
 usage()  {
-    echo "Usage: $0 [-v] COMMAND ..."
+    echo "Usage: $0 [-v] COMMAND"
     echo
     echo "Commands:"
     echo "  create  (Re)create the database"
@@ -43,13 +43,26 @@ run() {
 }
 
 pg_running() {
-    run pg_ctl -D "$pg_dir" status
+    if run pg_ctl -D "$pg_dir" status; then
+        return 0
+    fi
+
+    pid=$(pgrep -x postgres)
+    if [[ -n "$pid" ]]; then
+        die "There is a rogue postgres process (kill it with 'kill $pid')"
+    fi
+
+    return 1
+}
+
+pg_runaway_pid() {
+    return $(pgrep -x postgres)
 }
 
 create_db() {
     drop_db
 
-    say "Creating a postgres database cluster in $pg_dir"
+    say "Creating a postgres database cluster in $pg_dir/"
     if ! run initdb "$pg_dir"; then
         die "initdb failed"
     fi
@@ -73,29 +86,29 @@ drop_db() {
         stop_db
     fi
 
-    say "Deleting database directory"
+    say "Deleting database directory $pg_dir/"
     rm -rf "$pg_dir"
 }
 
 start_db() {
     if pg_running; then
-        say "Note: postgres is already running (stop it with $0 stop)"
+        say "Note: postgres is already running (stop it with '$0 stop')"
         return
     fi
 
     if ! [[ -d "$pg_dir" ]]; then
-        die "Database has not been created (create it with $0 create)"
+        die "Database has not been created (create it with '$0 create')"
     fi
 
     say "Starting postgres (logs in $pg_log)"
     if ! run pg_ctl -D "$pg_dir" -w -l "$pg_log" start; then
-        die "Failed to start postgres"
+        die "Failed to start postgres (have you run '$0 create'?)"
     fi
 }
 
 stop_db() {
     if ! pg_running; then
-        say "Note: postgres is not running (start it with $0 start)"
+        say "Note: postgres is not running (start it with '$0 start')"
         return
     fi
 
@@ -110,7 +123,9 @@ parse_args() {
         case "$1" in
             -h|--help) usage 0 ;;
             -v|--verbose) verbose=1 ;;
-            create|drop|start|stop) cmd=$1 ;;
+            create|drop|start|stop)
+                [[ -n "$cmd" ]] && usage 1 ;
+                cmd=$1 ;;
             *) usage 1 ;;
         esac
         shift
@@ -118,6 +133,8 @@ parse_args() {
 }
 
 main() {
+    cd "$(dirname "$0")"
+
     parse_args "$@"
     case "$cmd" in
         create) create_db ;;

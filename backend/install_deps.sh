@@ -8,7 +8,7 @@ die() {
 }
 
 say() {
-    echo "* $*"
+    echo " * $*"
 }
 
 macos() {
