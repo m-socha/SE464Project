@@ -1,0 +1,24 @@
+Project Name: Watnotes
+Team Name: Team Watnotes
+Members:
+  - Michael Socha (msocha)
+  - Mitchell Kember (mkember)
+  - Do Gyun Kim (dg3kim)
+  - Myungheon Chun (m5chun)
+
+Tech stack:
+  Backend: Python, Flask, PostgreSQL, Elasticsearch
+  Android: Java, XML
+  Website: Node, React, Webpack
+
+[Note: Haskell -> Python]
+[Note: Single server -> Python backend + Node web server]
+
+Demo functionality:
+  1. upload notes
+  2. see notes in the feed
+
+Simulated functionality:
+  - ???
+
+Architectural diagram: TODO
