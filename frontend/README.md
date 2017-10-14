@@ -9,4 +9,4 @@
 - [ ] import css library (eg materialize) and configure with webpack
 - [ ] build react components
 - [ ] integrate redux/flux into frontend for state management/communication with api
-
+- [x] add styleguide
