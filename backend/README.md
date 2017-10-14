@@ -34,6 +34,8 @@ $ database/db.sh create
  * Stopping postgres
 ```
 
+You can look around the database and run ad hoc queries using `db.sh psql`.
+
 ## Run
 
 To run the server, use `run.sh` (with `-d` for debug mode):

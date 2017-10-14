@@ -5,6 +5,7 @@ set -eufo pipefail
 pg_dir=data
 pg_log=postgres.log
 init_db=init.sql
+db_name=watnotes
 
 cmd=
 verbose=0
@@ -26,6 +27,7 @@ usage()  {
     echo "  drop    Delete the database"
     echo "  start   Start postgres"
     echo "  stop    Stop postgres"
+    echo "  psql    Start psql session"
     echo
     echo "Options:"
     echo "  -v      Verbose output"
@@ -118,12 +120,23 @@ stop_db() {
     fi
 }
 
+psql_db() {
+    if ! pg_running; then
+        start_db
+    fi
+
+    say "Connecting to database $db_name"
+    if ! psql -d "$db_name"; then
+        die "Failed to start psql"
+    fi
+}
+
 parse_args() {
     while (( $# )); do
         case "$1" in
             -h|--help) usage 0 ;;
             -v|--verbose) verbose=1 ;;
-            create|drop|start|stop)
+            create|drop|start|stop|psql)
                 [[ -n "$cmd" ]] && usage 1 ;
                 cmd=$1 ;;
             *) usage 1 ;;
@@ -141,6 +154,7 @@ main() {
         drop) drop_db ;;
         start) start_db ;;
         stop) stop_db ;;
+        psql) psql_db ;;
         *) usage 1 ;;
     esac
 }
