@@ -1,4 +1,4 @@
-"""This module defines helper functions for CRUD operations."""
+"""This module defines helper functions for CRUDL-style resources."""
 
 from typing import Sequence, Type
 
@@ -7,8 +7,13 @@ from flask import abort, request
 from watnotes.database import db
 
 
+class paginate(model: Type[db.Model]) -> str:
+    """List resource items in a paginated fashion."""
+    return "hi"
+
+
 def get(model: Type[db.Model], id: str) -> str:
-    """Get a """
+    """Get an existing resource item."""
     try:
         id = int(id)
     except ValueError:
@@ -21,6 +26,7 @@ def get(model: Type[db.Model], id: str) -> str:
 
 def create(model: Type[db.Model], required: Sequence[str],
            permitted: Sequence[str]=None) -> str:
+    """Create a new resource item."""
     json = request.get_json()
     fields = {}
     for f in required:

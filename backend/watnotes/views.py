@@ -5,20 +5,32 @@ from watnotes.crud_helpers import create, get
 from watnotes.database import db
 from watnotes.models import *
 
+users = Resource('users', User, ['email', 'name'])
+courses = Resource('courses', Course, ['code', 'title'])
+notebooks = Resource('notebooks', Notebook, ['user_id', 'course_id'])
+notes = Resource('')
 
 @app.route('/')
 def index():
     return "Hello World!"
 
 
-@app.route('/user/<id>')
+@app.route('/users', methods=['GET', 'POST'])
+def users():
+    if request.method == 'GET':
+        return paginate(User)
+    elif request.method == 'POST':
+        return create(User, ['email', 'name'])
+
+
+@app.route('/users/<id>', methods=['GET', 'PUT', 'DELETE'])
 def get_user(id):
-    return get(User, id)
-
-
-@app.route('/user/create', methods=['POST'])
-def create_user():
-    return create(User, ['email', 'name'])
+    if request.method == 'GET':
+        return get(User, id)
+    elif request.method == 'PUT':
+        return put(User, id)
+    elif request.method == 'DELETE':
+        return delete(User, id)
 
 
 @app.route('/course/<id>')
