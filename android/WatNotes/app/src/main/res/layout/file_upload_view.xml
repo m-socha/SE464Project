@@ -5,18 +5,22 @@
     android:orientation="vertical">
 
     <TextView
+        style="@style/standard_text_view"
         android:id="@+id/prompt_text_view"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/subtitle_font_size" />
 
     <ImageView
         android:id="@+id/upload_image_view"
-        android:layout_width="50dp"
-        android:layout_height="50dp" />
+        android:layout_width="@dimen/file_upload_icon_size"
+        android:layout_height="@dimen/file_upload_icon_size" />
 
     <TextView
+        style="@style/standard_text_view"
         android:id="@+id/caption_text_view"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/body_font_size" />
 
 </LinearLayout>

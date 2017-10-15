@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Common -->
+    <dimen name="half_standard_margin">8dp</dimen>
+    <dimen name="standard_margin">16dp</dimen>
+    <dimen name="one_half_standard_margin">24dp</dimen>
+    <dimen name="twice_standard_margin">32dp</dimen>
+
+    <dimen name="huge_font_size">30dp</dimen>
+    <dimen name="big_font_size">24dp</dimen>
+    <dimen name="title_font_size">20dp</dimen>
+    <dimen name="subtitle_font_size">18dp</dimen>
+    <dimen name="body_font_size">14dp</dimen>
+    <dimen name="caption_font_size">12dp</dimen>
+
+    <dimen name="corner_radius_tiny">2dp</dimen>
+    <dimen name="corner_radius_small">4dp</dimen>
+    <dimen name="corner_radius_medium">8dp</dimen>
+    <dimen name="corner_radius_large">12dp</dimen>
+
+    <dimen name="border_width_thin">1dp</dimen>
+    <dimen name="border_width_medium">2dp</dimen>
+    <dimen name="border_width_thick">4dp</dimen>
+    <dimen name="border_width_very_thick">8dp</dimen>
+
+    <!-- Take photo view -->
+    <dimen name="take_photo_icon_size">50dp</dimen>
+
+    <!-- File upload view -->
+    <dimen name="file_upload_icon_size">50dp</dimen>
+
+</resources>

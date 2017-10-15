@@ -6,4 +6,7 @@
 
     <!-- Upload Notes Activity -->
     <string name="upload_notes_title">Upload Notes</string>
+    <string name="upload_notes_take_photo_prompt">Take a picture of your notes</string>
+    <string name="upload_notes_upload_file_prompt">Upload an existing file</string>
+    <string name="upload_notes_upload_file_caption">Accepts photos, PDFs and .txt docs</string>
 </resources>
