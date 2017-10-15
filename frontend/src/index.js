@@ -1,20 +1,31 @@
 /* global document */
 import React from 'react';
 import ReactDOM from 'react-dom';
-
+import {HashRouter,
+  Route,
+  Link,
+  Switch
+} from 'react-router-dom';
 import { AppContainer } from 'react-hot-loader';
-import App from './components/App';
 
-const render = (Component) => {
+import App from './components/App';
+import NotFound from './components/NotFound';
+
+const render = () => {
   ReactDOM.render(
     <AppContainer>
-      <Component />
+      <HashRouter>
+        <Switch>
+          <Route exact path="/" component={App} />
+          <Route component={NotFound} />
+        </Switch>
+      </HashRouter>
     </AppContainer>,
     document.getElementById('root'),
   );
 };
 
-render(App);
+render();
 
 if (module.hot) {
   module.hot.accept('./components/App', () => { render(App); });
