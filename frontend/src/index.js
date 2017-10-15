@@ -6,21 +6,27 @@ import {HashRouter,
   Link,
   Switch
 } from 'react-router-dom';
-import { AppContainer } from 'react-hot-loader';
+import {AppContainer} from 'react-hot-loader';
+import {Provider} from 'react-redux';
+import {createStore} from 'redux';
 
 import App from './components/App';
 import NotFound from './components/NotFound';
 
+import rootReducer from './reducers';
+
 const render = () => {
   ReactDOM.render(
-    <AppContainer>
-      <HashRouter>
-        <Switch>
-          <Route exact path="/" component={App} />
-          <Route component={NotFound} />
-        </Switch>
-      </HashRouter>
-    </AppContainer>,
+    <Provider store={createStore(rootReducer)}>
+      <AppContainer>
+        <HashRouter>
+          <Switch>
+            <Route exact path="/" component={App} />
+            <Route component={NotFound} />
+          </Switch>
+        </HashRouter>
+      </AppContainer>
+    </Provider>,
     document.getElementById('root'),
   );
 };
@@ -28,5 +34,5 @@ const render = () => {
 render();
 
 if (module.hot) {
-  module.hot.accept('./components/App', () => { render(App); });
+  module.hot.accept('./components/App', () => { render(); });
 }

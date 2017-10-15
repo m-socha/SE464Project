@@ -1,7 +1,7 @@
 import React from 'react';
 import {Navbar, NavItem} from 'react-materialize';
 
-import Feed from 'container/Feed';
+import Feed from 'containers/Feed';
 
 export default class App extends React.Component {
   constructor(props) {
