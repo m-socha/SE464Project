@@ -1,11 +1,14 @@
 import React from 'react';
 
+import {Navbar, NavItem} from 'react-materialize';
+
 export default class App extends React.Component {
   render() {
     return (
-      <div>
-        <h1>Hello, World</h1>
-      </div>
+      <Navbar brand='WatNotes' right>
+        <NavItem href=''>Feed</NavItem>
+        <NavItem href=''>Login</NavItem>
+      </Navbar>
     );
   }
 }
