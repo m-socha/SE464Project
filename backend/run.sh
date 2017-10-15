@@ -3,6 +3,7 @@
 set -eufo pipefail
 
 app=watnotes
+warnings='ignore::RuntimeWarning:runpy'
 
 debug=0
 start_db=1
@@ -43,7 +44,8 @@ main() {
         ./db.sh "${db_opts[@]+"${db_opts[@]}"}" start
     fi
 
-    FLASK_APP=$app FLASK_DEBUG=$debug python3 -m flask run
+    FLASK_APP=$app FLASK_DEBUG=$debug PYTHONWARNINGS=$warnings \
+        python3 -m flask run
 }
 
 main "$@"

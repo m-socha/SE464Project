@@ -1,65 +1,103 @@
 """This module defines the Flask views (routes) for the server."""
 
 from watnotes import app
-from watnotes.crud_helpers import create, get
+from watnotes.crud_helpers import create, delete, get, paginate, update
 from watnotes.database import db
 from watnotes.models import *
 
+from flask import request
 
 @app.route('/')
 def index():
     return "Hello World!"
 
 
-@app.route('/user/<id>')
-def get_user(id):
-    return get(User, id)
+@app.route('/users', methods=['GET', 'POST'])
+def users():
+    if request.method == 'GET':
+        return paginate(User)
+    elif request.method == 'POST':
+        return create(User, ['email', 'name'])
 
 
-@app.route('/user/create', methods=['POST'])
-def create_user():
-    return create(User, ['email', 'name'])
+@app.route('/users/<int:id>', methods=['GET', 'PUT', 'DELETE'])
+def users_id(id):
+    if request.method == 'GET':
+        return get(User, id)
+    elif request.method == 'PUT':
+        return update(User, id)
+    elif request.method == 'DELETE':
+        return delete(User, id)
 
 
-@app.route('/course/<id>')
-def get_course(id):
-    return get(Course, id)
+@app.route('/courses', methods=['GET', 'POST'])
+def courses():
+    if request.method == 'GET':
+        return paginate(Course)
+    elif request.method == 'POST':
+        return create(Course, ['code', 'title'])
 
 
-@app.route('/course/create', methods=['POST'])
-def create_course(id):
-    return create(Course, ['code', 'title'])
+@app.route('/courses/<int:id>', methods=['GET', 'PUT', 'DELETE'])
+def courses_id(id):
+    if request.method == 'GET':
+        return get(Course, id)
+    elif request.method == 'PUT':
+        return update(Course, id)
+    elif request.method == 'DELETE':
+        return delete(Course, id)
 
 
-@app.route('/notebook/<id>')
-def get_notebook(id):
-    return get(Notebook, id)
+@app.route('/users/<int:user_id>/notebooks', methods=['GET', 'POST'])
+def notebooks(user_id):
+    if request.method == 'GET':
+        return paginate(Notebook, user_id=user_id)
+    elif request.method == 'POST':
+        return create(Notebook, ['course_id'], user_id=user_id)
 
 
-@app.route('/notebook/create', methods=['POST'])
-def create_notebook():
-    return create(Notebook, ['user_id', 'course_id'])
+@app.route('/notebooks/<int:id>', methods=['GET', 'PUT', 'DELETE'])
+def notebooks_id(id):
+    if request.method == 'GET':
+        return get(Notebook, id)
+    elif request.method == 'PUT':
+        return update(Notebook, id)
+    elif request.method == 'DELETE':
+        return delete(Notebook, id)
 
 
-@app.route('/note/<id>')
-def get_note(id):
-    return get(Note, id)
+@app.route('/notebooks/<int:notebook_id>/notes', methods=['GET', 'POST'])
+def notes(notebook_id):
+    if request.method == 'GET':
+        return paginate(Note, notebook_id=notebook_id)
+    elif request.method == 'POST':
+        return create(Note, ['index', 'format', 'data'],
+                      notebook_id=notebook_id)
 
 
-@app.route('/notebook/<id>/note/create', methods=['POST'])
-def create_note():
-    return create(Note, ['notebook_id', 'index', 'format', 'data'])
+@app.route('/notes/<int:id>', methods=['GET', 'PUT', 'DELETE'])
+def notes_id(id):
+    if request.method == 'GET':
+        return get(Note, id)
+    elif request.method == 'PUT':
+        return update(Note, id)
+    elif request.method == 'DELETE':
+        return delete(Note, id)
 
 
-@app.route('/comment/<id>')
-def get_comment(id):
-    return get(Comment, id)
+@app.route('/notes/<int:note_id>/comments', methods=['GET', 'POST'])
+def comments():
+    if request.method == 'GET':
+        return paginate(Comment, note_id=note_id)
+    elif request.method == 'POST':
+        return create(Note, ['user_id', 'content'], note_id=note_id)
 
 
-@app.route('/notebook/<id>/comment/create', methods=['POST'])
-def create_comment():
-    return create(Comment, ['user_id', 'note_id', 'content'])
-
-
-# @app.route('/notebook/<id>/notes')
-# def get_note_list
+@app.route('/comments/<int:id>', methods=['GET', 'PUT', 'DELETE'])
+def comments_id(id):
+    if request.method == 'GET':
+        return get(Comment, id)
+    elif request.method == 'PUT':
+        return update(Comment, id)
+    elif request.method == 'DELETE':
+        return delete(Comment, id)
