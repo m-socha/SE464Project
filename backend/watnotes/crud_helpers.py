@@ -2,14 +2,36 @@
 
 from typing import Sequence, Type
 
-from flask import abort, request
+from flask import abort, jsonify, request
 
 from watnotes.database import db
 
 
-def paginate(model: Type[db.Model], **provided) -> str:
+def get_int(name: str) -> int:
+    """Get an integer from the query string."""
+    value = request.args.get(name)
+    if not value:
+        abort(404)
+    try:
+        return int(value)
+    except ValueError:
+        abort(404)
+
+
+def paginate(model: Type[db.Model], order: str, **provided) -> str:
     """List resource items in a paginated fashion."""
-    return "Not implemented yet"
+    page = get_int('page')
+    per_page = get_int('per_page')
+    results = (model.query
+        .filter_by(**provided)
+        .order_by(order)
+        .paginate(page, per_page)
+    )
+    return jsonify(
+        page=results.page,
+        total_pages=results.pages,
+        total_results=results.total,
+        items=[item.serialize() for item in results.items])
 
 
 def create(model: Type[db.Model], required: Sequence[str],
@@ -26,6 +48,7 @@ def create(model: Type[db.Model], required: Sequence[str],
         for f in permitted:
             if f in json:
                 fields[f] = json[f]
+    fields.update(provided)
 
     object = model(**fields)
     db.session.add(object)
@@ -35,15 +58,19 @@ def create(model: Type[db.Model], required: Sequence[str],
 
 def get(model: Type[db.Model], id: int) -> str:
     """Get an existing resource item."""
-    object = model.query.get(id)
-    if object:
-        return repr(object)
-    abort(404)
+    return jsonify(model.query.get_or_404(id).serialize())
 
 
-def update(model: Type[db.Model], id: int) -> str:
-    return "Not implemented yet"
+def update(model: Type[db.Model], id: int, permitted: Sequence[str]) -> str:
+    object = model.query.get_or_404(id)
+    for k, v in request.get_json():
+        if k in permitted:
+            object[k] = v
+    db.session.commit()
 
 
 def delete(model: Type[db.Model], id: int) -> str:
-    return "Not implemented yet"
+    object = model.query.get_or_404(id)
+    db.session.delete(object)
+    db.session.commit()
+    return 'OK'

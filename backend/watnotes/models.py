@@ -19,6 +19,13 @@ class User(db.Model):
     name = Column(String, nullable=False)
     created_at = Column(DateTime, default=datetime.utcnow)
 
+    def serialize(self):
+        return {
+            'id': self.id,
+            'email': self.email,
+            'name': self.name
+        }
+
     def __repr__(self):
         return "<User #{} {}>".format(self.id, self.email)
 
@@ -33,6 +40,13 @@ class Course(db.Model):
     title = Column(String, nullable=False)
     created_at = Column(DateTime, default=datetime.utcnow)
 
+    def serialize(self):
+        return {
+            'id': self.id,
+            'code': self.code,
+            'title': self.title
+        }
+
     def __repr__(self):
         return "<Course #{} {}>".format(self.id, self.code)
 
@@ -46,6 +60,18 @@ class Notebook(db.Model):
     user_id = Column(Integer, ForeignKey(User.id), nullable=False)
     course_id = Column(Integer, ForeignKey(Course.id), nullable=False)
     created_at = Column(DateTime, default=datetime.utcnow)
+
+    user = db.relationship(
+        'User', backref=db.backref('notebooks', lazy=True))
+    course = db.relationship(
+        'Course', backref=db.backref('notebooks', lazy=True))
+
+    def serialize(self):
+        return {
+            'id': self.id,
+            'user_id': self.user_id,
+            'course_id': self.course_id
+        }
 
     def __repr__(self):
         return "<Notebook #{} u#{} c#{}>".format(
@@ -64,6 +90,18 @@ class Note(db.Model):
     data = Column(LargeBinary, nullable=False)
     created_at = Column(DateTime, default=datetime.utcnow)
 
+    notebook = db.relationship(
+        'Notebook', backref=db.backref('notes', lazy=True))
+
+    def serialize(self):
+        return {
+            'id': self.id,
+            'notebook_id': self.notebook_id,
+            'index': self.index,
+            'format': self.format,
+            'data': self.data
+        }
+
     def __repr__(self):
         return "<Note #{} u#{} nb#{}>".format(
             self.id, self.user_id, self.notebook_id)
@@ -79,6 +117,17 @@ class Comment(db.Model):
     note_id = Column(Integer, ForeignKey(Note.id), nullable=False)
     content = Column(String, nullable=False)
     created_at = Column(DateTime, default=datetime.utcnow)
+
+    user = db.relationship('User', backref=db.backref('comments', lazy=True))
+    note = db.relationship('Note', backref=db.backref('comments', lazy=True))
+
+    def serialize(self):
+        return {
+            'id': self.id,
+            'user_id': self.user_id,
+            'note_id': self.note_id,
+            'content': self.content
+        }
 
     def __repr__(self):
         return "<Comment #{} u#{}>".format(self.id, self.user_id)
