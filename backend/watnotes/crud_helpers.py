@@ -62,6 +62,7 @@ def get(model: Type[db.Model], id: int) -> str:
 
 
 def update(model: Type[db.Model], id: int, permitted: Sequence[str]) -> str:
+    """Update an existing resource item."""
     object = model.query.get_or_404(id)
     for k, v in request.get_json():
         if k in permitted:
@@ -70,6 +71,7 @@ def update(model: Type[db.Model], id: int, permitted: Sequence[str]) -> str:
 
 
 def delete(model: Type[db.Model], id: int) -> str:
+    """Delete a resource item."""
     object = model.query.get_or_404(id)
     db.session.delete(object)
     db.session.commit()

@@ -7,6 +7,7 @@ from watnotes.models import *
 
 from flask import request
 
+
 @app.route('/')
 def index():
     return "Hello World!"
