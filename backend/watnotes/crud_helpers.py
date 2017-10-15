@@ -1,0 +1,39 @@
+"""This module defines helper functions for CRUD operations."""
+
+from typing import Sequence, Type
+
+from flask import abort, request
+
+from watnotes.database import db
+
+
+def get(model: Type[db.Model], id: str) -> str:
+    """Get a """
+    try:
+        id = int(id)
+    except ValueError:
+        abort(404)
+    object = model.query.get(id)
+    if object:
+        return repr(object)
+    abort(404)
+
+
+def create(model: Type[db.Model], required: Sequence[str],
+           permitted: Sequence[str]=None) -> str:
+    json = request.get_json()
+    fields = {}
+    for f in required:
+        if f in json:
+            fields[f] = json[f]
+        else:
+            pass
+    if permitted:
+        for f in permitted:
+            if f in json:
+                fields[f] = json[f]
+
+    object = model(**fields)
+    db.session.add(object)
+    db.session.commit()
+    return 'OK'
