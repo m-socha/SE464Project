@@ -1,4 +1,4 @@
-"""This module defines helper functions for CRUDL-style resources."""
+"""This module defines helper functions for CRUD operations."""
 
 from typing import Sequence, Type
 
