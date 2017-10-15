@@ -3,4 +3,4 @@
 - [x] Set up Flask
 - [x] Set up PostgreSQL
 - [ ] Set up Elasticsearch
-- [ ] Implement basic API
+- [x] Implement basic API

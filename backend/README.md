@@ -58,6 +58,47 @@ $ ./run.sh
 
 Note that `run.sh` automatically starts PostgreSQL.
 
+## API
+
+The backend defines the following resources:
+
+- User
+- Course
+- Notebook (has one User, has one Course)
+- Note (has one Notebook)
+- Comment (has one User, has one Note)
+
+They can be accessed via a REST API. Here is the API for User:
+
+- `GET /users/<id>`
+    - Response:
+        - `id`: integer
+        - `email`: string
+        - `name`: string
+- `GET /users?page=<page>&per_page=<per_page>`
+    - Response:
+        - `page`: integer
+        - `total_pages`: integer
+        - `total_results`: integer
+        - `items`: array
+- `POST /users`
+    - Request:
+        - `email`: string
+        - `name`: string
+    - Side effect:
+        - Creates new user
+- `PUT /users/<id>`
+    - Request:
+        - `email`: string (optional)
+        - `name`: string (optional)
+    - Side effect:
+        - Updates attributes of user
+- `DELETE /users/<id>`
+    - Side effect:
+        - Deletes the user
+
+The other resources are similar. See watnotes/views.py for details.
+
 ## Style
 
 Code must adhere to [PEP 8][]. If you `pip3 install pep8`, you can run `pep8` on
