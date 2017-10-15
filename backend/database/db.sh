@@ -71,12 +71,16 @@ create_db() {
 
     start_db
 
+    if ! run createdb "$db_name"; then
+        die "createdb failed"
+    fi
+
     if ! [[ -f "$init_db" ]]; then
         die "Could not find $init_db"
     fi
 
     say "Running $init_db"
-    if ! run psql -d postgres -f "$init_db"; then
+    if ! run psql -d "$db_name" -v 'ON_ERROR_STOP=1' -f "$init_db"; then
         die "Failed to initialize database"
     fi
 
