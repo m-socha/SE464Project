@@ -2,7 +2,7 @@
 
 set -eufo pipefail
 
-app=watnotes/__init__.py
+app=watnotes
 
 debug=0
 start_db=1
@@ -43,7 +43,7 @@ main() {
         ./db.sh "${db_opts[@]+"${db_opts[@]}"}" start
     fi
 
-    FLASK_APP=$app FLASK_DEBUG=$debug flask run
+    FLASK_APP=$app FLASK_DEBUG=$debug python3 -m flask run
 }
 
 main "$@"

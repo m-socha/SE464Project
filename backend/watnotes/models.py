@@ -52,11 +52,14 @@ class Notebook(db.Model):
             self.id, self.user_id, self.course_id)
 
 
-class NoteChunk(db.Model):
+class Note(db.Model):
     """A chunk of material within a notebook."""
+
+    __tablename__ = 'notes'
 
     id = Column(Integer, primary_key=True)
     notebook_id = Column(Integer, ForeignKey(Notebook.id), nullable=False)
+    index = Column(Integer, nullable=False, unique=True)
     format = Column(String, nullable=False)
     data = Column(LargeBinary, nullable=False)
     created_at = Column(DateTime, default=datetime.utcnow)
@@ -73,6 +76,7 @@ class Comment(db.Model):
 
     id = Column(Integer, primary_key=True)
     user_id = Column(Integer, ForeignKey(User.id), nullable=False)
+    note_id = Column(Integer, ForeignKey(Note.id), nullable=False)
     content = Column(String, nullable=False)
     created_at = Column(DateTime, default=datetime.utcnow)
 
