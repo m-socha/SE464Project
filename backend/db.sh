@@ -2,10 +2,11 @@
 
 set -eufo pipefail
 
-pg_dir=data
+pg_dir=database
 pg_log=postgres.log
-init_db=init.sql
 db_name=watnotes
+init_db_script=./init_db.py
+config_path=instance/application.cfg
 
 cmd=
 verbose=0
@@ -75,12 +76,16 @@ create_db() {
         die "createdb failed"
     fi
 
-    if ! [[ -f "$init_db" ]]; then
-        die "Could not find $init_db"
+    mkdir -p "$(dirname "$config_path")"
+    if [[ -f "$config_path" ]]; then
+        say "Note: config file $config_path already exists"
+    else
+        say "Creating config file $config_path"
+        echo -e "DB_USER = '$(whoami)'\nDB_PASSWORD = ''" > "$config_path"
     fi
 
-    say "Running $init_db"
-    if ! run psql -d "$db_name" -v 'ON_ERROR_STOP=1' -f "$init_db"; then
+    say "Running $init_db_script"
+    if ! run "$init_db_script"; then
         die "Failed to initialize database"
     fi
 

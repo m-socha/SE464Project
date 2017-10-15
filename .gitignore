@@ -5,8 +5,11 @@
 __pycache__/
 *.pyc
 
+# Flask
+backend/instance/
+
 # Postgres
-backend/database/data/
+backend/database/
 
 # Node
 node_modules
