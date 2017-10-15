@@ -40,7 +40,7 @@ main() {
 
     if [[ "$start_db" == 1 ]]; then
         # Incantation to make empty array work with set -u
-        database/db.sh "${db_opts[@]+"${db_opts[@]}"}" start
+        ./db.sh "${db_opts[@]+"${db_opts[@]}"}" start
     fi
 
     FLASK_APP=$app FLASK_DEBUG=$debug flask run

@@ -27,15 +27,21 @@ $ pip3 install -r requirements.txt
 Before you run the server, create the database using `db.sh`:
 
 ```
-$ database/db.sh create
- * Deleting database directory data/
- * Creating a postgres database cluster in data/
+$ ./db.sh create
+ * Deleting database directory database/
+ * Creating a postgres database cluster in database/
  * Starting postgres (logs in postgres.log)
- * Running init.sql
+ * Note: config file instance/application.cfg already exists
+ * Running ./init_db.py
  * Stopping postgres
 ```
 
-You can look around the database and run ad hoc queries using `db.sh psql`.
+If there are problems, try again with the `-v` flag for verbose output.
+
+You can look around the database and run ad hoc queries using `./db.sh psql`. If
+you want to set a password on your PostgreSQL user, you can do so in psql using
+`\password`. Then, you'll have to put it in `instance/application.cfg` so that
+the Flask app can connect to the database.
 
 ## Run
 
