@@ -7,25 +7,13 @@ from flask import abort, request
 from watnotes.database import db
 
 
-class paginate(model: Type[db.Model]) -> str:
+def paginate(model: Type[db.Model], **provided) -> str:
     """List resource items in a paginated fashion."""
-    return "hi"
-
-
-def get(model: Type[db.Model], id: str) -> str:
-    """Get an existing resource item."""
-    try:
-        id = int(id)
-    except ValueError:
-        abort(404)
-    object = model.query.get(id)
-    if object:
-        return repr(object)
-    abort(404)
+    return "Not implemented yet"
 
 
 def create(model: Type[db.Model], required: Sequence[str],
-           permitted: Sequence[str]=None) -> str:
+           permitted: Sequence[str]=None, **provided) -> str:
     """Create a new resource item."""
     json = request.get_json()
     fields = {}
@@ -43,3 +31,19 @@ def create(model: Type[db.Model], required: Sequence[str],
     db.session.add(object)
     db.session.commit()
     return 'OK'
+
+
+def get(model: Type[db.Model], id: int) -> str:
+    """Get an existing resource item."""
+    object = model.query.get(id)
+    if object:
+        return repr(object)
+    abort(404)
+
+
+def update(model: Type[db.Model], id: int) -> str:
+    return "Not implemented yet"
+
+
+def delete(model: Type[db.Model], id: int) -> str:
+    return "Not implemented yet"
