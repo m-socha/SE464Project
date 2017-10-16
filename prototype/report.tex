@@ -5,6 +5,8 @@
   \usepackage{listings}
   \usepackage[margin=1in]{geometry}
   \usepackage{indentfirst}
+  \usepackage{graphicx}
+  \usepackage{float}
 
   \begin{document}
 
@@ -15,8 +17,8 @@
   {\large\bf SE464 Fall 2017}\\
   \vspace{3mm}
   {\Large\bf Prototype Status Update}\\
-  \vspace{3mm}
-  {\Large Project Name: {\bf Watnotes}}\\
+  \vspace{5mm}
+  {\Large Project Name: WatNotes}\\
   \vspace{5mm}
   Michael Socha, Mitchell Kember, Do Gyun Kim, Myungheon Chun\\
   \vspace{3mm}
@@ -48,6 +50,21 @@ Although the key functionality of note uploading, sharing, and viewing has been 
   \newpage
 
 \section{Architectural overview}
-TODO
+The architecture of WatNotes includes the following components:
+\begin{itemize}
+\setlength\itemsep{0pt}
+  \item Web client (JavaScript, React)
+  \item Web server (JavaScript, Node.js)
+  \item Android application (Java, Android SDK)
+  \item Back end server (Python, Flask)
+  \item Data storage (SQLAlchemy, PostgreSQL)
+  \item Search system (Elasticsearch)
+\end{itemize}
+These components, along with the connectors that join them and the topology they form, are shown in the architectural diagram:
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.9\linewidth]{diagram.pdf}
+  \caption{Architectural diagram for WatNotes}
+\end{figure}
 
 \end{document}
