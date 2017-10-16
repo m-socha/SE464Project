@@ -11,6 +11,7 @@ import {Provider} from 'react-redux';
 import {createStore} from 'redux';
 
 import App from './components/App';
+import Note from './containers/Note';
 import NotFound from './components/NotFound';
 
 import rootReducer from './reducers';
@@ -22,6 +23,7 @@ const render = () => {
         <HashRouter>
           <Switch>
             <Route exact path="/" component={App} />
+            <Route path="/notes/:note_id" component={Note} />
             <Route component={NotFound} />
           </Switch>
         </HashRouter>
