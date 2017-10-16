@@ -1,9 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="primary_main">#42B4E6</color>
-    <color name="primary_dark">#32AAD0</color>
+
+    <!-- Default -->
+    <color name="colorAccent">@color/blue_dark</color>
+    <color name="colorPrimary">@color/primary_main</color>
+    <color name="colorPrimaryDark">@color/primary_dark</color>
+
+    <!-- Common -->
+    <color name="primary_main">@color/blue</color>
+    <color name="primary_dark">@color/blue_dark</color>
 
     <color name="text_primary">#333333</color>
+
+    <color name="blue">#42B4E6</color>
+    <color name="blue_dark">#32AAD0</color>
 
     <color name="gray_light">#DCDCDC</color>
     <color name="gray">#A9A9A9</color>

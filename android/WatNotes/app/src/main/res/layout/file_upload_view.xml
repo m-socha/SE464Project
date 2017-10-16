@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:gravity="center"
     android:orientation="vertical">
 
     <TextView
@@ -9,12 +10,14 @@
         android:id="@+id/prompt_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/half_standard_margin"
         android:textSize="@dimen/subtitle_font_size" />
 
     <ImageView
         android:id="@+id/upload_image_view"
         android:layout_width="@dimen/file_upload_icon_size"
-        android:layout_height="@dimen/file_upload_icon_size" />
+        android:layout_height="@dimen/file_upload_icon_size"
+        android:layout_marginBottom="@dimen/half_standard_margin" />
 
     <TextView
         style="@style/standard_text_view"
