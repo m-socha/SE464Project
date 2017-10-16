@@ -24,10 +24,6 @@ export default class App extends React.Component {
   render() {
     return (
       <div>
-        <Navbar brand='WatNotes' right>
-          <NavItem href=''>Home</NavItem>
-          <NavItem href=''>Login</NavItem>
-        </Navbar>
         {this.renderPage()}
       </div>
     );
