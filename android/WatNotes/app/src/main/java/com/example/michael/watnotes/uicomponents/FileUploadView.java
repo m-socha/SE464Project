@@ -20,22 +20,7 @@ import com.example.michael.watnotes.activities.BaseActivity;
 
 public class FileUploadView extends RelativeLayout {
 
-    public enum FileSearchType {
-        GENERAL("file/*"),
-        IMAGE("image/*");
-
-        private String mSearchQuery;
-
-        FileSearchType(String searchQuery) {
-            mSearchQuery = searchQuery;
-        }
-
-        public String getSearchQuery() {
-            return mSearchQuery;
-        }
-    };
-
-    private FileSearchType mFileSearchType =  FileSearchType.GENERAL;
+    private BaseActivity.FileSearchType mFileSearchType =  BaseActivity.FileSearchType.GENERAL;
 
     private BaseActivity mActivity;
     private TextView mPromptTextView;
@@ -82,15 +67,9 @@ public class FileUploadView extends RelativeLayout {
         setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                selectFile();
+                mActivity.selectNoteFile(mFileSearchType);
             }
         });
-    }
-
-    private void selectFile() {
-        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-        intent.setType(mFileSearchType.getSearchQuery());
-        mActivity.startActivityForResult(intent, BaseActivity.ActivityResult.NOTE_FILE_SELECTION_RESULT.getValue());
     }
 
     public void setup(BaseActivity activity, String prompt, int uploadIcon) {
@@ -109,7 +88,7 @@ public class FileUploadView extends RelativeLayout {
         }
     }
 
-    public void setFileSearchType(FileSearchType fileSearchType) {
+    public void setFileSearchType(BaseActivity.FileSearchType fileSearchType) {
         mFileSearchType = fileSearchType;
     }
 }

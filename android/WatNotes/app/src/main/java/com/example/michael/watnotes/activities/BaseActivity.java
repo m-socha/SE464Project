@@ -3,6 +3,7 @@ package com.example.michael.watnotes.activities;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.MediaStore;
 
 /**
  * Created by michael on 10/1/17.
@@ -24,6 +25,21 @@ public abstract class BaseActivity extends Activity {
             return mActivityResultId;
         }
     }
+
+    public enum FileSearchType {
+        GENERAL("file/*"),
+        IMAGE("image/*");
+
+        private String mSearchType;
+
+        FileSearchType(String searchType) {
+            mSearchType = searchType;
+        }
+
+        public String getSearchType() {
+            return mSearchType;
+        }
+    };
 
     protected static final String UI_FRAGMENT_TAG = "UiFragmentTag";
     protected static final String SERVICE_FRAGMENT_TAG = "ServiceFragmentTag";
@@ -81,13 +97,21 @@ public abstract class BaseActivity extends Activity {
         }
     }
 
+    public void selectNoteFile(FileSearchType fileSearchType) {
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType(fileSearchType.getSearchType());
+        startActivityForResult(intent, ActivityResult.NOTE_FILE_SELECTION_RESULT.getValue());
+    }
+
     private void handleNoteCameraResult(int resultCode) {
         if (resultCode == RESULT_OK) {
+            selectNoteFile(FileSearchType.IMAGE);
         }
     }
 
     private void handleNoteFileSelectionResult(int resultCode) {
         if (resultCode == RESULT_OK) {
+
         }
     }
 }
