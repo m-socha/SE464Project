@@ -12,6 +12,8 @@
 
     <color name="text_primary">#333333</color>
 
+    <color name="white">#FFFFFF</color>
+
     <color name="blue">#42B4E6</color>
     <color name="blue_dark">#32AAD0</color>
 

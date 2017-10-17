@@ -4,6 +4,10 @@
     <!-- Common -->
     <string name="or">Or</string>
 
+    <!-- Drawer Layout -->
+    <string name="open_drawer">Open drawer</string>
+    <string name="close_drawer">Close drawer</string>
+
     <!-- Upload Notes Activity -->
     <string name="upload_notes_title">Upload Notes</string>
     <string name="upload_notes_take_photo_prompt">Take a picture of your notes</string>

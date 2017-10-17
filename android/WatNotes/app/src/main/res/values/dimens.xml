@@ -24,6 +24,9 @@
     <dimen name="border_width_thick">4dp</dimen>
     <dimen name="border_width_very_thick">8dp</dimen>
 
+    <!-- Drawer Layout -->
+    <dimen name="main_toolbar_height">44dp</dimen>
+
     <!-- Take photo view -->
     <dimen name="take_photo_icon_size">50dp</dimen>
 

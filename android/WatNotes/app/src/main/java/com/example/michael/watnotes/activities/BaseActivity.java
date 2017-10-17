@@ -1,15 +1,14 @@
 package com.example.michael.watnotes.activities;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.provider.MediaStore;
+import android.support.v7.app.AppCompatActivity;
 
 /**
  * Created by michael on 10/1/17.
  */
 
-public abstract class BaseActivity extends Activity {
+public abstract class BaseActivity extends AppCompatActivity {
 
     public enum ActivityResult {
         NOTE_CAMERA_RESULT(1),
@@ -50,8 +49,8 @@ public abstract class BaseActivity extends Activity {
     protected abstract UiFragment createUiFragment();
     protected abstract ServiceFragment createServiceFragment();
     protected abstract int getLayoutId();
+    protected abstract void setupUi();
     protected abstract int getUiFragmentContainerView();
-    protected abstract String getActionBarTitle();
 
     UiFragment getUiFragment() {
         return mUiFragment;
@@ -66,6 +65,7 @@ public abstract class BaseActivity extends Activity {
         super.onCreate(savedInstanceState);
 
         setContentView(getLayoutId());
+        setupUi();
 
         mUiFragment = createUiFragment();
         mServiceFragment = createServiceFragment();
