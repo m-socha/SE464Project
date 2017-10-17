@@ -25,6 +25,25 @@
         android:textAllCaps="true" />
 
     <com.example.michael.watnotes.uicomponents.FileUploadView
+        android:id="@+id/image_upload_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/half_standard_margin"
+        android:layout_marginBottom="@dimen/standard_margin" />
+
+    <TextView
+        style="@style/standard_text_view"
+        android:id="@+id/or_text_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/half_standard_margin"
+        android:layout_marginBottom="@dimen/standard_margin"
+        android:text="@string/or"
+        android:textAlignment="center"
+        android:textSize="@dimen/big_font_size"
+        android:textAllCaps="true" />
+
+    <com.example.michael.watnotes.uicomponents.FileUploadView
         android:id="@+id/file_upload_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

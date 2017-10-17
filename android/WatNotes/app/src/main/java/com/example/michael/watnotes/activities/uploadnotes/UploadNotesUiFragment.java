@@ -15,6 +15,7 @@ import com.example.michael.watnotes.uicomponents.TakePhotoView;
 public class UploadNotesUiFragment extends UiFragment {
 
     TakePhotoView mTakePhotoView;
+    FileUploadView mImageUploadView;
     FileUploadView mFileUploadView;
 
     @Override
@@ -25,16 +26,21 @@ public class UploadNotesUiFragment extends UiFragment {
     @Override
     protected void initializeUi(View view) {
         mTakePhotoView = (TakePhotoView) view.findViewById(R.id.take_photo_view);
+        mImageUploadView = (FileUploadView) view.findViewById(R.id.image_upload_view);
         mFileUploadView = (FileUploadView) view.findViewById(R.id.file_upload_view);
 
         withActivity(new ActivityTask<BaseActivity>() {
             @Override
             public void performTask(BaseActivity baseActivity) {
                 mTakePhotoView.setup(baseActivity, getString(R.string.upload_notes_take_photo_prompt), R.drawable.camera_icon);
+
+                mImageUploadView.setup(baseActivity, getString(R.string.upload_notes_upload_image_prompt), R.drawable.gallery_icon);
+                mImageUploadView.setFileSearchType(FileUploadView.FileSearchType.IMAGE);
+
+                mFileUploadView.setup(baseActivity, getString(R.string.upload_notes_upload_file_prompt), R.drawable.note_icon, getString(R.string.upload_notes_upload_file_caption));
+                mFileUploadView.setFileSearchType(FileUploadView.FileSearchType.GENERAL);
             }
         });
-
-        mFileUploadView.setup(getString(R.string.upload_notes_upload_file_prompt), R.drawable.note_icon, getString(R.string.upload_notes_upload_file_caption));
     }
 
 }

@@ -1,15 +1,18 @@
 package com.example.michael.watnotes.uicomponents;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.GradientDrawable;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.michael.watnotes.R;
+import com.example.michael.watnotes.activities.BaseActivity;
 
 /**
  * Created by michael on 10/11/17.
@@ -17,6 +20,24 @@ import com.example.michael.watnotes.R;
 
 public class FileUploadView extends RelativeLayout {
 
+    public enum FileSearchType {
+        GENERAL("file/*"),
+        IMAGE("image/*");
+
+        private String mSearchQuery;
+
+        FileSearchType(String searchQuery) {
+            mSearchQuery = searchQuery;
+        }
+
+        public String getSearchQuery() {
+            return mSearchQuery;
+        }
+    };
+
+    private FileSearchType mFileSearchType =  FileSearchType.GENERAL;
+
+    private BaseActivity mActivity;
     private TextView mPromptTextView;
     private ImageView mUploadImageView;
     private TextView mCaptionTextView;
@@ -57,12 +78,38 @@ public class FileUploadView extends RelativeLayout {
         roundedCornerBackground.setStroke(getResources().getDimensionPixelSize(R.dimen.border_width_thick), ContextCompat.getColor(getContext(), R.color.gray_light));
         roundedCornerBackground.setCornerRadius(getResources().getDimensionPixelSize(R.dimen.corner_radius_small));
         setBackground(roundedCornerBackground);
+
+        setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                selectFile();
+            }
+        });
     }
 
-    public void setup(String prompt, int uploadIcon, String caption) {
+    private void selectFile() {
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType(mFileSearchType.getSearchQuery());
+        mActivity.startActivityForResult(intent, BaseActivity.ActivityResult.NOTE_FILE_SELECTION_RESULT.getValue());
+    }
+
+    public void setup(BaseActivity activity, String prompt, int uploadIcon) {
+        setup(activity, prompt, uploadIcon, null);
+    }
+
+    public void setup(BaseActivity activity, String prompt, int uploadIcon, String caption) {
+        mActivity = activity;
+
         mPromptTextView.setText(prompt);
         mUploadImageView.setImageResource(uploadIcon);
-        mCaptionTextView.setText(caption);
+
+        if (caption != null) {
+            mCaptionTextView.setText(caption);
+            mCaptionTextView.setVisibility(View.VISIBLE);
+        }
     }
 
+    public void setFileSearchType(FileSearchType fileSearchType) {
+        mFileSearchType = fileSearchType;
+    }
 }
