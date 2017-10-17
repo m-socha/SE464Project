@@ -10,11 +10,18 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <FrameLayout
-            android:id="@+id/drawer_content_view"
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_margin="@dimen/standard_margin"/>
+            android:layout_height="match_parent">
+
+            <FrameLayout
+                android:id="@+id/drawer_content_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="@dimen/standard_margin"/>
+
+        </ScrollView>
+
     </LinearLayout>
     
     <ListView

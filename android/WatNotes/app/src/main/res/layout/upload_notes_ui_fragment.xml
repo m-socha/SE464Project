@@ -14,7 +14,6 @@
 
     <TextView
         style="@style/standard_text_view"
-        android:id="@+id/or_text_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="@dimen/half_standard_margin"
