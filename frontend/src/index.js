@@ -1,49 +1,46 @@
 /* global document */
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {HashRouter,
+import { Provider } from 'react-redux';
+import {
+  Router,
   Route,
-  Link,
-  Switch
+  Switch,
 } from 'react-router-dom';
-import {AppContainer} from 'react-hot-loader';
-import {Navbar, NavItem} from 'react-materialize';
-import {Provider} from 'react-redux';
-import {createStore} from 'redux';
-
-import Note from './containers/Note';
+import createHistory from 'history/createBrowserHistory';
+import configureStore from './store';
+import Header from './components/Header';
 import Feed from './containers/Feed';
-
+import Note from './containers/Note';
 import NotFound from './components/NotFound';
+// import {AppContainer} from 'react-hot-loader'; // TODO: hot reloading
 
-import rootReducer from './reducers';
+const store = configureStore({
+  notebooks: [],
+}); // can pass an initial state
+const history = createHistory();
 
 const render = () => {
   ReactDOM.render(
-    <div>
-      <Navbar brand='WatNotes' right>
-        <NavItem href='#/'>Home</NavItem>
-        <NavItem href='#/login'>Login</NavItem>
-      </Navbar>
-      
-      <Provider store={createStore(rootReducer)}>
-        <AppContainer>
-          <HashRouter>
-            <Switch>
-              <Route exact path="/" component={Feed} />
-              <Route path="/notes/:note_id" component={Note} />
-              <Route component={NotFound} />
-            </Switch>
-          </HashRouter>
-        </AppContainer>
-      </Provider>
-    </div>,
+    <Provider store={store}>
+      <Router history={history}>
+        <div>
+          <Header />
+          <Switch>
+            <Route exact path="/" component={Feed} />
+            <Route path="/notes/:note_id" component={Note} />
+            <Route component={NotFound} />
+          </Switch>
+        </div>
+      </Router>
+    </Provider>,
     document.getElementById('root'),
   );
 };
 
 render();
 
-if (module.hot) {
-  module.hot.accept('./components/App', () => { render(); });
-}
+// TODO: reimplement hot reloading
+// if (module.hot) {
+//   module.hot.accept('./components/App', () => { render(Feed); });
+// }

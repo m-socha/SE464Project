@@ -1,25 +1,34 @@
 import React from 'react';
-import {Redirect} from 'react-router-dom';
-
+import { connect } from 'react-redux';
+import { Col } from 'react-materialize';
 import Card from '../../components/Card';
+import fetchNotebooks from '../../actions';
 
-export default class Feed extends React.Component {
-  constructor(props) {
-    super();
+class Feed extends React.Component {
+  componentDidMount() {
+    const { dispatch } = this.props;
+    dispatch(fetchNotebooks(1)); // hardcode 1 as user_id
   }
 
   render() {
-    let data = [{note_id: '1', title: 'SE380 Fall 2017', author: 'ray', course: 'SE380'},
-                {note_id: '2', title: 'SE380 Fall 2016', author: 'jay', course: 'SE380'},
-                {note_id: '3', title: 'SE380 Fall 2015', author: 'say', course: 'SE380'}];
-    const cards = data.map((note_data, i) => {
-      return <Card key={i} {...note_data} />
-    });
+    const { notebooks } = this.props;
+    const cards = notebooks.map(notebookData =>
+      <Card key={notebookData.notebook_id} {...notebookData} />);
 
     return (
-      <div className='container'>
-        { cards }
+      <div className="container">
+        <Col l={12} m={12} s={12}>
+          { cards }
+        </Col>
       </div>
     );
   }
 }
+
+const mapStateToProps = state => ({
+  notebooks: state.notebooks,
+});
+
+export default connect(mapStateToProps)(Feed);
+
+// TODO add proptypes
