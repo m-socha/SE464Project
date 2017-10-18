@@ -1,12 +1,12 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Card, Button } from 'react-materialize';
-import './card.css';
+import styles from './card.css';
 
 const NoteCard = ({ id, user_id, course_id }) => {
   const cardActions = [
     <Link key={id} to={`/notes/${id}`}>
-      <Button className="floatRight red" waves="light" icon="arrow_forward" />
+      <Button className={`${styles.floatRight} red`} waves="light" icon="arrow_forward" />
     </Link>
   ];
 

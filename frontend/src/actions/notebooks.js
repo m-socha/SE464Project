@@ -24,7 +24,7 @@ export default function fetchNotebooks(userID) {
       .then((response) => {
         dispatch(receiveNotebooks(userID, response));
       });
-    // .catch(function (error) {
+    // .catch(function (error) { // TODO: Add error handling
     //   console.log(error);
     // });
   };

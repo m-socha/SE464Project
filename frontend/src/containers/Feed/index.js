@@ -2,16 +2,15 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Col } from 'react-materialize';
 import Card from '../../components/Card';
-import fetchNotebooks from '../../actions';
+import fetchNotebooks from '../../actions/notebooks';
 
 class Feed extends React.Component {
   componentDidMount() {
     const { dispatch } = this.props;
-    dispatch(fetchNotebooks(1)); // hardcode 1 as user_id
+    dispatch(fetchNotebooks(1)); // TODO: get userID from authentication system
   }
 
   render() {
-    console.log(this.props)
     const { notebooks } = this.props;
     const cards = notebooks.map(notebookData =>
       <Card key={notebookData.id} {...notebookData} />);
