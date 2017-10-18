@@ -68,6 +68,7 @@ def update(model: Type[db.Model], id: int, permitted: Sequence[str]) -> str:
         if k in permitted:
             object[k] = v
     db.session.commit()
+    return 'OK'
 
 
 def delete(model: Type[db.Model], id: int) -> str:
