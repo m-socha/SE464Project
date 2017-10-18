@@ -1,33 +1,32 @@
 import React from 'react';
-import style from './card.css';
-
 import { Link } from 'react-router-dom';
 import { Card, Button } from 'react-materialize';
+import './card.css';
 
-export default class NoteCard extends React.Component {
-  render() {
-    let cardActions = 
-      [ <Link to={`/notes/${this.props.note_id}`}>
-          <Button className={`${style.floatRight} 'red'`} waves='light' icon='arrow_forward' />
-        </Link>
-      ];
+const NoteCard = ({ id, user_id, course_id }) => {
+  const cardActions = [
+    <Link key={id} to={`/notes/${id}`}>
+      <Button className="floatRight red" waves="light" icon="arrow_forward" />
+    </Link>
+  ];
 
-    return (
-  		<Card className='small'
-        title={this.props.title}
-        actions={cardActions}>
-  		  { this.props.author &&
-          <div>
-            Author: {this.props.author}
-          </div>
-        }
+  return (
+		<Card className='small'
+      title='HardCodedTitle'
+      actions={cardActions}>
+		  { user_id &&
+        <div>
+          Author: {user_id}
+        </div>
+      }
 
-        { this.props.course &&
-          <div>
-            Course: {this.props.course}
-          </div>
-        }
-  		</Card>
-    );
-  }
+      { course_id &&
+        <div>
+          Course: {course_id}
+        </div>
+      }
+		</Card>
+  );
 }
+
+export default NoteCard;

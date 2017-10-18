@@ -11,22 +11,27 @@ class Feed extends React.Component {
   }
 
   render() {
+    console.log(this.props)
     const { notebooks } = this.props;
     const cards = notebooks.map(notebookData =>
-      <Card key={notebookData.notebook_id} {...notebookData} />);
+      <Card key={notebookData.id} {...notebookData} />);
 
     return (
       <div className="container">
-        <Col l={12} m={12} s={12}>
-          { cards }
-        </Col>
+        { !this.props.isFetching &&
+          <Col l={12} m={12} s={12}>
+            { cards }
+          </Col>
+        }
       </div>
     );
   }
 }
 
 const mapStateToProps = state => ({
-  notebooks: state.notebooks,
+  notebooks: state.notebooks.notebooks,
+  isFetching: state.notebooks.isFetching,
+  didInvalidate: state.notebooks.didInvalidate,
 });
 
 export default connect(mapStateToProps)(Feed);

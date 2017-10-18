@@ -16,7 +16,9 @@ import NotFound from './components/NotFound';
 // import {AppContainer} from 'react-hot-loader'; // TODO: hot reloading
 
 const store = configureStore({
-  notebooks: [],
+  notebooks: {
+    notebooks: [],
+  },
 }); // can pass an initial state
 const history = createHistory();
 

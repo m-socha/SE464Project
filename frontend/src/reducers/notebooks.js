@@ -7,7 +7,7 @@ export default (state = {
   isFetching: false,
   didInvalidate: false,
   notebooks: [],
-  user_id: null,
+  userID: null,
   lastUpdated: Date.now(),
 }, action) => {
   switch (action.type) {
@@ -15,12 +15,13 @@ export default (state = {
       return Object.assign({}, state, {
         isFetching: true,
         didInvalidate: false,
+        userID: action.userID,
       });
     case RECEIVE_NOTEBOOKS:
       return Object.assign({}, state, {
         isFetching: false,
         didInvalidate: false,
-        user_id: action.user_id,
+        userID: action.userID,
         notebooks: action.notebooks,
         lastUpdated: action.receivedAt,
       });

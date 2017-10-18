@@ -12,14 +12,14 @@ function receiveNotebooks(userID, json) {
   return {
     type: RECEIVE_NOTEBOOKS,
     userID,
-    notebooks: json.data.children.map(child => child.data),
+    notebooks: json.data.items,
     receivedAt: Date.now(),
   };
 }
 
 export default function fetchNotebooks(userID) {
   return (dispatch) => {
-    dispatch(requestNotebooks(dispatch));
+    dispatch(requestNotebooks(userID));
     axios.get(`/api/users/${userID}/notebooks`)
       .then((response) => {
         dispatch(receiveNotebooks(userID, response));

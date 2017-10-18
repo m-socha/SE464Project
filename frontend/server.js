@@ -26,7 +26,9 @@ const app = express();
 
 // api routes are proxied to our backend
 app.all(/^\/api\/(.*)/, (req, res) => {
-  proxy.web(req, res, { target: 'http://localhost:5000' });
+  res.send({ page: 1, total_pages: 1, total_results: 3, items: [{ id: 1, user_id: 1, course_id: 1 },
+    { id: 2, user_id: 1, course_id: 2 }, { id: 3, user_id: 1, course_id: 3 }]});
+  // proxy.web(req, res, { target: 'http://localhost:5000' });
 });
 app.get(/.*/, (req, res) => {
   res.sendFile(path.join(__dirname, '/index.html'));
