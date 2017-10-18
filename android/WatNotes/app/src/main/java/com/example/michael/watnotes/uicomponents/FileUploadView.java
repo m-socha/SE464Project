@@ -1,7 +1,6 @@
 package com.example.michael.watnotes.uicomponents;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.drawable.GradientDrawable;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
@@ -12,7 +11,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.michael.watnotes.R;
-import com.example.michael.watnotes.activities.BaseActivity;
+import com.example.michael.watnotes.activities.core.BaseActivity;
 
 /**
  * Created by michael on 10/11/17.

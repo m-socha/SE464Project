@@ -3,8 +3,8 @@ package com.example.michael.watnotes.activities.uploadnotes;
 import android.view.View;
 
 import com.example.michael.watnotes.R;
-import com.example.michael.watnotes.activities.BaseActivity;
-import com.example.michael.watnotes.activities.UiFragment;
+import com.example.michael.watnotes.activities.core.BaseActivity;
+import com.example.michael.watnotes.activities.core.UiFragment;
 import com.example.michael.watnotes.uicomponents.FileUploadView;
 import com.example.michael.watnotes.uicomponents.TakePhotoView;
 

@@ -1,4 +1,4 @@
-package com.example.michael.watnotes.activities;
+package com.example.michael.watnotes.activities.core;
 
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -7,6 +7,7 @@ import android.view.MenuItem;
 import android.widget.ListView;
 
 import com.example.michael.watnotes.R;
+import com.example.michael.watnotes.activities.core.BaseActivity;
 
 /**
  * Created by michael on 10/1/17.

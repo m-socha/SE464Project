@@ -1,4 +1,4 @@
-package com.example.michael.watnotes.activities;
+package com.example.michael.watnotes.activities.core;
 
 import android.content.Intent;
 import android.os.Bundle;

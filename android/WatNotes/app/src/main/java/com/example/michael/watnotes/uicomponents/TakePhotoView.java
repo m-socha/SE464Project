@@ -13,7 +13,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.michael.watnotes.R;
-import com.example.michael.watnotes.activities.BaseActivity;
+import com.example.michael.watnotes.activities.core.BaseActivity;
 
 /**
  * Created by michael on 10/11/17.

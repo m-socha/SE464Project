@@ -1,6 +1,4 @@
-package com.example.michael.watnotes.activities;
-
-import android.app.Fragment;
+package com.example.michael.watnotes.activities.core;
 
 /**
  * Created by michael on 10/1/17.

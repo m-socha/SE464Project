@@ -1,9 +1,9 @@
 package com.example.michael.watnotes.activities.uploadnotes;
 
 import com.example.michael.watnotes.R;
-import com.example.michael.watnotes.activities.DrawerActivity;
-import com.example.michael.watnotes.activities.ServiceFragment;
-import com.example.michael.watnotes.activities.UiFragment;
+import com.example.michael.watnotes.activities.core.DrawerActivity;
+import com.example.michael.watnotes.activities.core.ServiceFragment;
+import com.example.michael.watnotes.activities.core.UiFragment;
 
 public class UploadNotesActivity extends DrawerActivity {
 

@@ -1,4 +1,4 @@
-package com.example.michael.watnotes.activities;
+package com.example.michael.watnotes.activities.core;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
