@@ -5,7 +5,7 @@ set -eufo pipefail
 pg_dir=database
 pg_log=postgres.log
 db_name=watnotes
-init_db_script=./init_db.py
+init_db_py=init_db.py
 config_path=instance/application.cfg
 
 cmd=
@@ -29,6 +29,7 @@ usage()  {
     echo "  start   Start postgres"
     echo "  stop    Stop postgres"
     echo "  psql    Start psql session"
+    echo "  fake    Generate fake data"
     echo
     echo "Options:"
     echo "  -v      Verbose output"
@@ -84,8 +85,8 @@ create_db() {
         echo -e "DB_USER = '$(whoami)'\nDB_PASSWORD = ''" > "$config_path"
     fi
 
-    say "Running $init_db_script"
-    if ! run "$init_db_script"; then
+    say "Running $init_db_py"
+    if ! run python3 "$init_db_py"; then
         die "Failed to initialize database"
     fi
 
