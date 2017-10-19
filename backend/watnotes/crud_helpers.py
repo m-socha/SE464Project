@@ -1,6 +1,6 @@
 """This module defines helper functions for CRUD operations."""
 
-from typing import Sequence, Type
+from typing import Mapping, Sequence, Type
 
 from flask import abort, jsonify, request
 
@@ -16,6 +16,14 @@ def get_int(name: str) -> int:
         return int(value)
     except ValueError:
         abort(404)
+
+
+def get_json():
+    """Get the request JSON, or abort 404 if it doesn't exist."""
+    json = request.get_json()
+    if not json:
+        abort(404)
+    return json
 
 
 def paginate(model: Type[db.Model], order: str, **provided) -> str:
@@ -37,7 +45,7 @@ def paginate(model: Type[db.Model], order: str, **provided) -> str:
 def create(model: Type[db.Model], required: Sequence[str],
            permitted: Sequence[str]=None, **provided) -> str:
     """Create a new resource item."""
-    json = request.get_json()
+    json = get_json()
     fields = {}
     for f in required:
         if f in json:
@@ -53,7 +61,7 @@ def create(model: Type[db.Model], required: Sequence[str],
     object = model(**fields)
     db.session.add(object)
     db.session.commit()
-    return 'OK'
+    return jsonify(object.serialize())
 
 
 def get(model: Type[db.Model], id: int) -> str:
@@ -64,7 +72,7 @@ def get(model: Type[db.Model], id: int) -> str:
 def update(model: Type[db.Model], id: int, permitted: Sequence[str]) -> str:
     """Update an existing resource item."""
     object = model.query.get_or_404(id)
-    for k, v in request.get_json():
+    for k, v in get_json():
         if k in permitted:
             object[k] = v
     db.session.commit()
