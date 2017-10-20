@@ -22,7 +22,11 @@ class User(db.Model):
     name = Column(String, nullable=False)
     created_at = Column(DateTime, default=datetime.utcnow)
 
-    def serialize(self):
+    @classmethod
+    def relations(cls):
+        return {}
+
+    def serialize(self, preloads=None):
         return {
             'id': self.id,
             'email': self.email,
@@ -43,7 +47,11 @@ class Course(db.Model):
     title = Column(String, nullable=False)
     created_at = Column(DateTime, default=datetime.utcnow)
 
-    def serialize(self):
+    @classmethod
+    def relations(cls):
+        return {}
+
+    def serialize(self, preloads=None):
         return {
             'id': self.id,
             'code': self.code,
@@ -64,17 +72,23 @@ class Notebook(db.Model):
     course_id = Column(Integer, ForeignKey(Course.id), nullable=False)
     created_at = Column(DateTime, default=datetime.utcnow)
 
-    user = db.relationship(
-        'User', backref=db.backref('notebooks', lazy=True))
-    course = db.relationship(
-        'Course', backref=db.backref('notebooks', lazy=True))
+    user = db.relationship('User', backref=db.backref('notebooks'))
+    course = db.relationship('Course', backref=db.backref('notebooks'))
 
-    def serialize(self):
-        return {
-            'id': self.id,
-            'user_id': self.user_id,
-            'course_id': self.course_id
-        }
+    @classmethod
+    def relations(cls):
+        return {'user': cls.user, 'course': cls.course}
+
+    def serialize(self, preloads=None):
+        result = {'id': self.id}
+        for name in 'user', 'course':
+            if preloads and name in preloads:
+                result[name] = getattr(self, name).serialize(preloads)
+            else:
+                name_id = name + '_id'
+                result[name_id] = getattr(self, name_id)
+
+        return result
 
     def __repr__(self):
         return "<Notebook #{} u#{} c#{}>".format(
@@ -93,8 +107,7 @@ class Note(db.Model):
     data = Column(LargeBinary, nullable=False)
     created_at = Column(DateTime, default=datetime.utcnow)
 
-    notebook = db.relationship(
-        'Notebook', backref=db.backref('notes', lazy=True))
+    notebook = db.relationship('Notebook', backref=db.backref('notes'))
 
     # Mapping from Note formats to bytes->str encoders.
     ENCODERS = {
@@ -121,6 +134,10 @@ class Note(db.Model):
         kwargs['data'] = data
         super().__init__(**kwargs)
 
+    @classmethod
+    def relations(cls):
+        return {'notebook': cls.notebook}
+
     @validates('format')
     def validate_format(self, key, format):
         if not is_valid_mime(format):
@@ -135,14 +152,18 @@ class Note(db.Model):
         filename = str(self.id)
         return self.data, filename
 
-    def serialize(self):
+    def serialize(self, preloads=None):
         result = {
             'id': self.id,
-            'notebook_id': self.notebook_id,
             'index': self.index,
             'format': self.format,
             'extension': mime_to_extension(self.format)
         }
+
+        if preloads and 'notebook' in preloads:
+            result['notebook'] = self.notebook.serialize(preloads)
+        else:
+            result['notebook_id'] = self.notebook_id
 
         encode = self.ENCODERS.get(self.format)
         if encode:
@@ -166,16 +187,26 @@ class Comment(db.Model):
     content = Column(String, nullable=False)
     created_at = Column(DateTime, default=datetime.utcnow)
 
-    user = db.relationship('User', backref=db.backref('comments', lazy=True))
-    note = db.relationship('Note', backref=db.backref('comments', lazy=True))
+    user = db.relationship('User', backref=db.backref('comments'))
+    note = db.relationship('Note', backref=db.backref('comments'))
 
-    def serialize(self):
-        return {
+    @classmethod
+    def relations(cls):
+        return {'user': cls.user, 'note': cls.note}
+
+    def serialize(self, preloads=None):
+        result = {
             'id': self.id,
-            'user_id': self.user_id,
-            'note_id': self.note_id,
             'content': self.content
         }
+        for name in 'user', 'note':
+            if preloads and name in preloads:
+                result[name] = getattr(self, name).serialize(preloads)
+            else:
+                name_id = name + '_id'
+                result[name_id] = getattr(self, name_id)
+
+        return result
 
     def __repr__(self):
         return "<Comment #{} u#{}>".format(self.id, self.user_id)

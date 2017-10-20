@@ -4,6 +4,7 @@ from typing import Any, Mapping, Sequence, Type
 
 from flask import abort, jsonify, make_response, request
 from sqlalchemy.exc import IntegrityError
+from sqlalchemy.orm import joinedload
 
 from watnotes.database import db
 from watnotes.errors import InvalidAttribute
@@ -29,6 +30,31 @@ def is_form() -> bool:
 def is_attachment() -> bool:
     """Return true if the client requested to download as an attachment."""
     return request.args.get('dl') == '1'
+
+
+def get_preloads():
+    """Return the list of preloads specified in the query parameters."""
+    names = request.args.get('load')
+    if names is None:
+        return []
+    return names.split(',')
+
+
+def preloaded(model: Type[db.Model], preloads=None):
+    """Return a query for the model with preloads configured."""
+    if not preloads:
+        preloads = get_preloads()
+
+    query = model.query
+    relations = model.relations()
+    for name in preloads:
+        rel = relations.get(name)
+        if rel is None:
+            abort(404, "Invalid preload name '{}' for {}".format(
+                name, model.__name__))
+        query = query.options(joinedload(rel, innerjoin=True))
+
+    return query
 
 
 def get_json():
@@ -81,7 +107,7 @@ def get_fields(model_name: str,
 
 def get_or_404(model: Type[db.Model], id: int):
     """Get a model object by ID, and 404 if it doesn't exist."""
-    object = model.query.get(id)
+    object = preloaded(model).get(id)
     if not object:
         abort(404, "{} with ID {} does not exist".format(model.__name__, id))
     return object
@@ -89,7 +115,8 @@ def get_or_404(model: Type[db.Model], id: int):
 
 def paginate(model: Type[db.Model], order: str, **provided) -> str:
     """List resource items in a paginated fashion."""
-    results = model.query.filter_by(**provided).order_by(order)
+    preloads = get_preloads()
+    results = preloaded(model, preloads).filter_by(**provided).order_by(order)
 
     page = get_int('page')
     per_page = get_int('per_page')
@@ -99,10 +126,10 @@ def paginate(model: Type[db.Model], order: str, **provided) -> str:
             page=results.page,
             total_pages=results.pages,
             total_results=results.total,
-            items=[item.serialize() for item in results.items])
+            items=[item.serialize(preloads) for item in results.items])
 
     # By default, return all items.
-    return jsonify(items=[item.serialize() for item in results])
+    return jsonify(items=[item.serialize(preloads) for item in results])
 
 
 def create(model: Type[db.Model], required: Sequence[str],
@@ -117,12 +144,12 @@ def create(model: Type[db.Model], required: Sequence[str],
         abort(404, "Integrity error: {}".format(e))
     except InvalidAttribute as e:
         abort(404, e)
-    return jsonify(object.serialize())
+    return jsonify(object.serialize(get_preloads()))
 
 
 def get(model: Type[db.Model], id: int) -> str:
     """Get an existing resource item."""
-    return jsonify(get_or_404(model, id).serialize())
+    return jsonify(get_or_404(model, id).serialize(get_preloads()))
 
 
 def download(model: Type[db.Model], id: int, extension: str):
