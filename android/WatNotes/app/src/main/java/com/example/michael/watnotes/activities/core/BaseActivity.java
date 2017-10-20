@@ -1,17 +1,12 @@
 package com.example.michael.watnotes.activities.core;
 
 import android.content.Intent;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 
 import com.example.michael.watnotes.util.IOUtil;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -122,8 +117,8 @@ public abstract class BaseActivity extends AppCompatActivity {
         try {
             InputStream inputStream = getContentResolver().openInputStream(uri);
             byte[] fileContents = IOUtil.getBytes(inputStream);
-            String mimeType = getContentResolver().getType(uri);
-            mServiceFragment.uploadNoteFile(1, uri.getPath(), mimeType, fileContents);
+            String fileFormat = getContentResolver().getType(uri);
+            mServiceFragment.uploadNoteFile(1, uri.getPath(), fileFormat, fileContents);
         } catch (IOException e) {
             e.printStackTrace();
         }

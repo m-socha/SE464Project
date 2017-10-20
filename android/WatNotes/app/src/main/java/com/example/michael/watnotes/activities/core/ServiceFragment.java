@@ -10,8 +10,8 @@ public class ServiceFragment extends WatNotesFragment {
 
     private UploadNoteService mUploadNoteService = new UploadNoteService();
 
-    public void uploadNoteFile(int notebookId, String uri, String mimeType, byte[] fileContents) {
-        mUploadNoteService.requestService(notebookId, uri, mimeType, fileContents);
+    public void uploadNoteFile(int notebookId, String uri, String fileFormat, byte[] fileContents) {
+        mUploadNoteService.requestService(notebookId, uri, fileFormat, fileContents);
     }
 
     @Override

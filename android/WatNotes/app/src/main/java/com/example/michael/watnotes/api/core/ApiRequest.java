@@ -35,28 +35,28 @@ public class ApiRequest {
     // TODO: Make this a proper param map
     private String mFileKey;
     private String mFileUri;
-    private String mFileMimeType;
+    private String mFileFormat;
     private byte[] mFileContents;
 
     public ApiRequest(String endpoint) {
         mEndpoint = endpoint;
     }
 
-    public void addFormFile(String key, String uri, String mimeType, byte[] fileContents) {
+    public void addFormFile(String key, String uri, String fileFormat, byte[] fileContents) {
         mFileKey = key;
         mFileUri = uri;
-        mFileMimeType = mimeType;
+        mFileFormat = fileFormat;
         mFileContents = fileContents;
     }
 
     public void startRequest() {
         OkHttpClient httpClient = new OkHttpClient();
 
-        Log.d("FileContentsLength", mFileContents.length + "");
         RequestBody requestBody = new MultipartBody.Builder()
+                .setType(MultipartBody.FORM)
+                .addFormDataPart("index", "111")
+                .addFormDataPart("format", mFileFormat)
                 .addFormDataPart("data", mFileUri, RequestBody.create(MediaType.parse(mFileUri), mFileContents))
-                .addFormDataPart("index", "0")
-                .addFormDataPart("format", mFileMimeType)
                 .build();
 
         final Request request = new Request.Builder()
@@ -80,6 +80,7 @@ public class ApiRequest {
                     Log.d("ApiResponse2", response.code() + "");
                     Log.d("ApiResponse3", response.message());
                     Log.d("ApiResponse4", request.method());
+                    Log.d("ResposeBodyTest", new String(response.body().bytes()));
                     if (response.isSuccessful()) {
 
                     }

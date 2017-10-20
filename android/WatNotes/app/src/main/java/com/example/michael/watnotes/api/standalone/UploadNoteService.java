@@ -9,9 +9,9 @@ import com.example.michael.watnotes.api.core.SingleApiService;
 
 public class UploadNoteService extends SingleApiService {
 
-    public void requestService(int notebookId, String fileUri, String mimeType, byte[] fileContents) {
-        ApiRequest request = new ApiRequest("notebooks/" + notebookId + "/notes");
-        request.addFormFile("data", fileUri, mimeType, fileContents);
+    public void requestService(int notebookId, String fileUri, String fileFormat, byte[] fileContents) {
+        ApiRequest request = new ApiRequest("notebooks/" + notebookId + "/notes?form=1");
+        request.addFormFile("data", fileUri, fileFormat, fileContents);
         request.startRequest();
     }
 
