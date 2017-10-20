@@ -15,14 +15,14 @@ def get_int(name: str) -> int:
     try:
         return int(value)
     except ValueError:
-        abort(404)
+        abort(404, "Query parameter '{}' is not an integer".format(name))
 
 
 def get_json():
     """Get the request JSON, or abort 404 if it doesn't exist."""
     json = request.get_json()
     if not json:
-        abort(404)
+        abort(404, "Expected JSON in request body")
     return json
 
 
