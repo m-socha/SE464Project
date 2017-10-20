@@ -15,7 +15,7 @@ class Feed extends React.Component {
   }
 
   componentWillMount() {
-    this.props.fetchFeed(17, this.state.page);
+    this.props.fetchFeed(1, this.state.page);
   }
 
   render() {
