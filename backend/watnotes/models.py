@@ -95,18 +95,12 @@ class Note(db.Model):
 
     # Mapping from Note formats to bytes->str encoders.
     ENCODERS = {
-        'text': lambda data: data.decode('utf-8')
+        'text/plain': lambda data: data.decode('utf-8')
     }
 
     # Mapping from Note formats to str->bytes decoders.
     DECODERS = {
-        'text': lambda string: string.encode('utf-8')
-    }
-
-    # Mapping from Note formats to MIME types.
-    MIME_TYPES = {
-        'text': 'text/plain',
-        'png': 'image/png'
+        'text/plain': lambda string: string.encode('utf-8')
     }
 
     def __init__(self, **kwargs):
@@ -124,9 +118,13 @@ class Note(db.Model):
         kwargs['data'] = data
         super().__init__(**kwargs)
 
-    def mime_type(self):
-        """Return the MIME type of the note's data."""
-        return self.MIME_TYPES[self.format]
+    def get_data(self, mime_type):
+        """Return the note's data and a filename for it."""
+        if mime_type != self.format:
+            return None
+
+        filename = str(self.id)
+        return self.data, filename
 
     def serialize(self):
         result = {

@@ -116,11 +116,13 @@ def gen_notebooks(users, courses):
 
 def gen_notes(notebooks):
     notes = []
+    used = set()
     for i in range(NUM_NOTES):
+        index = get_unique(fake.random_int, used)
         n = Note(
             notebook_id=fake.random_element(notebooks).id,
-            index=fake.random_int(),
-            format='text',
+            index=index,
+            format='text/plain',
             data=bytes(fake.text(max_nb_chars=NOTE_MAX_CHARS), 'utf-8')
         )
         notes.append(n)

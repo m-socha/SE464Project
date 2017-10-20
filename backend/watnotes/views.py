@@ -1,11 +1,13 @@
 """This module defines the Flask views (routes) for the server."""
 
 from watnotes import app
-from watnotes.crud_helpers import create, delete, get, paginate, update
+from watnotes.crud_helpers import (
+    create, delete, download, get, paginate, update
+)
 from watnotes.database import db
 from watnotes.models import *
 
-from flask import abort, jsonify, make_response, request
+from flask import abort, jsonify, request
 
 
 @app.errorhandler(404)
@@ -91,14 +93,9 @@ def notes_id(id):
         return delete(Note, id)
 
 
-@app.route('/notes/<int:id>.<format>', methods=['GET'])
-def notes_id_format(id, format):
-    note = Note.query.get_or_404(id)
-    if format != note.format:
-        abort(404)
-    response = make_response(note.data)
-    response.headers['Content-Type'] = note.mime_type()
-    return response
+@app.route('/notes/<int:id>.<extension>', methods=['GET'])
+def notes_id_format(id, extension):
+    return download(Note, id, extension)
 
 
 @app.route('/notes/<int:note_id>/comments', methods=['GET', 'POST'])
