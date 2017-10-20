@@ -11,7 +11,7 @@ def get_int(name: str) -> int:
     """Get an integer from the query string."""
     value = request.args.get(name)
     if not value:
-        abort(404)
+        return None
     try:
         return int(value)
     except ValueError:
@@ -28,18 +28,20 @@ def get_json():
 
 def paginate(model: Type[db.Model], order: str, **provided) -> str:
     """List resource items in a paginated fashion."""
+    results = model.query.filter_by(**provided).order_by(order)
+
     page = get_int('page')
     per_page = get_int('per_page')
-    results = (model.query
-        .filter_by(**provided)
-        .order_by(order)
-        .paginate(page, per_page)
-    )
-    return jsonify(
-        page=results.page,
-        total_pages=results.pages,
-        total_results=results.total,
-        items=[item.serialize() for item in results.items])
+    if page is not None and per_page is not None:
+        results = results.paginate(page, per_page)
+        return jsonify(
+            page=results.page,
+            total_pages=results.pages,
+            total_results=results.total,
+            items=[item.serialize() for item in results.items])
+
+    # By default, return all items.
+    return jsonify(items=[item.serialize() for item in results])
 
 
 def create(model: Type[db.Model], required: Sequence[str],
