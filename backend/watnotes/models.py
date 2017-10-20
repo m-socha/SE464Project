@@ -3,13 +3,17 @@
 from datetime import datetime
 
 from sqlalchemy import (
-    Column, DateTime, ForeignKey, Integer, LargeBinary, String
+    Column, DateTime, Float, ForeignKey, Integer, LargeBinary, String
 )
 from sqlalchemy.orm import validates
 
 from watnotes.database import db
 from watnotes.errors import InvalidAttribute
 from watnotes.formats import is_valid_mime, mime_to_extension
+
+
+# Double-precision floating-point type.
+Double = Float(precision=53)
 
 
 class User(db.Model):
@@ -102,7 +106,7 @@ class Note(db.Model):
 
     id = Column(Integer, primary_key=True)
     notebook_id = Column(Integer, ForeignKey(Notebook.id), nullable=False)
-    index = Column(Integer, nullable=False, unique=True)
+    index = Column(Double, nullable=False)
     format = Column(String, nullable=False)
     data = Column(LargeBinary, nullable=False)
     created_at = Column(DateTime, default=datetime.utcnow)
