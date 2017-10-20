@@ -18,5 +18,14 @@ def get_database_uri(**params):
                       **app.config['DB_CONNECTION'])
 
 
+def is_db_running():
+    """Return true if the database connection is working."""
+    try:
+        db.session.execute('SELECT 1')
+    except Exception:
+        return False
+    return True
+
+
 app.config['SQLALCHEMY_DATABASE_URI'] = get_database_uri()
 db = SQLAlchemy(app)

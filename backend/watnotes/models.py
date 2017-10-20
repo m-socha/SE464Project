@@ -9,6 +9,18 @@ from sqlalchemy import (
 from watnotes.database import db
 
 
+# Mapping from Note formats to bytes->str decoders for serialization.
+INLINE_DECODER = {
+    'text': lambda data: data.decode('utf-8')
+}
+
+# Mapping from Note formats to MIME types.
+MIME_TYPES = {
+    'text': 'text/plain',
+    'png': 'image/png'
+}
+
+
 class User(db.Model):
     """A user of Watnotes."""
 
@@ -93,14 +105,23 @@ class Note(db.Model):
     notebook = db.relationship(
         'Notebook', backref=db.backref('notes', lazy=True))
 
+    def mime_type(self):
+        """Return the MIME type of the note's data."""
+        return MIME_TYPES[self.format]
+
     def serialize(self):
-        return {
+        result = {
             'id': self.id,
             'notebook_id': self.notebook_id,
             'index': self.index,
-            'format': self.format,
-            'data': self.data
+            'format': self.format
         }
+
+        decode = INLINE_DECODER.get(self.format)
+        if decode:
+            result['data'] = decode(self.data)
+
+        return result
 
     def __repr__(self):
         return "<Note #{} u#{} nb#{}>".format(

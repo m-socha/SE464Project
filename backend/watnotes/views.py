@@ -5,7 +5,7 @@ from watnotes.crud_helpers import create, delete, get, paginate, update
 from watnotes.database import db
 from watnotes.models import *
 
-from flask import request
+from flask import abort, make_response, request
 
 
 @app.route('/')
@@ -84,6 +84,16 @@ def notes_id(id):
         return update(Note, id, ['index', 'data'])
     elif request.method == 'DELETE':
         return delete(Note, id)
+
+
+@app.route('/notes/<int:id>.<format>', methods=['GET'])
+def notes_id_format(id, format):
+    note = Note.query.get_or_404(id)
+    if format != note.format:
+        abort(404)
+    response = make_response(note.data)
+    response.headers['Content-Type'] = note.mime_type()
+    return response
 
 
 @app.route('/notes/<int:note_id>/comments', methods=['GET', 'POST'])

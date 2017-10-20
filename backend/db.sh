@@ -5,8 +5,10 @@ set -eufo pipefail
 pg_dir=database
 pg_log=postgres.log
 db_name=watnotes
-init_db_script=./init_db.py
 config_path=instance/application.cfg
+
+py_init_db=init_db.py
+py_gen_fake=fake_data.py
 
 cmd=
 verbose=0
@@ -29,6 +31,7 @@ usage()  {
     echo "  start   Start postgres"
     echo "  stop    Stop postgres"
     echo "  psql    Start psql session"
+    echo "  fake    Generate fake data"
     echo
     echo "Options:"
     echo "  -v      Verbose output"
@@ -84,8 +87,8 @@ create_db() {
         echo -e "DB_USER = '$(whoami)'\nDB_PASSWORD = ''" > "$config_path"
     fi
 
-    say "Running $init_db_script"
-    if ! run "$init_db_script"; then
+    say "Running $py_init_db"
+    if ! run python3 "$py_init_db"; then
         die "Failed to initialize database"
     fi
 
@@ -140,12 +143,23 @@ psql_db() {
     fi
 }
 
+fake_db() {
+    if ! pg_running; then
+        start_db
+    fi
+
+    say "Running $py_gen_fake"
+    if ! run python3 "$py_gen_fake"; then
+        die "Failed to generate fake data"
+    fi
+}
+
 parse_args() {
     while (( $# )); do
         case "$1" in
             -h|--help) usage 0 ;;
             -v|--verbose) verbose=1 ;;
-            create|drop|start|stop|psql)
+            create|drop|start|stop|psql|fake)
                 [[ -n "$cmd" ]] && usage 1 ;
                 cmd=$1 ;;
             *) usage 1 ;;
@@ -164,6 +178,7 @@ main() {
         start) start_db ;;
         stop) stop_db ;;
         psql) psql_db ;;
+        fake) fake_db ;;
         *) usage 1 ;;
     esac
 }
