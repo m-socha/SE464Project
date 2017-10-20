@@ -101,10 +101,10 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == ActivityResult.NOTE_CAMERA_RESULT.getValue()) {
-            handleNoteCameraResult(resultCode);
-        } else if (requestCode == ActivityResult.NOTE_FILE_SELECTION_RESULT.getValue()) {
-            handleNoteFileSelectionResult(resultCode, data.getData());
+        if (requestCode == ActivityResult.NOTE_CAMERA_RESULT.getValue() && resultCode == RESULT_OK) {
+            handleNoteCameraResult();
+        } else if (requestCode == ActivityResult.NOTE_FILE_SELECTION_RESULT.getValue() && resultCode == RESULT_OK) {
+            handleNoteFileSelectionResult(data.getData());
         }
     }
 
@@ -114,22 +114,18 @@ public abstract class BaseActivity extends AppCompatActivity {
         startActivityForResult(intent, ActivityResult.NOTE_FILE_SELECTION_RESULT.getValue());
     }
 
-    private void handleNoteCameraResult(int resultCode) {
-        if (resultCode == RESULT_OK) {
-            selectNoteFile(FileSearchType.IMAGE);
-        }
+    private void handleNoteCameraResult() {
+        selectNoteFile(FileSearchType.IMAGE);
     }
 
-    private void handleNoteFileSelectionResult(int resultCode, Uri uri) {
-        if (resultCode == RESULT_OK) {
-            try {
-                InputStream inputStream = getContentResolver().openInputStream(uri);
-                byte[] fileContents = IOUtil.getBytes(inputStream);
-                String mimeType = getContentResolver().getType(uri);
-                mServiceFragment.uploadNoteFile(1, uri.getPath(), mimeType, fileContents);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+    private void handleNoteFileSelectionResult(Uri uri) {
+        try {
+            InputStream inputStream = getContentResolver().openInputStream(uri);
+            byte[] fileContents = IOUtil.getBytes(inputStream);
+            String mimeType = getContentResolver().getType(uri);
+            mServiceFragment.uploadNoteFile(1, uri.getPath(), mimeType, fileContents);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }
