@@ -9,18 +9,6 @@ from sqlalchemy import (
 from watnotes.database import db
 
 
-# Mapping from Note formats to bytes->str decoders for serialization.
-INLINE_DECODER = {
-    'text': lambda data: data.decode('utf-8')
-}
-
-# Mapping from Note formats to MIME types.
-MIME_TYPES = {
-    'text': 'text/plain',
-    'png': 'image/png'
-}
-
-
 class User(db.Model):
     """A user of Watnotes."""
 
@@ -105,6 +93,37 @@ class Note(db.Model):
     notebook = db.relationship(
         'Notebook', backref=db.backref('notes', lazy=True))
 
+    # Mapping from Note formats to bytes->str encoders.
+    ENCODERS = {
+        'text': lambda data: data.decode('utf-8')
+    }
+
+    # Mapping from Note formats to str->bytes decoders.
+    DECODERS = {
+        'text': lambda string: string.encode('utf-8')
+    }
+
+    # Mapping from Note formats to MIME types.
+    MIME_TYPES = {
+        'text': 'text/plain',
+        'png': 'image/png'
+    }
+
+    def __init__(self, **kwargs):
+        """Create a new Note, optionally with inline data."""
+        format = kwargs['format']
+        data = kwargs.get('data')
+        if data:
+            decode = self.DECODERS.get(format)
+            if not decode:
+                raise Exception("Passed inline data for format without decoder")
+            data = decode(data)
+        else:
+            data = b''
+
+        kwargs['data'] = data
+        super().__init__(**kwargs)
+
     def mime_type(self):
         """Return the MIME type of the note's data."""
         return MIME_TYPES[self.format]
@@ -117,9 +136,9 @@ class Note(db.Model):
             'format': self.format
         }
 
-        decode = INLINE_DECODER.get(self.format)
-        if decode:
-            result['data'] = decode(self.data)
+        encode = self.ENCODERS.get(self.format)
+        if encode:
+            result['data'] = encode(self.data)
 
         return result
 
