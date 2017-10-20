@@ -29,9 +29,9 @@ class NoteBook extends React.Component {
     if (typeof notebook !== 'undefined') {
       pages = notebook.notes.map((page) => {
         switch (page.format) {
-          case 'text':
+          case 'text/plain':
             return <TxtPage key={page.id} page={page} />;
-          case 'png':
+          case 'image/png':
             return <ImagePage key={page.id} page={page} format="png" />;
           case 'image/jpeg':
             return <ImagePage key={page.id} page={page} format="jpg" />;
