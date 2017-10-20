@@ -6,35 +6,31 @@ import {
   Router,
   Route,
   Switch,
+  HashRouter,
 } from 'react-router-dom';
-import createHistory from 'history/createBrowserHistory';
+
 import configureStore from './store';
 import Header from './components/Header';
 import Feed from './containers/Feed';
-import Note from './containers/Note';
+import Note from './containers/NoteBook';
 import NotFound from './components/NotFound';
 // import {AppContainer} from 'react-hot-loader'; // TODO: hot reloading
 
-const store = configureStore({
-  notebooks: {
-    notebooks: [],
-  },
-}); // can pass an initial state
-const history = createHistory();
+const store = configureStore({}); 
 
 const render = () => {
   ReactDOM.render(
     <Provider store={store}>
-      <Router history={history}>
+      <HashRouter>
         <div>
-          <Header />
+          <Header/>
           <Switch>
             <Route exact path="/" component={Feed} />
             <Route path="/notes/:note_id" component={Note} />
             <Route component={NotFound} />
           </Switch>
         </div>
-      </Router>
+      </HashRouter>
     </Provider>,
     document.getElementById('root'),
   );

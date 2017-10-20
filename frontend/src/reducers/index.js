@@ -1,6 +1,11 @@
 import { combineReducers } from 'redux';
-import notebooks from './notebooks';
+
+import fetch from './fetch';
+import feed from './feed';
+import notebook from './notebook';
 
 export default combineReducers({
-  notebooks,
+  fetch,
+  feed,
+  notebook,
 });

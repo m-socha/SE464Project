@@ -1,5 +1,7 @@
 import axios from 'axios';
-import { REQUEST_NOTEBOOK, RECEIVE_NOTEBOOK } from '../constants/data';
+
+import {get} from 'services/request';
+import { REQUEST_NOTEBOOK, RECEIVE_NOTEBOOK } from 'constants/data';
 
 function requestNotebook(notebookID) {
   return {
@@ -18,12 +20,8 @@ function receiveNotebook(notebookID, json) {
 export default function fetchNotebook(notebookID) {
   return (dispatch) => {
     dispatch(requestNotebook(notebookID));
-    axios.get(`/notebooks/${notebookID}/notes`)
-      .then((response) => {
-        dispatch(receiveNotebook(notebookID, response));
-      });
-    // .catch(function (error) { // TODO: Add error handling
-    //   console.log(error);
-    // });
+    get(`/notebooks/${notebookID}/notes`, null, (response) => {
+      dispatch(receiveNotebook(notebookID, response));
+    })
   };
 }
