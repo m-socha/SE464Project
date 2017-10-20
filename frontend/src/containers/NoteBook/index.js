@@ -1,8 +1,10 @@
 import React from 'react';
 import { connect } from 'react-redux';
+
+import {getNotebook} from 'selectors/notebook';
+
 import TxtPage from '../../components/TxtPage';
 import PNGPage from '../../components/PNGPage';
-
 
 import * as actionCreator from 'actions/notebook';
 
@@ -12,6 +14,11 @@ class NoteBook extends React.Component {
   }
 
   render() {
+    if (this.props.isFetching != true) {
+
+    }
+
+    let notebook = this.props.getNotebook(this.props.match.params.note_id);
     return (
       <div className="container">
         <PNGPage data="https://www.w3schools.com/images/w3schools_green.jpg"/>
@@ -25,6 +32,7 @@ class NoteBook extends React.Component {
 function mapStateToProps(state) {
   return {
     isFetching: state.fetch['feed'],
+    getNotebook: getNotebook.bind(null, state)
   };
 }
 
