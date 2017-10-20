@@ -1,10 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
-
+import { Preloader } from 'react-materialize';
 import {getNotebook} from 'selectors/notebook';
+import styles from './notebook.css';
 
-import TxtPage from '../../components/TxtPage';
-import ImagePage from '../../components/ImagePage';
+import TxtPage from 'components/TxtPage';
+import ImagePage from 'components/ImagePage';
 
 import * as actionCreator from 'actions/notebook';
 
@@ -14,8 +15,12 @@ class NoteBook extends React.Component {
   }
 
   render() {
-    if (this.props.isFetching != true) {
-
+    if (this.props.isFetching) {
+      return (
+        <div className={styles.center}>
+          <Preloader size="big"/>;
+        </div>
+      );
     }
 
     const notebook = this.props.getNotebook(this.props.match.params.note_id);
