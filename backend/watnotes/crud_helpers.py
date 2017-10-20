@@ -47,17 +47,43 @@ def paginate(model: Type[db.Model], order: str, **provided) -> str:
 def create(model: Type[db.Model], required: Sequence[str],
            permitted: Sequence[str]=None, **provided) -> str:
     """Create a new resource item."""
+    if request.args.get('form') == '1':
+        return create_form(model, required, permitted, **provided)
+
     json = get_json()
     fields = {}
     for f in required:
         if f in json:
             fields[f] = json[f]
         else:
-            pass
+            abort(404)
     if permitted:
         for f in permitted:
             if f in json:
                 fields[f] = json[f]
+    fields.update(provided)
+
+    object = model(**fields)
+    db.session.add(object)
+    db.session.commit()
+    return jsonify(object.serialize())
+
+
+def create_form(model: Type[db.Model], required: Sequence[str],
+                permitted: Sequence[str]=None, **provided) -> str:
+    """Create a new resource item from form data."""
+    fields = {}
+    for f in required:
+        if f in request.form:
+            fields[f] = request.form[f]
+        elif f in request.files:
+            fields[f] = request.files[f].read()
+    if permitted:
+        for f in permitted:
+            if f in request.form:
+                fields[f] = request.form[f]
+            elif f in request.files:
+                fields[f] = request.files[f].read()
     fields.update(provided)
 
     object = model(**fields)

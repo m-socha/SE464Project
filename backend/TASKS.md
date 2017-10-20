@@ -4,3 +4,4 @@
 - [x] Set up PostgreSQL
 - [ ] Set up Elasticsearch
 - [x] Implement basic API
+- [ ] More descriptive error messages on 404

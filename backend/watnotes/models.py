@@ -113,20 +113,20 @@ class Note(db.Model):
         """Create a new Note, optionally with inline data."""
         format = kwargs['format']
         data = kwargs.get('data')
-        if data:
+        if data is None:
+            data = b''
+        elif isinstance(data, str):
             decode = self.DECODERS.get(format)
             if not decode:
                 raise Exception("Passed inline data for format without decoder")
             data = decode(data)
-        else:
-            data = b''
 
         kwargs['data'] = data
         super().__init__(**kwargs)
 
     def mime_type(self):
         """Return the MIME type of the note's data."""
-        return MIME_TYPES[self.format]
+        return self.MIME_TYPES[self.format]
 
     def serialize(self):
         result = {
