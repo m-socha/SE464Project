@@ -3,6 +3,7 @@
 from typing import Mapping, Sequence, Type
 
 from flask import abort, jsonify, request
+from sqlalchemy.exc import IntegrityError
 
 from watnotes.database import db
 
@@ -30,6 +31,7 @@ def get_or_404(model: Type[db.Model], id: int):
     object = model.query.get(id)
     if not object:
         abort(404, "{} with ID {} does not exist".format(model.__name__, id))
+    return object
 
 
 def paginate(model: Type[db.Model], order: str, **provided) -> str:
@@ -71,7 +73,10 @@ def create(model: Type[db.Model], required: Sequence[str],
 
     object = model(**fields)
     db.session.add(object)
-    db.session.commit()
+    try:
+        db.session.commit()
+    except IntegrityError as e:
+        abort(404, "Integrity error: {}".format(e))
     return jsonify(object.serialize())
 
 
@@ -94,7 +99,10 @@ def create_form(model: Type[db.Model], required: Sequence[str],
 
     object = model(**fields)
     db.session.add(object)
-    db.session.commit()
+    try:
+        db.session.commit()
+    except IntegrityError as e:
+        abort(404, "Integrity error: {}".format(e))
     return jsonify(object.serialize())
 
 
