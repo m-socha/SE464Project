@@ -1,28 +1,35 @@
 import axios from 'axios';
 
-import { REQUEST_NOTEBOOK, RECEIVE_NOTEBOOK } from '../constants/data';
+import {get} from 'services/request';
+import { REQUEST_NOTEBOOK, RECEIVE_NOTEBOOK } from 'constants/data';
 
-function requestNotebook() {
+function requestNotebook(notebookID) {
   return {
     type: REQUEST_NOTEBOOK,
-  }
+    notebookID,
+    source: 'notebook',
+  };
 }
 
-function receiveNotebook(notebookID, notebook) {
+function receiveNotebook(notebookID, json) {
   return {
     type: RECEIVE_NOTEBOOK,
-    source: 'notebook',
     notebookID,
-    notebook
-  }
+    notebook: {
+      notes: json.items,
+      page: json.page,
+      total_pages: json.total_pages,
+      total_results: json.total_results,
+    },
+    source: 'notebook',
+  };
 }
 
-export function fetchNotebook(userID, notebookID) {
+export function fetchNotebook(notebookID) {
   return (dispatch) => {
-    dispatch(requestNotebook());
-    axios.get(`/users/${userID}/notebooks/${notebookID}/notes`)
-      .then((response) => {
-        dispatch(receiveNotebook(notebookID, response));
-      });
+    dispatch(requestNotebook(notebookID));
+    get(`/notebooks/${notebookID}/notes`, { page: 1, per_page: 20 }, (response) => {
+      dispatch(receiveNotebook(notebookID, response));
+    });
   };
 }

@@ -43,6 +43,6 @@ function mapStateToProps(state) {
     feed: state.feed,
     isFetching: state.fetch['feed'],
   }
-};
+}
 
 export default connect(mapStateToProps, actionCreator)(Feed);
