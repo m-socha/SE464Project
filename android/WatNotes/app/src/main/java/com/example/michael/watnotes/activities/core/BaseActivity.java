@@ -1,8 +1,19 @@
 package com.example.michael.watnotes.activities.core;
 
 import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+
+import com.example.michael.watnotes.util.IOUtil;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * Created by michael on 10/1/17.
@@ -26,7 +37,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     public enum FileSearchType {
-        GENERAL("file/*"),
+        GENERAL("*/*"),
         IMAGE("image/*");
 
         private String mSearchType;
@@ -93,7 +104,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         if (requestCode == ActivityResult.NOTE_CAMERA_RESULT.getValue()) {
             handleNoteCameraResult(resultCode);
         } else if (requestCode == ActivityResult.NOTE_FILE_SELECTION_RESULT.getValue()) {
-            handleNoteFileSelectionResult(resultCode);
+            handleNoteFileSelectionResult(resultCode, data.getData());
         }
     }
 
@@ -109,9 +120,16 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
     }
 
-    private void handleNoteFileSelectionResult(int resultCode) {
+    private void handleNoteFileSelectionResult(int resultCode, Uri uri) {
         if (resultCode == RESULT_OK) {
-
+            try {
+                InputStream inputStream = getContentResolver().openInputStream(uri);
+                byte[] fileContents = IOUtil.getBytes(inputStream);
+                String mimeType = getContentResolver().getType(uri);
+                mServiceFragment.uploadNoteFile(1, uri.getPath(), mimeType, fileContents);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 }
