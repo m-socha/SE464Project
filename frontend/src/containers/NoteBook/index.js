@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import {getNotebook} from 'selectors/notebook';
 
 import TxtPage from '../../components/TxtPage';
-import PNGPage from '../../components/PNGPage';
+import ImagePage from '../../components/ImagePage';
 
 import * as actionCreator from 'actions/notebook';
 
@@ -27,9 +27,11 @@ class NoteBook extends React.Component {
           case 'text':
             return <TxtPage key={page.id} page={page} />;
           case 'png':
-            return <PNGPage key={page.id} page={page} />;
+            return <ImagePage key={page.id} page={page} format="png" />;
+          case 'image/jpeg':
+            return <ImagePage key={page.id} page={page} format="jpg" />;
           default:
-            return <TxtPage key={page.id} page={page} />;
+            return null;
         }
       });
     }

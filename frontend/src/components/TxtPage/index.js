@@ -4,7 +4,7 @@ import Page from '../Page';
 const TxtPage = (props) => {
   return (
     <Page>
-      { props.data }
+      { props.page.data }
     </Page>
   );
 };
