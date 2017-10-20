@@ -18,7 +18,7 @@ public abstract class MultiApiService<T> extends ApiService {
         request.startRequest();
     }
 
-    public void cancelRequest(T requestId) {
+    private void cancelRequest(T requestId) {
         if (mActiveRequests.get(requestId) != null) {
             mActiveRequests.remove(requestId);
         }

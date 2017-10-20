@@ -5,7 +5,12 @@ from watnotes.crud_helpers import create, delete, get, paginate, update
 from watnotes.database import db
 from watnotes.models import *
 
-from flask import abort, make_response, request
+from flask import abort, jsonify, make_response, request
+
+
+@app.errorhandler(404)
+def page_not_found(e):
+    return jsonify(error=404, message=str(e)), 404
 
 
 @app.route('/')

@@ -15,7 +15,7 @@ public abstract class SingleApiService extends ApiService {
         mRequest.startRequest();
     }
 
-    public void cancelRequest() {
+    private void cancelRequest() {
         if (mRequest != null) {
             mRequest.cancelRequest();
         }

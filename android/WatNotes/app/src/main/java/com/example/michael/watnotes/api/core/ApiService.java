@@ -15,6 +15,5 @@ public abstract class ApiService {
     }
 
     protected abstract void cancelAllRequests();
-    protected abstract String endPoint();
 
 }
