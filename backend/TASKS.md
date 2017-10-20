@@ -7,4 +7,4 @@
 - [x] More descriptive error messages on 404
 - [x] Handle JSON vs form vs files generically
 - [ ] More descriptive error messages on unique failure
-- [ ] Basic sanity checks (max length, etc.)
+- [ ] Basic validation in models (max length, valid format, etc.)

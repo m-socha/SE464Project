@@ -6,15 +6,7 @@ from flask import abort, jsonify, make_response, request
 from sqlalchemy.exc import IntegrityError
 
 from watnotes.database import db
-
-
-# Mapping from extensions to MIME types.
-MIME_TYPES = {
-    'txt': 'text/plain',
-    'png': 'image/png',
-    'jpg': 'image/jpeg',
-    'jpeg': 'image/jpeg'
-}
+from watnotes.formats import extension_to_mime
 
 
 def get_int(name: str) -> int:
@@ -132,7 +124,7 @@ def get(model: Type[db.Model], id: int) -> str:
 
 def download(model: Type[db.Model], id: int, extension: str):
     """Download a resource."""
-    mime_type = MIME_TYPES.get(extension)
+    mime_type = extension_to_mime(extension)
     if mime_type is None:
         abort(404, "Unrecognized extension '{}'".format(extension))
 

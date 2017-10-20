@@ -5,8 +5,10 @@ from datetime import datetime
 from sqlalchemy import (
     Column, DateTime, ForeignKey, Integer, LargeBinary, String
 )
+from sqlalchemy.orm import validates
 
 from watnotes.database import db
+from watnotes.formats import is_valid_mime, mime_to_extension
 
 
 class User(db.Model):
@@ -118,6 +120,11 @@ class Note(db.Model):
         kwargs['data'] = data
         super().__init__(**kwargs)
 
+    @validates('format')
+    def validate_format(self, key, format):
+        assert is_valid_mime(format)
+        return format
+
     def get_data(self, mime_type):
         """Return the note's data and a filename for it."""
         if mime_type != self.format:
@@ -131,7 +138,8 @@ class Note(db.Model):
             'id': self.id,
             'notebook_id': self.notebook_id,
             'index': self.index,
-            'format': self.format
+            'format': self.format,
+            'extension': mime_to_extension(self.format)
         }
 
         encode = self.ENCODERS.get(self.format)
