@@ -1,7 +1,5 @@
 """This module defines the data models for Watnotes."""
 
-from datetime import datetime
-
 from sqlalchemy import (
     Column, DateTime, Float, ForeignKey, Integer, LargeBinary, String
 )
@@ -9,14 +7,46 @@ from sqlalchemy.orm import validates
 
 from watnotes.database import db
 from watnotes.errors import InvalidAttribute
-from watnotes.formats import is_valid_mime, mime_to_extension
+from watnotes.formats import is_valid_mime, mime_is_image, mime_to_extension
+from watnotes.image import process_image_data
 
 
 # Double-precision floating-point type.
 Double = Float(precision=53)
 
 
-class User(db.Model):
+class BaseModel(db.Model):
+    """Base class for all models."""
+
+    __abstract__ = True
+
+    created_at = Column(DateTime, default=db.func.now())
+    updated_at = Column(DateTime, default=db.func.now(), onupdate=db.func.now())
+
+    @classmethod
+    def relations(cls):
+        """Return a mapping from names to relation objects.
+
+        This maps singular names to relation objects that are on the "one" side
+        of a one-to-many relationship. For example, if there is one User for
+        each Comment, then the Comment relations method should map 'user' to
+        that User relation object designating a unique user, and the User
+        relations method should not mention Comment at all.
+        """
+        return {}
+
+    def before_commit(self):
+        """Hook that is run before insert and before update."""
+        pass
+
+
+@db.event.listens_for(BaseModel, ('before_insert'), propagate=True)
+@db.event.listens_for(BaseModel, ('before_update'), propagate=True)
+def before_commit(mapper, connect, target):
+    target.before_commit()
+
+
+class User(BaseModel):
     """A user of Watnotes."""
 
     __tablename__ = 'users'
@@ -24,11 +54,6 @@ class User(db.Model):
     id = Column(Integer, primary_key=True)
     email = Column(String, nullable=False, unique=True)
     name = Column(String, nullable=False)
-    created_at = Column(DateTime, default=datetime.utcnow)
-
-    @classmethod
-    def relations(cls):
-        return {}
 
     def serialize(self, preloads=None):
         return {
@@ -41,7 +66,7 @@ class User(db.Model):
         return "<User #{} {}>".format(self.id, self.email)
 
 
-class Course(db.Model):
+class Course(BaseModel):
     """A course that a user takes."""
 
     __tablename__ = 'courses'
@@ -49,11 +74,6 @@ class Course(db.Model):
     id = Column(Integer, primary_key=True)
     code = Column(String, nullable=False, unique=True)
     title = Column(String, nullable=False)
-    created_at = Column(DateTime, default=datetime.utcnow)
-
-    @classmethod
-    def relations(cls):
-        return {}
 
     def serialize(self, preloads=None):
         return {
@@ -66,7 +86,7 @@ class Course(db.Model):
         return "<Course #{} {}>".format(self.id, self.code)
 
 
-class Notebook(db.Model):
+class Notebook(BaseModel):
     """A collection of notes made by a user for a course."""
 
     __tablename__ = 'notebooks'
@@ -74,7 +94,6 @@ class Notebook(db.Model):
     id = Column(Integer, primary_key=True)
     user_id = Column(Integer, ForeignKey(User.id), nullable=False)
     course_id = Column(Integer, ForeignKey(Course.id), nullable=False)
-    created_at = Column(DateTime, default=datetime.utcnow)
 
     user = db.relationship('User', backref=db.backref('notebooks'))
     course = db.relationship('Course', backref=db.backref('notebooks'))
@@ -99,7 +118,7 @@ class Notebook(db.Model):
             self.id, self.user_id, self.course_id)
 
 
-class Note(db.Model):
+class Note(BaseModel):
     """A chunk of material within a notebook."""
 
     __tablename__ = 'notes'
@@ -109,7 +128,6 @@ class Note(db.Model):
     index = Column(Double, nullable=False)
     format = Column(String, nullable=False)
     data = Column(LargeBinary, nullable=False)
-    created_at = Column(DateTime, default=datetime.utcnow)
 
     notebook = db.relationship('Notebook', backref=db.backref('notes'))
 
@@ -123,30 +141,36 @@ class Note(db.Model):
         'text/plain': lambda string: string.encode('utf-8')
     }
 
-    def __init__(self, **kwargs):
-        """Create a new Note, optionally with inline data."""
-        format = kwargs['format']
-        data = kwargs.get('data')
-        if data is None:
-            data = b''
-        elif isinstance(data, str) and is_valid_mime(format):
-            decode = self.DECODERS.get(format)
-            if not decode:
-                raise Exception("Passed inline data for format without decoder")
-            data = decode(data)
-
-        kwargs['data'] = data
-        super().__init__(**kwargs)
-
     @classmethod
     def relations(cls):
         return {'notebook': cls.notebook}
 
-    @validates('format')
-    def validate_format(self, key, format):
-        if not is_valid_mime(format):
-            raise InvalidAttribute(key, format)
-        return format
+    @validates('format', 'data')
+    def validate_format(self, key, value):
+        error = None
+        if key == 'format':
+            if not is_valid_mime(value):
+                error = "Unrecognized MIME type"
+        elif key == 'data':
+            if isinstance(value, str):
+                decode = self.DECODERS.get(self.format)
+                if not decode:
+                    error = "No decoder found"
+                else:
+                    try:
+                        value = decode(value)
+                    except ValueError as e:
+                        error = "Failed to decode"
+            elif not isinstance(value, bytes):
+                error = "Expected bytes"
+
+        if error is not None:
+            raise InvalidAttribute(key, value, error)
+        return value
+
+    def before_commit(self):
+        if len(self.data) > 0 and mime_is_image(self.format):
+            self.data, self.format = process_image_data(self.data, self.format)
 
     def get_data(self, mime_type):
         """Return the note's data and a filename for it."""
@@ -176,11 +200,11 @@ class Note(db.Model):
         return result
 
     def __repr__(self):
-        return "<Note #{} u#{} nb#{}>".format(
-            self.id, self.user_id, self.notebook_id)
+        return "<Note #{} nb#{} fmt=\"{}\">".format(
+            self.id, self.notebook_id, self.format)
 
 
-class Comment(db.Model):
+class Comment(BaseModel):
     """A comment made by a user on a notebook."""
 
     __tablename__ = 'comments'
@@ -189,7 +213,6 @@ class Comment(db.Model):
     user_id = Column(Integer, ForeignKey(User.id), nullable=False)
     note_id = Column(Integer, ForeignKey(Note.id), nullable=False)
     content = Column(String, nullable=False)
-    created_at = Column(DateTime, default=datetime.utcnow)
 
     user = db.relationship('User', backref=db.backref('comments'))
     note = db.relationship('Note', backref=db.backref('comments'))
