@@ -30,12 +30,12 @@ def get_int(name: str) -> int:
 
 def is_form() -> bool:
     """Return true if the client specified the input using form data."""
-    return request.args.get('form') == 1
+    return request.args.get('form') == '1'
 
 
 def is_attachment() -> bool:
     """Return true if the client requested to download as an attachment."""
-    return request.args.get('dl') == 1
+    return request.args.get('dl') == '1'
 
 
 def get_json():
