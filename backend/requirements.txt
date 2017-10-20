@@ -1,5 +1,6 @@
 Faker ~= 0.7
 Flask ~= 0.12
+Flask-Cors ~= 3.0
 Flask-SQLAlchemy ~= 1.0
 SQLAlchemy ~= 1.1
 psycopg2 ~= 2.7
