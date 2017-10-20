@@ -18,12 +18,25 @@ class NoteBook extends React.Component {
 
     }
 
-    let notebook = this.props.getNotebook(this.props.match.params.note_id);
+    const notebook = this.props.getNotebook(this.props.match.params.note_id);
+    let pages = <div />;
+
+    if (typeof notebook !== 'undefined') {
+      pages = notebook.notes.map((page) => {
+        switch (page.format) {
+          case 'text':
+            return <TxtPage key={page.id} page={page} />;
+          case 'png':
+            return <PNGPage key={page.id} page={page} />;
+          default:
+            return <TxtPage key={page.id} page={page} />;
+        }
+      });
+    }
+
     return (
       <div className="container">
-        <PNGPage data="https://www.w3schools.com/images/w3schools_green.jpg"/>
-        <PNGPage data="https://www.w3schools.com/images/w3schools_green.jpg"/>
-        <PNGPage data="https://www.w3schools.com/images/w3schools_green.jpg"/>
+        { pages }
       </div>
     );
   }
@@ -31,7 +44,7 @@ class NoteBook extends React.Component {
 
 function mapStateToProps(state) {
   return {
-    isFetching: state.fetch['feed'],
+    isFetching: state.fetch['notebook'],
     getNotebook: getNotebook.bind(null, state)
   };
 }
