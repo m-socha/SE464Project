@@ -19,7 +19,7 @@ function receiveFeed(data) {
 export function fetchFeed(userID, page) {
   return (dispatch) => {
     dispatch(requestFeed());
-    get(`/users/${userID}/notebooks`, ({page, per_page: 20}), (data, err) => {
+    get(`/users/${userID}/notebooks`, ({page, per_page: 20, load: 'user,course'}), (data, err) => {
       if (err) {
         console.log(`Error while fetching feed for ${userID} - ${err}`);
       }

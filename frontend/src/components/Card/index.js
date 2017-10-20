@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { Card, Button } from 'react-materialize';
 import styles from './card.css';
 
-const NoteCard = ({ id, user_id, course_id }) => {
+const NoteCard = ({ id, course, user }) => {
   const cardActions = [
     <Link key={id} to={`/notes/${id}`}>
       <Button className={`${styles.floatRight} red`} waves="light" icon="arrow_forward" />
@@ -12,17 +12,17 @@ const NoteCard = ({ id, user_id, course_id }) => {
 
   return (
 		<Card className='small'
-      title='HardCodedTitle'
+      title={course.title}
       actions={cardActions}>
-		  { user_id &&
+		  { user &&
         <div>
-          Author: {user_id}
+          Author: {user.name}
         </div>
       }
 
-      { course_id &&
+      { course &&
         <div>
-          Course: {course_id}
+          Course: {course.code}
         </div>
       }
 		</Card>
