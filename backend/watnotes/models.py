@@ -8,6 +8,7 @@ from sqlalchemy import (
 from sqlalchemy.orm import validates
 
 from watnotes.database import db
+from watnotes.errors import InvalidAttribute
 from watnotes.formats import is_valid_mime, mime_to_extension
 
 
@@ -111,7 +112,7 @@ class Note(db.Model):
         data = kwargs.get('data')
         if data is None:
             data = b''
-        elif isinstance(data, str):
+        elif isinstance(data, str) and is_valid_mime(format):
             decode = self.DECODERS.get(format)
             if not decode:
                 raise Exception("Passed inline data for format without decoder")
@@ -122,7 +123,8 @@ class Note(db.Model):
 
     @validates('format')
     def validate_format(self, key, format):
-        assert is_valid_mime(format)
+        if not is_valid_mime(format):
+            raise InvalidAttribute(key, format)
         return format
 
     def get_data(self, mime_type):

@@ -6,6 +6,7 @@ from flask import abort, jsonify, make_response, request
 from sqlalchemy.exc import IntegrityError
 
 from watnotes.database import db
+from watnotes.errors import InvalidAttribute
 from watnotes.formats import extension_to_mime
 
 
@@ -108,12 +109,14 @@ def create(model: Type[db.Model], required: Sequence[str],
            permitted: Sequence[str]=None, **provided) -> str:
     """Create a new resource item."""
     fields = get_fields(model.__name__, required, permitted, provided)
-    object = model(**fields)
-    db.session.add(object)
     try:
+        object = model(**fields)
+        db.session.add(object)
         db.session.commit()
     except IntegrityError as e:
         abort(404, "Integrity error: {}".format(e))
+    except InvalidAttribute as e:
+        abort(404, e)
     return jsonify(object.serialize())
 
 
@@ -147,9 +150,12 @@ def update(model: Type[db.Model], id: int, permitted: Sequence[str]) -> str:
     """Update an existing resource item."""
     fields = get_fields(model.__name__, permitted=permitted)
     object = get_or_404(model, id)
-    for k, v in fields:
-        object[k] = v
-    db.session.commit()
+    try:
+        for k, v in fields:
+            object[k] = v
+        db.session.commit()
+    except InvalidAttribute as e:
+        abort(404, e)
     return 'OK'
 
 
