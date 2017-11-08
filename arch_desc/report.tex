@@ -32,8 +32,8 @@
   \subsection{Overview}
     WatNotes is a platform designed to allow students at the University of Waterloo to effectively upload, share
     and collaboratively edit notes. WatNotes has a mobile client used primarily for uploading notes, searching for
-    other relevant notes, and other activities that tend to require little user commitment and have short session times.
-    A website it also supported for activities that require greater user commitment and focus, such as studying and
+    other relevant notes, and other activities that tend to have short session times.
+    A website is also supported for activities that require greater user commitment and focus, such as studying and
     collaboratively editing notes. \\
 
     Once the supported platforms for WatNotes were finalized, development was divided into three separate teams, namely
@@ -43,9 +43,7 @@
     developing and deploying the Watnotes website. \\
 
     In this section, WatNotes' architecture is analyzed in a way that treats the backend, mobile client, and website of the system
-    somewhat as black boxes (low level of detail). The subsequent sections expand upon each of these platforms in greater detail. \\
-
-    A high-level component diagram where each platform is described as a separate component is described below. \\
+    somewhat as black boxes (low level of detail). The subsequent sections expand upon each of these platforms in greater detail. A high-level component diagram where each platform is described as a separate component is described below. \\
 
     From a high-level overview where each of WatNotes' platforms are treated as separate components, the main architectural styles applied are
     a client-server architecture and a blackboard-based shared memory architecture. A client-server architecture is built with Watnotes' mobile
@@ -112,9 +110,9 @@
     The Android application is written primarily in Java, which is the most commonly used
     language in Android development. Alternatives such as Kotlin seemed somewhat immature, and
     Java meets to requirements of being object-oriented and being well known by members of
-    the group, so it was selected as the main implementation language. \\
+    the group. \\
 
-    UI layouts are primarily built with using XML files, which generate layout resources
+    UI layouts are primarily built using XML files, which generate layout resources
     that can be inflated at runtime. Placing the majority of UI logic in XML files helps
     separate program logic from UI construction, and XML is also known for being fairly easy to read.
     To avoid excessive duplication in UI construction, common styles, colors and dimens are
@@ -194,17 +192,17 @@
     an Android app, providing a user with a UI, resource management and handling certain OS events. Much of this logic is common to all activities, and
     hence is abstracted into a common BaseActivity class. BaseActivity is an abstract class that follows a template design pattern, with functionality
     such as getting the UI layout container (getLayoutId) and initializing the UI once it is loaded (setupUi) implemented by concrete subclasses. DrawerActivity
-    is an abstract subclass that extends from BaseActivity, and implements a side navigation drawer - most classes in WatNotes inherit from DrawerActivity. \\
+    is an abstract subclass that extends from BaseActivity, and implements a side navigation drawer - most activity classes in WatNotes inherit from DrawerActivity. \\
 
     Each activity must implement the createUiFragment and createServiceFragment methods. UiFragments implement an activity's UI (e.g. loading and
     initializing layout resources), while ServiceFragments are responsible for handling an activity's networking by providing an interface
     to service instances (adapter design patter). The BaseActivity attaches both of these fragments to the activity, where they can have independent sub-lifecycles
-    within the activity. UiFragment and ServiceFragment are both abstract base classes, with concrete UiFragment and ServiceFragment associated with each
+    within the activity. UiFragment and ServiceFragment are both abstract base classes, with concrete UiFragment and ServiceFragment instances associated with each
     concrete class. \\
 
     Another major design decision concerns how the app's networking layer is organized. An abstract base class called ApiRequest defined from which the abstract
-    SingleApiService and MultiApiService classes extend. SingleApiService classes are services for which there is never expected to be more than one active request. Thus, whenever
-    a service is started through a call to startRequest(), any existing service is canceled. On the other hand, MultiApiServices may have multiple requests active,
+    SingleApiService and MultiApiService classes extend. SingleApiService classes are services for which there are never expected to be more than one active request. Thus, whenever
+    a service is started through a call to startRequest(), any pre-existing service is canceled. On the other hand, MultiApiServices may have multiple requests active,
     and a request is only canceled in calls to startRequest() if it shares the requestId of the new request. Concrete ApiRequest classes extend from either
     SingleApiService or MultiApiService classes, following a template design pattern. \\
 
