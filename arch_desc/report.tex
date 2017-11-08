@@ -109,6 +109,23 @@
     discoverability, since search is a primary way to discover notes.
 
   \subsection{Android Application}
+    The Android application is written primarily in Java, which is the most commonly used
+    language in Android development. Alternatives such as Kotlin seemed somewhat immature, and
+    Java meets to requirements of being object-oriented and being well known by members of
+    the group, so it was selected as the main implementation language. \\
+
+    UI layouts are primarily built with using XML files, which generate layout resources
+    that can be inflated at runtime. Placing the majority of UI logic in XML files helps
+    separate program logic from UI construction, and XML is also known for being fairly easy to read.
+    To avoid excessive duplication in UI construction, common styles, colors and dimens are
+    stored in their respective resource files (styles.xml, colors.xml, dimens.xml). \\
+
+    Since the backend communicates through a JSON-based REST API, two key components of the
+    Android application are an HTTP client and a JSON parser. For the HTTP client, Square's
+    OkHttp is used, and a thin wrapper is formed around its instances in the ApiRequest class.
+    For a JSON parser, GSON is used. Both of these libraries are loaded as external dependencies
+    in the application's gradle file. \\
+
   \subsection{Website}
 
   The front-end architecture consists of mainly three components: Login, Feed and Note. As the name suggested, the login component is responsible for authenticating the user via acquiring JWT from the web server. Feed Component handles all the main actions which users can perform in our application. The actions include discovering the user customized notes and searching through specific notes via tagging. Finally, note component is where users can view and edit the published notes and collaborate with other users. \\
