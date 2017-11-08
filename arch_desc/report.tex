@@ -59,11 +59,54 @@
     \end{figure}
 
   \subsection{Backend}
-    Some writing goes here.
+    The backend of WatNotes comprises the core application logic and persistent
+    data storage. Through the Backend Server, it provides the ``Application
+    Services'' interface to the rest of WatNotes, nameley the web application
+    and the Android application. There are two main subsystems that sit
+    underneath the Backend Server in the layered architecture: the Data Storage
+    module and the Search System. For production, these three subsystems are
+    deployed together on a Heroku dyno. All these components are shown in the
+    component diagram below.
+
     \begin{figure}[H]
       \includegraphics[width=\textwidth]{assets/backend-component.pdf}
-      \caption{Component diagram showing the back end of WatNotes}
+      \caption{Component diagram showing the backend of WatNotes}
     \end{figure}
+
+    The Backend Server is a Python application that uses the Flask web
+    framework. It handles requests from clients, dispatches them according to
+    URL routing rules defined in the HTTP Router component, and then accesses
+    the database to produce results. In production, the Backend Server uses the
+    Gunicorn HTTP server. This serves the nonfunctional property of efficiency,
+    as the Flask HTTP server is inefficient and only suitable for development.
+    The Backend Server also uses the Pillow library for image processing. This
+    is also useful for efficiency, since it allows the server to resize large
+    images to more suitable sizes, making load times faster.\\
+
+    The Data Storage subsystem consists of two parts: SQLAlchemy, a Python
+    Objection-Relational Mapping (ORM) library; and PostgreSQL, a popular open
+    source Relational Database Management System (RDBMS). The data that WatNotes
+    stores is highly relational, so it made most sense to use an RDBMS.
+    Furthermore, PostgreSQL provides the nonfunctional property of dependability
+    via support for ACID-compliant transactions (atomic, consistent, isolated,
+    durable). This means we can depend on the WatNotes backend to never get into
+    an inconsistent state, nor to corrupt data as a result of a system outage.\\
+
+    Instead of specifying SQL tables and queries directly, the Backend Server
+    creates and manipulates Python objects (called ``Models''), and relies on
+    SQLAlchemy to map these to the SQL domain. This serves the nonfunctional
+    property of evolvability, since it makes it very easy to make changes at the
+    data representation level with migrations and changes to the models to store
+    or calculate new data.\\
+
+    The Search System provides an efficient means of searching globally across
+    all notes for specific keywords or fragments of text. It comprises a Python
+    client, used by the Backend Server via procedure calls, and the Search
+    Engine. The Search Engine is an instance of Elasticsearch running on a
+    different port on the same machine. The redundant storage of data in both
+    PostgreSQL and Elasticsearch is a small price to pay for the incredible
+    speed of Elasticsearch. This also helps provides the functional property of
+    discoverability, since search is a primary way to discover notes.
 
   \subsection{Android Application}
   \subsection{Website}
@@ -75,8 +118,16 @@
   \subsection{Backend}
     Some more writing here.
     \begin{figure}[H]
+<<<<<<< HEAD
       \includegraphics[width=\textwidth]{assets/backend-class.pdf}
       \caption{Class diagram diagram of the Python back end server of WatNotes}
+||||||| merged common ancestors
+      \includegraphics{assets/backend-class.pdf}
+      \caption{Class diagram diagram of the Python back end server of WatNotes}
+=======
+      \includegraphics{assets/backend-class.pdf}
+      \caption{Class diagram diagram of the Python backend server of WatNotes}
+>>>>>>> Text for back end architecture
     \end{figure}
 
   \subsection{Android Application}
