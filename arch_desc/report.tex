@@ -78,10 +78,10 @@
     URL routing rules defined in the HTTP Router component, and then accesses
     the database to produce results. In production, the Backend Server uses the
     Gunicorn HTTP server. This serves the nonfunctional property of efficiency,
-    as the Flask HTTP server is inefficient and only suitable for development.
-    The Backend Server also uses the Pillow library for image processing. This
-    is also useful for efficiency, since it allows the server to resize large
-    images to more suitable sizes, making load times faster.\\
+    as Flask's built-in HTTP server is inefficient and only suitable for
+    development. The Backend Server also uses the Pillow library for image
+    processing. This is also useful for efficiency, since it allows the server
+    to resize large images to more suitable sizes, making load times faster.\\
 
     The Data Storage subsystem consists of two parts: SQLAlchemy, a Python
     Objection-Relational Mapping (ORM) library; and PostgreSQL, a popular open
@@ -139,11 +139,47 @@
 
   \section{Project Design}
   \subsection{Backend}
-    Some more writing here.
+    As mentioned in the architecture section, the Backend Server of WatNotes is
+    a Flask application, written in Python. The use of Flask largely dictates
+    the design of the application, since for most of its use cases their is a
+    prescribed method and style for achieving it.
+
+    The design can be separated into three main parts: the HTTP router, the CRUD
+    helpers, and the Models. The router defines a REST API by mapping different
+    URLs and HTTP verbs to either queries of manipulations of the database. It
+    performs these queries and manipulations view the CRUD (create, read,
+    update, delete) helpers, which are located in a separate module and
+    implement generic routines for manipulating all the Models. These routines
+    include getting a specific record, updating attributes of an existing
+    record, creating a new record, and listing all records of a given type in a
+    paginated fashion. Both the router module and the CRUD module follow a
+    functional style of programming, without the use of classes, and so there is
+    no class diagram for them. The Models, however, are organized in a class
+    hierarchy shown in the figure below:
+
     \begin{figure}[H]
       \includegraphics[width=\textwidth]{assets/backend-class.pdf}
       \caption{Class diagram diagram of the Python backend server of WatNotes}
     \end{figure}
+
+    All Models inherit from BaseModel, which defines common attributes and
+    methods. For example, every Model in the database has columns called
+    ``created\_at'' and ``updated\_at,'' which are automatically set on creation
+    and upon updating. In addition, the Models use the Observer design pattern
+    to execute additional code when different events SQLAlchemy's ORM lifecycle
+    occur. For example, before inserts and updates are committed, the Note class
+    checks the data it is about to store, and if it is an image, it first
+    processes the image to resize it and convert it to a desirable format.
+
+    In addition to Note, there are four other Models: User, Course, Notebook,
+    and Comment. Their relationships are as follows: each User can have many
+    Notebooks, each corresponding to a particular course; within a Notebook
+    there exists many Notes; and a particular Note may have many Comments on it,
+    each associated with a User. Each implements the ``serialize'' method to
+    convert their data to JSON form, so that the HTTP router can respond to the
+    client with JSON data. In addition, these functions support
+    \emph{preloading} other records, so for example a request to get a User may
+    preload all the users Notebooks in a single query.
 
   \subsection{Android Application}
     This section serves to provide a general overview of the Android application's class-level design. All of the described components run on the Android
