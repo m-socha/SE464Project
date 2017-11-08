@@ -53,7 +53,61 @@
     architecture is achieved through the system-wide data store in the backend, to which clients can upload and retrieve data, maintaining a
     global system state. \\
 
+    \begin{figure}[H]
+      \includegraphics[width=\textwidth]{assets/overview.pdf}
+      \caption{Component diagram presenting an overview of the architecture of WatNotes}
+    \end{figure}
+
   \subsection{Backend}
+    The backend of WatNotes comprises the core application logic and persistent
+    data storage. Through the Backend Server, it provides the ``Application
+    Services'' interface to the rest of WatNotes, nameley the web application
+    and the Android application. There are two main subsystems that sit
+    underneath the Backend Server in the layered architecture: the Data Storage
+    module and the Search System. For production, these three subsystems are
+    deployed together on a Heroku dyno. All these components are shown in the
+    component diagram below.
+
+    \begin{figure}[H]
+      \includegraphics[width=\textwidth]{assets/backend-component.pdf}
+      \caption{Component diagram showing the backend of WatNotes}
+    \end{figure}
+
+    The Backend Server is a Python application that uses the Flask web
+    framework. It handles requests from clients, dispatches them according to
+    URL routing rules defined in the HTTP Router component, and then accesses
+    the database to produce results. In production, the Backend Server uses the
+    Gunicorn HTTP server. This serves the nonfunctional property of efficiency,
+    as the Flask HTTP server is inefficient and only suitable for development.
+    The Backend Server also uses the Pillow library for image processing. This
+    is also useful for efficiency, since it allows the server to resize large
+    images to more suitable sizes, making load times faster.\\
+
+    The Data Storage subsystem consists of two parts: SQLAlchemy, a Python
+    Objection-Relational Mapping (ORM) library; and PostgreSQL, a popular open
+    source Relational Database Management System (RDBMS). The data that WatNotes
+    stores is highly relational, so it made most sense to use an RDBMS.
+    Furthermore, PostgreSQL provides the nonfunctional property of dependability
+    via support for ACID-compliant transactions (atomic, consistent, isolated,
+    durable). This means we can depend on the WatNotes backend to never get into
+    an inconsistent state, nor to corrupt data as a result of a system outage.\\
+
+    Instead of specifying SQL tables and queries directly, the Backend Server
+    creates and manipulates Python objects (called ``Models''), and relies on
+    SQLAlchemy to map these to the SQL domain. This serves the nonfunctional
+    property of evolvability, since it makes it very easy to make changes at the
+    data representation level with migrations and changes to the models to store
+    or calculate new data.\\
+
+    The Search System provides an efficient means of searching globally across
+    all notes for specific keywords or fragments of text. It comprises a Python
+    client, used by the Backend Server via procedure calls, and the Search
+    Engine. The Search Engine is an instance of Elasticsearch running on a
+    different port on the same machine. The redundant storage of data in both
+    PostgreSQL and Elasticsearch is a small price to pay for the incredible
+    speed of Elasticsearch. This also helps provides the functional property of
+    discoverability, since search is a primary way to discover notes.
+
   \subsection{Android Application}
   \subsection{Website}
 
@@ -69,12 +123,50 @@
   \section{Project Design}
   \subsection{Overview}
   \subsection{Backend}
+    Some more writing here.
+    \begin{figure}[H]
+      \includegraphics[width=\textwidth]{assets/backend-class.pdf}
+      \caption{Class diagram diagram of the Python backend server of WatNotes}
+    \end{figure}
+
   \subsection{Android Application}
+    This section serves to provide a general overview of the Android application's class-level design. All of the described components run on the Android
+    device on which the application is operating (no distributed logic). \\
+
+    One major design decision of the app concerns how the application handles Android's activity lifecycle. In short, activities are the basic building blocks of
+    an Android app, providing a user with a UI, resource management and handling certain OS events. Much of this logic is common to all activities, and
+    hence is abstracted into a common BaseActivity class. BaseActivity is an abstract class that follows a template design pattern, with functionality
+    such as getting the UI layout container (getLayoutId) and initializing the UI once it is loaded (setupUi) implemented by concrete subclasses. DrawerActivity
+    is an abstract subclass that extends from BaseActivity, and implements a side navigation drawer - most classes in WatNotes inherit from DrawerActivity. \\
+
+    Each activity must implement the createUiFragment and createServiceFragment methods. UiFragments implement an activity's UI (e.g. loading and
+    initializing layout resources), while ServiceFragments are responsible for handling an activity's networking by providing an interface
+    to service instances (adapter design patter). The BaseActivity attaches both of these fragments to the activity, where they can have independent sub-lifecycles
+    within the activity. UiFragment and ServiceFragment are both abstract base classes, with concrete UiFragment and ServiceFragment associated with each
+    concrete class. \\
+
+    Another major design decision concerns how the app's networking layer is organized. An abstract base class called ApiRequest defined from which the abstract
+    SingleApiService and MultiApiService classes extend. SingleApiService classes are services for which there is never expected to be more than one active request. Thus, whenever
+    a service is started through a call to startRequest(), any existing service is canceled. On the other hand, MultiApiServices may have multiple requests active,
+    and a request is only canceled in calls to startRequest() if it shares the requestId of the new request. Concrete ApiRequest classes extend from either
+    SingleApiService or MultiApiService classes, following a template design pattern. \\
+
+    \begin{figure}[H]
+      \includegraphics[width=\textwidth]{assets/android-activity-class.pdf}
+      \caption{Class diagram diagram of the Android application's activity and fragment design}
+    \end{figure}
+
   \subsection{Website}
   The front-end of WatNotes is a react-redux application that runs on a node server and uses webpack for dependency management. The source code for the project is under the src directory. In src, the main index.js file can be found which initializes the react router and redux store. Other important subdirectories in the src directory include store, containers, and components. Any new dependencies required in the project are handled using npm and should be added to the webpack build as required (look in the webpack directory).\\
 
-  The react router implements the logic for deciding which components to render based on the url. When the browser goes to a specific url, a container is chosen to render. The react router is an example of the strategy design pattern. Containers define the data that will be passed down to components to render. They define the data to be passed down by referencing the redux store and are responsible for actions such as fetching data from an api and bootstraping the components with the fetched data. This is an example of one way directional data flow where components only receive data and cannot modify the data received. This pattern decreases complexity since the developer only has to manage 1 data state (the redux store) and can think of components as only having the responsibility of rendering the ui (single responsibility principle). A component is a class that represents what you see visually only. Components are designed to be reusable and has no dependencies other than the properites passed into the class constructor. This minimizes coupling as ui components have no dependencies and it also maximizes flexibility whichs helps accomodate for future requirement changes. If a new ui component or an existing requirement for a ui component is changed, miminal changes are needed since the UI would be broken up into small components.\\
+  The react router implements the logic for deciding which components to render based on the url. When the browser goes to a specific url, a container is chosen to render. The react router is an example of the strategy design pattern. Containers define the data that will be passed down to components to render. They define the data to be passed down by referencing the redux store and are responsible for actions such as fetching data from an api and bootstraping the components with the fetched data. This is an example of one way directional data flow where components only receive data and cannot modify the data received. This pattern decreases complexity since the developer only has to manage 1 data state (the redux store) and can think of components as only having the responsibility of rendering the ui (single responsibility principle). A component is a class that represents what you see visually only. Components are designed to be reusable and has no dependencies other than the properites passed into the class constructor. This minimizes coupling as ui components have no dependencies and it also maximizes flexibility which helps accommodate for future requirement changes. If a new ui component or an existing requirement for a ui component is changed, minimal changes are needed since the UI would be broken up into small components.\\
 
-  The use of react and redux seperates the the ui logic from the data state logic. Redux containers can fetch data using the backend api and pass it down to the components. As more features are added, more properites will have to be added to the state along with more containers to decide how to pass down those new properties down to components. Since there is a single store, adding more data to the store will not affect other parts of the application. 
+  The use of react and redux separates the the ui logic from the data state logic. Redux containers can fetch data using the backend api and pass it down to the components. As more features are added, more properties will have to be added to the state along with more containers to decide how to pass down those new properties down to components. Since there is a single store, adding more data to the store will not affect other parts of the application.
+
+  \begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{assets/frontend_design.pdf}
+    \caption{Class diagram of the website design of WatNotes}
+  \end{figure}
 
 \end{document}
