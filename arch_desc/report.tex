@@ -54,14 +54,14 @@
     global system state. \\
 
     \begin{figure}[H]
-      \includegraphics{assets/overview.pdf}
+      \includegraphics[width=\textwidth]{assets/overview.pdf}
       \caption{Component diagram presenting an overview of the architecture of WatNotes}
     \end{figure}
 
   \subsection{Backend}
     Some writing goes here.
     \begin{figure}[H]
-      \includegraphics{assets/backend-component.pdf}
+      \includegraphics[width=\textwidth]{assets/backend-component.pdf}
       \caption{Component diagram showing the back end of WatNotes}
     \end{figure}
 
@@ -75,7 +75,7 @@
   \subsection{Backend}
     Some more writing here.
     \begin{figure}[H]
-      \includegraphics{assets/backend-class.pdf}
+      \includegraphics[width=\textwidth]{assets/backend-class.pdf}
       \caption{Class diagram diagram of the Python back end server of WatNotes}
     \end{figure}
 
@@ -100,6 +100,12 @@
     a service is started through a call to startRequest(), any existing service is canceled. On the other hand, MultiApiServices may have multiple requests active,
     and a request is only canceled in calls to startRequest() if it shares the requestId of the new request. Concrete ApiRequest classes extend from either
     SingleApiService or MultiApiService classes, following a template design pattern. \\
+
+    \begin{figure}[H]
+      \includegraphics[width=\textwidth]{assets/android-activity-class.pdf}
+      \caption{Class diagram diagram of the Android application's activity and fragment design}
+    \end{figure}
+
   \subsection{Website}
   The front-end of WatNotes is a react-redux application that runs on a node server and uses webpack for dependency management. The source code for the project is under the src directory. In src, the main index.js file can be found which initializes the react router and redux store. Other important subdirectories in the src directory include store, containers, and components. Any new dependencies required in the project are handled using npm and should be added to the webpack build as required (look in the webpack directory).\\
 
