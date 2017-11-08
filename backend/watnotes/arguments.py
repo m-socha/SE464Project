@@ -1,6 +1,6 @@
 """This module defines helper functions for extracting request arguments."""
 
-from typing import Any, Mapping, Sequence
+from typing import Any, Dict, Mapping, Sequence
 
 from flask import abort, request
 
@@ -45,7 +45,7 @@ def get_json():
 def get_fields(model_name: str,
                required: Sequence[str]=None,
                permitted: Sequence[str]=None,
-               provided: Mapping[str, Any]=None) -> str:
+               provided: Mapping[str, Any]=None) -> Dict[str, Any]:
     """Return input fields for a request."""
     required = required or []
     permitted = permitted or []
