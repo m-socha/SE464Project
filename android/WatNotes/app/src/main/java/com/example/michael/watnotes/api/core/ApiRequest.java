@@ -2,6 +2,9 @@ package com.example.michael.watnotes.api.core;
 
 import com.example.michael.watnotes.util.IOUtil;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -25,12 +28,14 @@ public class ApiRequest {
 
     private boolean mRequestCancelled = false;
     private String mEndpoint;
+    private ApiService mApiService;
 
     private Map<String, String> mParamMap = new HashMap();
     private Map<String, IOUtil.FileInfo> mFileMap = new HashMap();
 
-    public ApiRequest(String endpoint) {
+    public ApiRequest(String endpoint, ApiService apiService) {
         mEndpoint = endpoint;
+        mApiService = apiService;
     }
 
     public void addParam(String key, int value) {
@@ -75,6 +80,7 @@ public class ApiRequest {
             public void onFailure(Call call, IOException e) {
                 if (!mRequestCancelled) {
                     e.printStackTrace();
+                    mApiService.onRequestFailure();
                 }
             }
 
@@ -82,7 +88,16 @@ public class ApiRequest {
             public void onResponse(Call call, Response response) throws IOException {
                 if (!mRequestCancelled) {
                     if (response.isSuccessful()) {
-
+                        try {
+                            String responseString = response.body().string().toString();
+                            JSONObject responseJson = new JSONObject(responseString);
+                            mApiService.onRequestSuccess(responseJson);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            mApiService.onRequestFailure();
+                        }
+                    } else {
+                        mApiService.onRequestFailure();
                     }
                 }
             }

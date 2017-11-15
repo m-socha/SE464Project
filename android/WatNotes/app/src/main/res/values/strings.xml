@@ -14,4 +14,5 @@
     <string name="upload_notes_upload_image_prompt">Upload images from your gallery</string>
     <string name="upload_notes_upload_file_prompt">Upload an existing file</string>
     <string name="upload_notes_upload_file_caption">Accepts photos, PDFs and .txt docs</string>
+    <string name="upload_notes_upload_file_success">Notes uploaded successfully</string>
 </resources>
