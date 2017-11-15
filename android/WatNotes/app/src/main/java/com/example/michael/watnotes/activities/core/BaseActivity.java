@@ -118,7 +118,8 @@ public abstract class BaseActivity extends AppCompatActivity {
             InputStream inputStream = getContentResolver().openInputStream(uri);
             byte[] fileContents = IOUtil.getBytes(inputStream);
             String fileFormat = getContentResolver().getType(uri);
-            mServiceFragment.uploadNoteFile(1, uri.getPath(), fileFormat, fileContents);
+            IOUtil.FileInfo fileInfo = new IOUtil.FileInfo(uri.getPath(), fileContents);
+            mServiceFragment.uploadNoteFile(1, fileInfo, fileFormat);
         } catch (IOException e) {
             e.printStackTrace();
         }

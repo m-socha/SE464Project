@@ -1,16 +1,10 @@
 package com.example.michael.watnotes.api.core;
 
-import android.content.ContentResolver;
-import android.provider.MediaStore;
-import android.util.Log;
+import com.example.michael.watnotes.util.IOUtil;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
+import java.util.HashMap;
+import java.util.Map;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -32,36 +26,47 @@ public class ApiRequest {
     private boolean mRequestCancelled = false;
     private String mEndpoint;
 
-    // TODO: Make this a proper param map
-    private String mFileKey;
-    private String mFileUri;
-    private String mFileFormat;
-    private byte[] mFileContents;
+    private Map<String, String> mParamMap = new HashMap();
+    private Map<String, IOUtil.FileInfo> mFileMap = new HashMap();
 
     public ApiRequest(String endpoint) {
         mEndpoint = endpoint;
     }
 
-    public void addFormFile(String key, String uri, String fileFormat, byte[] fileContents) {
-        mFileKey = key;
-        mFileUri = uri;
-        mFileFormat = fileFormat;
-        mFileContents = fileContents;
+    public void addParam(String key, int value) {
+        mParamMap.put(key, String.valueOf(value));
+    }
+
+    public void addParam(String key, float value) {
+        mParamMap.put(key, String.valueOf(value));
+    }
+
+    public void addParam(String key, String value) {
+        mParamMap.put(key, value);
+    }
+
+    public void addFormFile(String key, IOUtil.FileInfo fileInfo) {
+        mFileMap.put(key, fileInfo);
     }
 
     public void startRequest() {
         OkHttpClient httpClient = new OkHttpClient();
 
-        RequestBody requestBody = new MultipartBody.Builder()
-                .setType(MultipartBody.FORM)
-                .addFormDataPart("index", "111")
-                .addFormDataPart("format", mFileFormat)
-                .addFormDataPart("data", mFileUri, RequestBody.create(MediaType.parse(mFileUri), mFileContents))
-                .build();
+        MultipartBody.Builder requestBodyBuilder = new MultipartBody.Builder()
+                .setType(MultipartBody.FORM);
+
+        for (Map.Entry<String, String> param : mParamMap.entrySet()) {
+            requestBodyBuilder.addFormDataPart(param.getKey(), param.getValue());
+        }
+
+        for (Map.Entry<String, IOUtil.FileInfo> param : mFileMap.entrySet()) {
+            IOUtil.FileInfo fileInfo = param.getValue();
+            requestBodyBuilder.addFormDataPart(param.getKey(), fileInfo.getFileUri(), RequestBody.create(MediaType.parse(fileInfo.getFileUri()), fileInfo.getFileContents()));
+        }
 
         final Request request = new Request.Builder()
                 .url(getCompleteEndpoint())
-                .post(requestBody)
+                .post(requestBodyBuilder.build())
                 .build();
 
         mRequestCancelled = false;
@@ -76,11 +81,6 @@ public class ApiRequest {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 if (!mRequestCancelled) {
-                    Log.d("ApiResponse1", request.url().toString());
-                    Log.d("ApiResponse2", response.code() + "");
-                    Log.d("ApiResponse3", response.message());
-                    Log.d("ApiResponse4", request.method());
-                    Log.d("ResposeBodyTest", new String(response.body().bytes()));
                     if (response.isSuccessful()) {
 
                     }

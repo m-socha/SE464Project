@@ -10,6 +10,24 @@ import java.io.InputStream;
 
 public class IOUtil {
 
+    public static class FileInfo {
+        private final String mFileUri;
+        private final byte[] mFileContents;
+
+        public FileInfo(String fileUri, byte[] fileContents) {
+            mFileUri = fileUri;
+            mFileContents = fileContents;
+        }
+
+        public String getFileUri() {
+            return mFileUri;
+        }
+
+        public byte[] getFileContents() {
+            return mFileContents;
+        }
+    }
+
     public static byte[] getBytes(InputStream inputStream) throws IOException {
         ByteArrayOutputStream byteBuffer = new ByteArrayOutputStream();
         byte[] buffer = new byte[1024];
