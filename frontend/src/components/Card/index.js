@@ -5,7 +5,7 @@ import styles from './card.css';
 
 const NoteCard = ({ id, course, user }) => {
   const cardActions = [
-    <Link key={id} to={`/notes/${id}`}>
+    <Link key={id} to={{ pathname: `/notes/${id}`, state: {courseCode: `${course.code}`}}}>
       <Button className={`${styles.floatRight} red`} waves="light" icon="arrow_forward" />
     </Link>
   ];

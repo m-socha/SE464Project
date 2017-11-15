@@ -1,6 +1,9 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Preloader } from 'react-materialize';
+import {
+  Icon,
+  Preloader,
+} from 'react-materialize';
 import {getNotebook} from 'selectors/notebook';
 import styles from './notebook.css';
 
@@ -11,6 +14,7 @@ import * as actionCreator from 'actions/notebook';
 
 class NoteBook extends React.Component {
   componentWillMount() {
+    console.log(this.props);
     this.props.fetchNotebook(this.props.match.params.note_id);
   }
 
@@ -40,10 +44,18 @@ class NoteBook extends React.Component {
         }
       });
     }
+    
+    const courseCode = this.props.location.state ? this.props.location.state.courseCode : 'Course Code';
 
     return (
-      <div className="container">
-        { pages }
+      <div>
+        <div>
+          {/*<Icon small>keyboard_arrow_left</Icon>*/}
+          <h3 className={styles.center}>{courseCode}</h3>
+        </div>
+        <div className="container">
+          { pages }
+        </div>
       </div>
     );
   }
