@@ -1,8 +1,9 @@
 import axios from 'axios';
+import config from 'react-global-configuration';
 
 export function get(url, params, callback) {
   axios
-    .get(`http://watnotes.herokuapp.com${url}`, {
+    .get(`${config.get('backend')}${url}`, {
       params
     })
     .then(response => {
