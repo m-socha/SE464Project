@@ -14,3 +14,13 @@ export function get(url, params, callback) {
       callback(null, err);
     });
 }
+
+export function post(url, body, callback) {
+  axios.post(`${config.get('backend')}${url}`, body)
+    .then((response) => {
+      callback(response.data);
+    })
+    .catch((err) => {
+      callback(null, err);
+    });
+}
