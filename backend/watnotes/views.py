@@ -99,11 +99,11 @@ def notes_id_format(id, extension):
 
 
 @app.route('/notes/<int:note_id>/comments', methods=['GET', 'POST'])
-def comments():
+def comments(note_id):
     if request.method == 'GET':
         return paginate(Comment, 'created_at', note_id=note_id)
     elif request.method == 'POST':
-        return create(Note, ['user_id', 'content'], note_id=note_id)
+        return create(Comment, ['user_id', 'content'], note_id=note_id)
 
 
 @app.route('/comments/<int:id>', methods=['GET', 'PUT', 'DELETE'])

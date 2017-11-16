@@ -3,7 +3,7 @@ import Page from '../Page';
 
 const TxtPage = (props) => {
   return (
-    <Page>
+    <Page onComment={props.onComment} pageID={props.page.id}>
       { props.page.data }
     </Page>
   );

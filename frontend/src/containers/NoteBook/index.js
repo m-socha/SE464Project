@@ -10,11 +10,11 @@ import styles from './notebook.css';
 import TxtPage from 'components/TxtPage';
 import ImagePage from 'components/ImagePage';
 
-import * as actionCreator from 'actions/notebook';
+import { fetchNotebook } from 'actions/notebook';
+import { createComment } from 'actions/comment';
 
 class NoteBook extends React.Component {
   componentWillMount() {
-    console.log(this.props);
     this.props.fetchNotebook(this.props.match.params.note_id);
   }
 
@@ -34,11 +34,11 @@ class NoteBook extends React.Component {
       pages = notebook.notes.map((page) => {
         switch (page.format) {
           case 'text/plain':
-            return <TxtPage key={page.id} page={page} />;
+            return <TxtPage onComment={this.props.onComment} key={page.id} page={page} />;
           case 'image/png':
-            return <ImagePage key={page.id} page={page} format="png" />;
+            return <ImagePage onComment={this.props.onComment} key={page.id} page={page} format="png" />;
           case 'image/jpeg':
-            return <ImagePage key={page.id} page={page} format="jpg" />;
+            return <ImagePage onComment={this.props.onComment} key={page.id} page={page} format="jpg" />;
           default:
             return null;
         }
@@ -68,4 +68,15 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps, actionCreator)(NoteBook);
+function mapDispatchToProps(dispatch) {
+  return {
+    fetchNotebook: (notebookID) => {
+      dispatch(fetchNotebook(notebookID));
+    },
+    onComment: (noteID, content) => {
+      dispatch(createComment(noteID, content));
+    },
+  };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(NoteBook);

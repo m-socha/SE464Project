@@ -16,6 +16,11 @@ import Note from './containers/NoteBook';
 import NotFound from './components/NotFound';
 // import {AppContainer} from 'react-hot-loader'; // TODO: hot reloading
 
+import config from 'react-global-configuration';
+import configuration from '../config';
+
+config.set(configuration);
+
 const store = configureStore({}); 
 
 const render = () => {

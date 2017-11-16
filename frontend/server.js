@@ -2,6 +2,10 @@ const http = require('http');
 const express = require('express');
 const httpProxy = require('http-proxy');
 const path = require('path');
+const config = require('react-global-configuration');
+const configuration = require('./config');
+
+config.set(configuration);
 
 const proxy = httpProxy.createProxyServer({});
 const app = express();
