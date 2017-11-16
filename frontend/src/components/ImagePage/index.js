@@ -6,7 +6,7 @@ import config from 'react-global-configuration';
 
 const ImagePage = (props) => {
   return (
-    <Page>
+    <Page onComment={props.onComment} pageID={props.page.id}>
       <img className={styles.imagepage} src={`${config.get('backend')}/notes/${props.page.id}.${props.format}`} alt="Single Note" />
     </Page>
   );
