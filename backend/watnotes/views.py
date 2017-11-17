@@ -121,6 +121,10 @@ def comments_id(id):
 def search():
     query = request.args.get('q')
     limit = request.args.get('limit') or 20
+    try:
+        limit = int(limit)
+    except ValueError:
+        abort(404, "Expected 'limit' query parameter to be an integer")
     if not query:
         abort(404, "Expected a search query in query parameter 'q'")
     return jsonify(es_search(query, limit))

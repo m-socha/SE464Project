@@ -1,5 +1,6 @@
 """This module defines searching functionality."""
 
+from itertools import islice
 from typing import Any, Dict, List
 
 from elasticsearch import Elasticsearch
@@ -32,7 +33,7 @@ def es_search(query: str, limit: int) -> List[Dict[str, Any]]:
     body = {'query': {'query_string': {'query': query}}}
     response = es.search(index=INDEX, body=body)
     items = []
-    for result in response['hits']['hits']:
+    for result in islice(response['hits']['hits'], limit):
         item = result['_source']
         item['type'] = result['_type']
         item['id'] = result['_id']
