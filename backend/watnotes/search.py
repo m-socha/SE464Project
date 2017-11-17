@@ -3,6 +3,7 @@
 from itertools import islice
 from typing import Any, Dict, List
 import os
+import re
 
 from elasticsearch import Elasticsearch
 
