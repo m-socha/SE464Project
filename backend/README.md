@@ -15,6 +15,7 @@ If the script doesn't work, install the following packages manually:
 
 - Python 3.6
 - PostgreSQL 9.6
+- Elasticsearch 5 or 6
 
 Then, install the Python dependencies:
 
