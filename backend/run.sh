@@ -14,7 +14,7 @@ usage()  {
     echo
     echo "Options:"
     echo "  -d  Use Flask debug mode"
-    echo "  -n  Do not start the database"
+    echo "  -n  Do not start postgres or elasticsearch"
     echo "  -v  Verbose output"
     echo
 
@@ -42,6 +42,7 @@ main() {
     if [[ "$start_db" == 1 ]]; then
         # Incantation to make empty array work with set -u
         ./db.sh "${db_opts[@]+"${db_opts[@]}"}" start
+        ./db.sh es:start
     fi
 
     FLASK_APP=$app FLASK_DEBUG=$debug PYTHONWARNINGS=$warnings \

@@ -17,7 +17,7 @@ macos() {
         die "Command brew not found (install it from https://brew.sh)"
     fi
 
-    for p in python3 postgresql; do
+    for p in python3 postgresql elasticsearch; do
         if brew list --versions "$p" > /dev/null; then
             say "Note: $p already installed"
         elif ! brew install "$p"; then
