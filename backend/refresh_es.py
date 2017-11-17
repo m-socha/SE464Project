@@ -4,7 +4,7 @@ import sys
 
 from watnotes.database import db, is_db_running
 from watnotes.models import models
-from watnotes.search import es_delete_all
+from watnotes.search import es_delete_all, is_es_running
 
 
 def main():
@@ -19,7 +19,6 @@ def main():
     for m in models:
         print(" * Refreshing table '{}'".format(m.__tablename__))
         for o in m.query.all():
-            print("   * Refreshing obj '{}'".format(o))
             o.put_to_es()
 
 
