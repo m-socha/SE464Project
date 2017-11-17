@@ -12,6 +12,7 @@ es_pid=elastic.pid
 
 py_init_db=init_db.py
 py_gen_fake=fake_data.py
+py_refresh_es=refresh_es.py
 
 cmd=
 verbose=0
@@ -29,14 +30,15 @@ usage()  {
     echo "Usage: $0 [-v] COMMAND"
     echo
     echo "Commands:"
-    echo "  create    (Re)create the database"
-    echo "  drop      Delete the database"
-    echo "  start     Start postgres"
-    echo "  stop      Stop postgres"
-    echo "  psql      Start psql session"
-    echo "  fake      Generate fake data"
-    echo "  es:start  Start elasticsearch"
-    echo "  es:stop   Stop elasticsearch"
+    echo "  create      (Re)create the database"
+    echo "  drop        Delete the database"
+    echo "  start       Start postgres"
+    echo "  stop        Stop postgres"
+    echo "  psql        Start psql session"
+    echo "  fake        Generate fake data"
+    echo "  es:start    Start elasticsearch"
+    echo "  es:stop     Stop elasticsearch"
+    echo "  es:refresh  Refresh elasticsearch"
     echo
     echo "Options:"
     echo "  -v      Verbose output"
@@ -107,11 +109,15 @@ create_db() {
         echo -e "DB_USER = '$(whoami)'\nDB_PASSWORD = ''" > "$config_path"
     fi
 
+    # Need elasticsearch running for initializing the database.
+    start_es
+
     say "Running $py_init_db"
     if ! run python3 "$py_init_db"; then
         die "Failed to initialize database"
     fi
 
+    stop_es
     stop_db
 }
 
@@ -164,9 +170,8 @@ psql_db() {
 }
 
 fake_db() {
-    if ! pg_running; then
-        start_db
-    fi
+    start_db
+    start_es
 
     say "Running $py_gen_fake"
     if ! run python3 "$py_gen_fake"; then
@@ -185,6 +190,18 @@ start_es() {
     if ! run kill -0 $!; then
         die "Failed to start elasticsearch"
     fi
+
+    i=10
+    while (( i > 0 )); do
+        sleep 2
+        if curl -s http://localhost:9200/_cluster/health &>/dev/null; then
+            say "Elasticsearch is running"
+            return
+        fi
+        (( i-- ))
+        say "Waiting for elasticsearch ($i tries left)"
+    done
+    say "Timed out waiting for elasticsearch to start"
 }
 
 stop_es() {
@@ -199,12 +216,22 @@ stop_es() {
     fi
 }
 
+refresh_es() {
+    start_db
+    start_es
+
+    say "Running $py_refresh_es"
+    if ! run python3 "$py_refresh_es"; then
+        die "Failed to refresh elasticsearch"
+    fi
+}
+
 parse_args() {
     while (( $# )); do
         case "$1" in
             -h|--help) usage 0 ;;
             -v|--verbose) verbose=1 ;;
-            create|drop|start|stop|psql|fake|es:start|es:stop)
+            create|drop|start|stop|psql|fake|es:start|es:stop|es:refresh)
                 [[ -n "$cmd" ]] && usage 1 ;
                 cmd=$1 ;;
             *) usage 1 ;;
@@ -226,6 +253,7 @@ main() {
         fake) fake_db ;;
         es:start) start_es ;;
         es:stop) stop_es ;;
+        es:refresh) refresh_es ;;
         *) usage 1 ;;
     esac
 }

@@ -11,6 +11,9 @@ backend/instance/
 # Postgres
 backend/database/
 
+# Elasticsearch
+elastic.pid
+
 # Node
 node_modules
 

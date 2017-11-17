@@ -1,13 +1,14 @@
 """This module defines the Flask views (routes) for the server."""
 
+from flask import abort, jsonify, request
+
 from watnotes import app
 from watnotes.crud_helpers import (
     create, delete, download, get, paginate, update
 )
 from watnotes.database import db
 from watnotes.models import *
-
-from flask import abort, jsonify, request
+from watnotes.search import es_search
 
 
 @app.errorhandler(404)
@@ -114,3 +115,12 @@ def comments_id(id):
         return update(Comment, id, ['content'])
     elif request.method == 'DELETE':
         return delete(Comment, id)
+
+
+@app.route('/search')
+def search():
+    query = request.args.get('q')
+    limit = request.args.get('limit') or 20
+    if not query:
+        abort(404, "Expected a search query in query parameter 'q'")
+    return jsonify(es_search(query, limit))

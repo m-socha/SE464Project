@@ -9,6 +9,7 @@ from watnotes.database import db
 from watnotes.errors import InvalidAttribute
 from watnotes.formats import is_valid_mime, mime_is_image, mime_to_extension
 from watnotes.image import process_image_data
+from watnotes.search import es_delete, es_insert
 
 
 # Double-precision floating-point type.
@@ -37,13 +38,53 @@ class BaseModel(db.Model):
 
     def before_commit(self):
         """Hook that is run before insert and before update."""
-        pass
+        self.process()
+
+    def after_commit(self):
+        """Hook that is run after insert and after update."""
+        self.put_to_es()
+
+    def before_delete(self):
+        """Hook that is run before delete."""
+
+    def after_delete(self):
+        """Hook that is run after delete."""
+        self.delete_from_es()
+
+    def put_to_es(self):
+        """Insert or update the model in elasticsearch."""
+        doc = self.serialize()
+        del doc['id']
+        es_insert(self.__tablename__, self.id, doc)
+
+    def delete_from_es(self):
+        """Insert or update the model in elasticsearch."""
+        es_delete(self.__tablename__, self.id)
+
+    def process(self):
+        """Process the model before committing it in the database."""
 
 
 @db.event.listens_for(BaseModel, ('before_insert'), propagate=True)
 @db.event.listens_for(BaseModel, ('before_update'), propagate=True)
 def before_commit(mapper, connect, target):
     target.before_commit()
+
+
+@db.event.listens_for(BaseModel, ('after_insert'), propagate=True)
+@db.event.listens_for(BaseModel, ('after_update'), propagate=True)
+def after_commit(mapper, connect, target):
+    target.after_commit()
+
+
+@db.event.listens_for(BaseModel, ('before_delete'), propagate=True)
+def before_delete(mapper, connect, target):
+    target.before_delete()
+
+
+@db.event.listens_for(BaseModel, ('after_delete'), propagate=True)
+def after_delete(mapper, connect, target):
+    target.after_delete()
 
 
 class User(BaseModel):
@@ -168,7 +209,7 @@ class Note(BaseModel):
             raise InvalidAttribute(key, value, error)
         return value
 
-    def before_commit(self):
+    def process(self):
         if len(self.data) > 0 and mime_is_image(self.format):
             self.data, self.format = process_image_data(self.data, self.format)
 
@@ -237,3 +278,7 @@ class Comment(BaseModel):
 
     def __repr__(self):
         return "<Comment #{} u#{}>".format(self.id, self.user_id)
+
+
+# List of all models.
+models = [User, Course, Notebook, Note, Comment]
