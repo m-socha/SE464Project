@@ -9,7 +9,9 @@ from watnotes.database import db
 from watnotes.errors import InvalidAttribute
 from watnotes.formats import is_valid_mime, mime_is_image, mime_to_extension
 from watnotes.image import process_image_data
-from watnotes.search import es_delete, es_insert
+from watnotes.search import (
+    es_create_index, es_delete, es_delete_all, es_insert
+)
 
 
 # Double-precision floating-point type.
@@ -37,6 +39,21 @@ class BaseModel(db.Model):
         """
         return {}
 
+    @classmethod
+    def es_index(cls):
+        """Return the index name for this model in Elasticsearch."""
+        return cls.__tablename__
+
+    @classmethod
+    def create_es_index(cls):
+        """Create the index in Elasticsearch for this model."""
+        es_create_index(cls.es_index())
+
+    @classmethod
+    def delete_all_from_es(cls):
+        """Delete all documents from the Elasticsearch index for this model."""
+        es_delete_all(cls.es_index())
+
     def before_commit(self):
         """Hook that is run before insert and before update."""
         self.process()
@@ -53,14 +70,14 @@ class BaseModel(db.Model):
         self.delete_from_es()
 
     def put_to_es(self):
-        """Insert or update the model in elasticsearch."""
+        """Insert or update the model in Elasticsearch."""
         doc = self.serialize()
         del doc['id']
-        es_insert(self.__tablename__, self.id, doc)
+        es_insert(self.es_index(), self.id, doc)
 
     def delete_from_es(self):
-        """Insert or update the model in elasticsearch."""
-        es_delete(self.__tablename__, self.id)
+        """Insert or update the model in Elasticsearch."""
+        es_delete(self.es_index(), self.id)
 
     def process(self):
         """Process the model before committing it in the database."""
@@ -281,5 +298,6 @@ class Comment(BaseModel):
         return "<Comment #{} u#{}>".format(self.id, self.user_id)
 
 
-# List of all models.
 models = [User, Course, Notebook, Note, Comment]
+for m in models:
+    m.create_es_index()

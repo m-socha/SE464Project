@@ -15,9 +15,9 @@ def main():
         print("ERROR: elasticsearch is not running")
         sys.exit(1)
 
-    es_delete_all()
     for m in models:
-        print(" * Refreshing table '{}'".format(m.__tablename__))
+        m.delete_all_from_es()
+        print(" * Refreshing index '{}'".format(m.es_index()))
         for o in m.query.all():
             o.put_to_es()
 

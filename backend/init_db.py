@@ -3,6 +3,7 @@
 import sys
 
 from watnotes.database import db, is_db_running
+from watnotes.search import is_es_running
 import watnotes.models
 
 

@@ -11,6 +11,10 @@ import certifi
 from watnotes import app
 
 
+# Use a single type for Elasticsearch 6.
+TYPE = 'default'
+
+
 def get_es_header():
     """Get the ES header from the environment or configuration files."""
     bonsai = os.environ.get('BONSAI_URL')
@@ -27,41 +31,44 @@ def get_es_header():
     return [app.config['ES_CONNECTION']]
 
 
-ALREADY_EXISTS = 400
-INDEX = 'documents'
 es = Elasticsearch(get_es_header())
-es.indices.create(index=INDEX, ignore=ALREADY_EXISTS)
 
 
 def is_es_running():
-    """Return true if the elasticsearch connection is working."""
+    """Return true if the Elasticsearch connection is working."""
     return es.ping()
 
 
-def es_insert(doc_type: str, id: int, body: Dict[str, Any]):
-    """Insert a document into elasticsearch."""
-    es.index(index=INDEX, doc_type=doc_type, id=id, body=body)
+def es_create_index(index: str):
+    """Create an index in Elasticsearch if it doesn't exist."""
+    exists = 400
+    es.indices.create(index=index, ignore=exists)
 
 
-def es_delete(doc_type: str, id: int):
-    """Delete a document from elasticsearch."""
-    es.delete(index=INDEX, doc_type=doc_type, id=id)
+def es_delete_all(index: str):
+    """Delete all documents in an Elasticsearch index."""
+    es.indices.delete(index=index)
+    es.indices.create(index=index)
 
 
-def es_delete_all():
-    """Delete all documents in elasticsearch."""
-    es.indices.delete(index=INDEX)
-    es.indices.create(index=INDEX)
+def es_insert(index: str, id: int, body: Dict[str, Any]):
+    """Insert a document into Elasticsearch."""
+    es.index(index=index, doc_type=TYPE, id=id, body=body)
+
+
+def es_delete(index: str, id: int):
+    """Delete a document from Elasticsearch."""
+    es.delete(index=index, doc_type=TYPE, id=id)
 
 
 def es_search(query: str, limit: int) -> List[Dict[str, Any]]:
-    """Search for documents in elasticsearch."""
+    """Search for documents in Elasticsearch."""
     body = {'query': {'query_string': {'query': query}}}
-    response = es.search(index=INDEX, body=body)
+    response = es.search(body=body)
     items = []
     for result in islice(response['hits']['hits'], limit):
         item = result['_source']
-        item['type'] = result['_type']
+        item['type'] = result['_index']
         item['id'] = result['_id']
         items.append(item)
     return {'items': items}
