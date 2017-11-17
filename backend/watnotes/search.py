@@ -6,6 +6,7 @@ import os
 import re
 
 from elasticsearch import Elasticsearch
+import certifi
 
 from watnotes import app
 
