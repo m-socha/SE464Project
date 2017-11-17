@@ -31,7 +31,10 @@ def es_search(query: str, limit: int) -> List[Dict[str, Any]]:
     """Search for documents in elasticsearch."""
     body = {'query': {'query_string': {'query': query}}}
     response = es.search(index=INDEX, body=body)
-    results = []
+    items = []
     for result in response['hits']['hits']:
-        results.append(result)
-    return results
+        item = result['_source']
+        item['type'] = result['_type']
+        item['id'] = result['_id']
+        items.append(item)
+    return {'items': items}
