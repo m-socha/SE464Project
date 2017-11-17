@@ -1,14 +1,14 @@
 """This module configures the SQLAlchemy database engine."""
 
+import os
+
 from flask_sqlalchemy import SQLAlchemy
 
 from watnotes import app
 
-import os
 
-
-def get_database_uri(**params):
-    """Gets the database URI from the environment or configuration files."""
+def get_database_uri():
+    """Get the database URI from the environment or configuration files."""
     uri = os.environ.get('DATABASE_URL')
     if uri:
         return uri

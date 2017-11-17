@@ -8,5 +8,11 @@ DB_CONNECTION = {
     'port': 5432
 }
 
+ES_CONNECTION = {
+    'host': 'localhost',
+    'port': 9200,
+    'use_ssl': False
+}
+
 MAX_IMAGE_WIDTH = 2000
 MAX_IMAGE_HEIGHT = 1800

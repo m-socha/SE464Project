@@ -22,7 +22,8 @@ class BaseModel(db.Model):
     __abstract__ = True
 
     created_at = Column(DateTime, default=db.func.now())
-    updated_at = Column(DateTime, default=db.func.now(), onupdate=db.func.now())
+    updated_at = Column(DateTime, default=db.func.now(),
+                        onupdate=db.func.now())
 
     @classmethod
     def relations(cls):

@@ -14,7 +14,7 @@ MAX_SIZE = app.config['MAX_IMAGE_WIDTH'], app.config['MAX_IMAGE_HEIGHT']
 
 
 def process_image_data(data: bytes, format: str) -> Tuple[bytes, str]:
-    """Process an image, possibly resizing it and converting to a new format."""
+    """Process an image, possibly resizing and converting to a new format."""
     f = BytesIO(data)
     image = Image.open(f)
     image = resize_image(image, MAX_SIZE)

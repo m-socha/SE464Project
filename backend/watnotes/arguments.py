@@ -69,7 +69,8 @@ def get_fields(model_name: str,
     for f in required:
         value = lookup(f)
         if value is None:
-            abort(404, "{} missing required attribute {}".format(model_name, f))
+            abort(404, "{} missing required attribute {}".format(
+                model_name, f))
         else:
             fields[f] = value
 
