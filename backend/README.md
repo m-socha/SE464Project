@@ -76,7 +76,14 @@ They can be accessed via a REST API. Here is the API for User:
         - `id`: integer
         - `email`: string
         - `name`: string
-- `GET /users?page=<page>&per_page=<per_page>`
+    - Query parameters:
+        - `load`: comma-separated list of attributes to load
+- `GET /users`
+    - Query parameters:
+        - `page`: page number (first page is 1)
+        - `per_page`: maximum results per page
+        - If `page` and `per_page` are omitted, it returns **ALL** users.
+        - `load`: comma-separated list of attributes to load
     - Response:
         - `page`: integer
         - `total_pages`: integer
@@ -99,6 +106,34 @@ They can be accessed via a REST API. Here is the API for User:
         - Deletes the user
 
 The other resources are similar. See watnotes/views.py for details.
+
+There is no use for the `load` query parameter on Users, but for other resources
+it is useful. For example, `/notebooks/1?load=user,course` (**note**: singular)
+would load the entire record for the notebook's user and course, instead of just
+including their IDs.
+
+Here is the search API:
+
+- `GET /search`
+    - Query parameters:
+        - `page`: page number (first page is 1)
+        - `per_page`: maximum results per page
+        - If `page` and `per_page` are omitted, it returns up to **20** results.
+        - `load`: comma-separated list of attributes to load
+        - `in`: comma-separated list of tables to search in
+        - If `in` is omitted, it searches in all 5 resources.
+    - Response:
+        - `page`: integer
+        - `total_pages`: integer
+        - `total_results`: integer
+        - `items`: object
+            - `users`: list of matched users
+            - `courses`: list of matched courses
+            - `notebooks`: list of matched notebooks
+            - `notes`: list of matched notes
+            - `comments`: list of matched comments
+        - The number of results (`per_page` and `total_results`) refers to the
+          combined number of results in all resources.
 
 ## Style
 
