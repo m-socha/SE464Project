@@ -3,11 +3,13 @@
 from sqlalchemy import (
     Column, DateTime, Float, ForeignKey, Integer, LargeBinary, String
 )
-from sqlalchemy.orm import validates
+from sqlalchemy.orm import joinedload, validates
 
 from watnotes.database import db
 from watnotes.errors import InvalidAttribute
-from watnotes.formats import is_valid_mime, mime_is_image, mime_to_extension
+from watnotes.formats import (
+    is_valid_mime, mime_is_image, mime_is_text, mime_to_extension
+)
 from watnotes.image import process_image_data
 from watnotes.search import (
     es_create_index, es_delete, es_delete_all, es_insert
@@ -40,6 +42,25 @@ class BaseModel(db.Model):
         return {}
 
     @classmethod
+    def preloaded(cls, preloads, abort=None):
+        """Return a query for the model with preloads configured.
+
+        If abort isn't none, calls it when one of the preloads is invalid for
+        this model. Otherwise, silently ignores invalid preloads.
+        """
+        query = cls.query
+        relations = cls.relations()
+        for name in preloads:
+            rel = relations.get(name)
+            if rel is not None:
+                query = query.options(joinedload(rel, innerjoin=True))
+            elif abort is not None:
+                abort(404, "Invalid preload name '{}' for {}".format(
+                    name, cls.__name__))
+
+        return query
+
+    @classmethod
     def es_index(cls):
         """Return the index name for this model in Elasticsearch."""
         return cls.__tablename__
@@ -53,6 +74,14 @@ class BaseModel(db.Model):
     def delete_all_from_es(cls):
         """Delete all documents from the Elasticsearch index for this model."""
         es_delete_all(cls.es_index())
+
+    def serialize(self, preloads=None):
+        """Serialize the model to a dict."""
+        raise NotImplementedError()
+
+    def serialize_es(self):
+        """Serialize the model to a dict to store in Elasticsearch."""
+        raise NotImplementedError()
 
     def before_commit(self):
         """Hook that is run before insert and before update."""
@@ -71,9 +100,9 @@ class BaseModel(db.Model):
 
     def put_to_es(self):
         """Insert or update the model in Elasticsearch."""
-        doc = self.serialize()
-        del doc['id']
-        es_insert(self.es_index(), self.id, doc)
+        doc = self.serialize_es()
+        if doc:
+            es_insert(self.es_index(), self.id, doc)
 
     def delete_from_es(self):
         """Insert or update the model in Elasticsearch."""
@@ -114,9 +143,19 @@ class User(BaseModel):
     email = Column(String, nullable=False, unique=True)
     name = Column(String, nullable=False)
 
+    @classmethod
+    def es_fields(cls):
+        return ['email', 'name']
+
     def serialize(self, preloads=None):
         return {
             'id': self.id,
+            'email': self.email,
+            'name': self.name
+        }
+
+    def serialize_es(self):
+        return {
             'email': self.email,
             'name': self.name
         }
@@ -137,6 +176,12 @@ class Course(BaseModel):
     def serialize(self, preloads=None):
         return {
             'id': self.id,
+            'code': self.code,
+            'title': self.title
+        }
+
+    def serialize_es(self):
+        return {
             'code': self.code,
             'title': self.title
         }
@@ -171,6 +216,13 @@ class Notebook(BaseModel):
                 result[name_id] = getattr(self, name_id)
 
         return result
+
+    def serialize_es(self):
+        return {
+            'name': self.user.name,
+            'code': self.course.code,
+            'title': self.course.title
+        }
 
     def __repr__(self):
         return "<Notebook #{} u#{} c#{}>".format(
@@ -258,6 +310,11 @@ class Note(BaseModel):
 
         return result
 
+    def serialize_es(self):
+        if mime_is_text(self.format) and self.format in self.ENCODERS:
+            return {'data': self.ENCODERS[self.format](self.data)}
+        return None
+
     def __repr__(self):
         return "<Note #{} nb#{} fmt=\"{}\">".format(
             self.id, self.notebook_id, self.format)
@@ -293,6 +350,12 @@ class Comment(BaseModel):
                 result[name_id] = getattr(self, name_id)
 
         return result
+
+    def serialize_es(self):
+        return {
+            'name': self.user.name,
+            'content': self.content
+        }
 
     def __repr__(self):
         return "<Comment #{} u#{}>".format(self.id, self.user_id)

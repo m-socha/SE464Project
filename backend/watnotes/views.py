@@ -3,6 +3,7 @@
 from flask import abort, jsonify, request
 
 from watnotes import app
+from watnotes.arguments import get_int
 from watnotes.crud_helpers import (
     create, delete, download, get, paginate, update
 )
@@ -120,11 +121,13 @@ def comments_id(id):
 @app.route('/search')
 def search():
     query = request.args.get('q')
-    limit = request.args.get('limit') or 20
-    try:
-        limit = int(limit)
-    except ValueError:
-        abort(404, "Expected 'limit' query parameter to be an integer")
     if not query:
         abort(404, "Expected a search query in query parameter 'q'")
-    return jsonify(es_search(query, limit))
+    page = get_int('page') or 1
+    per_page = get_int('per_page') or 20
+    if page < 1 or per_page < 1:
+        abort(404, "Invalid value supplied for 'page' or 'per_page'")
+    indices = request.args.get('in') or None
+    if indices:
+        indices = indices.split(',')
+    return jsonify(es_search(query, page, per_page, indices))

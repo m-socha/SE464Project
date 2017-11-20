@@ -1,6 +1,7 @@
 """This module defines searching functionality."""
 
 from itertools import islice
+from math import ceil
 from typing import Any, Dict, List
 import os
 import re
@@ -8,7 +9,8 @@ import re
 from elasticsearch import Elasticsearch
 import certifi
 
-from watnotes import app
+from watnotes import app, crud_helpers, models
+from watnotes.arguments import get_preloads
 
 
 # Use a single type for Elasticsearch 6.
@@ -61,14 +63,40 @@ def es_delete(index: str, id: int):
     es.delete(index=index, doc_type=TYPE, id=id)
 
 
-def es_search(query: str, limit: int) -> List[Dict[str, Any]]:
-    """Search for documents in Elasticsearch."""
+def es_search(query: str, page: int, per_page: int, indices: List[str]=None):
+    """Search for documents in Elasticsearch.
+
+    Returns serialized models from the database based on Elasticsearch results.
+    """
+    assert page >= 1
+    assert per_page >= 1
+
     body = {'query': {'query_string': {'query': query}}}
-    response = es.search(body=body)
-    items = []
-    for result in islice(response['hits']['hits'], limit):
-        item = result['_source']
-        item['type'] = result['_index']
-        item['id'] = result['_id']
-        items.append(item)
-    return {'items': items}
+    response = es.search(index=indices, body=body, from_=page-1, size=per_page)
+
+    index_id_score = {}
+    for hit in response['hits']['hits']:
+        index = hit['_index']
+        if index not in index_id_score:
+            index_id_score[index] = {}
+        index_id_score[index][int(hit['_id'])] = hit['_score']
+
+    preloads = get_preloads()
+    items = {}
+    for m in models.models:
+        index = m.es_index()
+        if index not in index_id_score:
+            items[index] = {}
+            continue
+        id_score = index_id_score[index]
+        ids = id_score.keys()
+        objs = m.preloaded(preloads).filter(m.id.in_(ids)).all()
+        objs.sort(key=lambda o: id_score[o.id], reverse=True)
+        items[index] = [o.serialize(preloads) for o in objs]
+
+    total = response['hits']['total']
+    return dict(
+        page=page,
+        total_pages=ceil(total / per_page),
+        total_results=total,
+        items=items)

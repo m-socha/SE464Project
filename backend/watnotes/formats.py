@@ -43,3 +43,7 @@ def is_valid_mime(mime: str) -> bool:
 
 def mime_is_image(mime: str) -> bool:
     return mime.lower().startswith('image/')
+
+
+def mime_is_text(mime: str) -> bool:
+    return mime.lower().startswith('text/')

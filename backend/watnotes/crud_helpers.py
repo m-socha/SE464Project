@@ -4,7 +4,6 @@ from typing import Sequence, Type
 
 from flask import abort, jsonify, make_response, request
 from sqlalchemy.exc import IntegrityError
-from sqlalchemy.orm import joinedload
 
 from watnotes.arguments import (
     get_fields, get_int, get_preloads, is_attachment, is_form
@@ -15,26 +14,9 @@ from watnotes.formats import extension_to_mime
 from watnotes.models import BaseModel
 
 
-def preloaded(model: Type[BaseModel], preloads=None):
-    """Return a query for the model with preloads configured."""
-    if not preloads:
-        preloads = get_preloads()
-
-    query = model.query
-    relations = model.relations()
-    for name in preloads:
-        rel = relations.get(name)
-        if rel is None:
-            abort(404, "Invalid preload name '{}' for {}".format(
-                name, model.__name__))
-        query = query.options(joinedload(rel, innerjoin=True))
-
-    return query
-
-
 def get_or_404(model: Type[BaseModel], id: int):
     """Get a model object by ID, and 404 if it doesn't exist."""
-    object = preloaded(model).get(id)
+    object = model.preloaded(get_preloads(), abort).get(id)
     if not object:
         abort(404, "{} with ID {} does not exist".format(model.__name__, id))
     return object
@@ -43,7 +25,8 @@ def get_or_404(model: Type[BaseModel], id: int):
 def paginate(model: Type[BaseModel], order: str, **provided) -> str:
     """List resource items in a paginated fashion."""
     preloads = get_preloads()
-    results = preloaded(model, preloads).filter_by(**provided).order_by(order)
+    results = model.preloaded(preloads, abort) \
+        .filter_by(**provided).order_by(order)
 
     page = get_int('page')
     per_page = get_int('per_page')
@@ -56,7 +39,12 @@ def paginate(model: Type[BaseModel], order: str, **provided) -> str:
             items=[item.serialize(preloads) for item in results.items])
 
     # By default, return all items.
-    return jsonify(items=[item.serialize(preloads) for item in results])
+    items = [item.serialize(preloads) for item in results]
+    return jsonify(
+        page=1,
+        total_pages=1,
+        total_results=len(items),
+        items=items)
 
 
 def create(model: Type[BaseModel], required: Sequence[str],
