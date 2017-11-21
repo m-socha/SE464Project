@@ -7,6 +7,7 @@ import {
 import Autocomplete from 'react-autocomplete'
 import fuzzysearch from 'fuzzysearch'
 
+import {fetchSearchResults} from 'actions/search'
 
 export default class Header extends React.Component {
   constructor() {
@@ -14,16 +15,27 @@ export default class Header extends React.Component {
 
     this.state = {
       inquiry: "",
-      data: [
-              {label: 'Apple'},
-              {label: 'Microsoft'},
-              {label: 'Google'}
-            ]
+      data: [],
+      cache: new Map(),
     }
   }
 
   onChange(inquiry) {
-    this.setState({inquiry});
+    if (!inquiry) {
+      return this.setState({inquiry, data:[]});
+    }
+
+    let data = this.state.cache.get(inquiry);
+    if (data) {
+      return this.setState({inquiry, data});
+    }
+
+    fetchSearchResults(inquiry, (data) => {
+      if (!data) return;
+
+      this.state.cache.set(inquiry, data);
+      this.setState({inquiry, data});
+    });
   }
 
   onSelect(inquiry) {
@@ -31,16 +43,41 @@ export default class Header extends React.Component {
   }
 
   renderItem(item, isHighlighted) {
-    return (
-      <div key={item.label} style={{color: 'black'}}>
-        {item.label}
-      </div>
-    );
-  }
+    switch(item.type) {
+      case 'users':
+        return (
+          <div key={item.id} style={{color: 'black'}}>
+            {item.name}
+          </div>
+        );
+      case 'courses':
+        return (
+          <div key={item.id} style={{color: 'black'}}>
+            {item.code} {item.title}
+          </div>
+        );
+      case 'notes':
+        return (
+          <div key={item.id} style={{color: 'black'}}>
+            {item.data}
+          </div>
+        );
+      case 'notebooks':
+        return (
+          <div key={item.name} style={{color: 'black'}}>
+            {item.name}
+          </div>
+        );
+      case 'comments':
+        return (
+          <div key={item.name} style={{color: 'black'}}>
+            {item.name}
+          </div>
+        );
+      default:
+      ;  
+    }
 
-  shouldItemRender(item) {
-    let match = fuzzysearch(this.state.inquiry.toLowerCase(), item.label.toLowerCase());
-    return match;
   }
 
   render() {
@@ -56,7 +93,6 @@ export default class Header extends React.Component {
             autoHighlight={false} 
             getItemValue={(item) => item.label}
             items={this.state.data}
-            shouldItemRender={this.shouldItemRender.bind(this)}
             value={this.state.inquiry}
             onChange={(e) => this.onChange(e.target.value)}
             onSelect={(val) => this.onSelect(val)}
