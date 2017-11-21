@@ -1,7 +1,10 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Col } from 'react-materialize';
-
+import {
+  Col,
+  Preloader,
+} from 'react-materialize';
+import styles from './feed.css';
 import Card from 'components/Card';
 import * as actionCreator from 'actions/feed';
 
@@ -20,7 +23,11 @@ class Feed extends React.Component {
 
   render() {
     if (this.props.isFetching) {
-      // return loading spinner 
+      return (
+        <div className={styles.center}>
+          <Preloader size="big" />;
+        </div>
+      );
     }
 
     const { feed } = this.props;
