@@ -1,14 +1,18 @@
 package com.example.michael.watnotes.activities.core;
 
+import android.content.Intent;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.view.Gravity;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.example.michael.watnotes.R;
 import com.example.michael.watnotes.activities.core.BaseActivity;
+import com.example.michael.watnotes.activities.search.SearchActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,6 +59,17 @@ public abstract class DrawerActivity extends BaseActivity {
         List<String> drawerListItems = new ArrayList();
         drawerListItems.add(getString(R.string.search));
         mNavDrawerListView.setAdapter(new DrawerListAdapter(this, drawerListItems));
+        mNavDrawerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                switch (position) {
+                    case 0:
+                        Intent intent = new Intent(DrawerActivity.this, SearchActivity.class);
+                        startActivity(intent);
+                        break;
+                }
+            }
+        });
     }
 
     @Override

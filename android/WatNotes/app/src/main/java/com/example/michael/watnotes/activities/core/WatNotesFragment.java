@@ -16,14 +16,7 @@ public class WatNotesFragment extends Fragment {
         withActivity(new ActivityTask<BaseActivity>() {
             @Override
             public void performTask(BaseActivity baseActivity) {
-                A castedServiceFragment = null;
-                try {
-                    baseActivity.getServiceFragment();
-                } catch (ClassCastException e) {}
-
-                if (castedServiceFragment != null) {
-                    serviceFragmentTask.performTask(castedServiceFragment);
-                }
+                serviceFragmentTask.performTask((A) baseActivity.getServiceFragment());
             }
         });
     }
@@ -36,14 +29,7 @@ public class WatNotesFragment extends Fragment {
         withActivity(new ActivityTask<BaseActivity>() {
             @Override
             public void performTask(BaseActivity baseActivity) {
-                A castedUiFragment = null;
-                try {
-                    baseActivity.getUiFragment();
-                } catch (ClassCastException e) {}
-
-                if (castedUiFragment != null) {
-                    uiFragmentTask.performTask(castedUiFragment);
-                }
+                uiFragmentTask.performTask((A) baseActivity.getUiFragment());
             }
         });
     }
@@ -53,13 +39,6 @@ public class WatNotesFragment extends Fragment {
     }
 
     protected <A extends BaseActivity> void withActivity(ActivityTask<A> activityTask) {
-        A castedActivity = null;
-        try {
-            castedActivity = (A) getActivity();
-        } catch (ClassCastException e) {}
-
-        if (castedActivity != null) {
-            activityTask.performTask(castedActivity);
-        }
+        activityTask.performTask((A) getActivity());
     }
 }

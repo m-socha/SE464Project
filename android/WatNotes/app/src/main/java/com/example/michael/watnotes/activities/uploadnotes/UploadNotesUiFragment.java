@@ -14,9 +14,9 @@ import com.example.michael.watnotes.uicomponents.TakePhotoView;
 
 public class UploadNotesUiFragment extends UiFragment {
 
-    TakePhotoView mTakePhotoView;
-    FileUploadView mImageUploadView;
-    FileUploadView mFileUploadView;
+    private TakePhotoView mTakePhotoView;
+    private FileUploadView mImageUploadView;
+    private FileUploadView mFileUploadView;
 
     @Override
     protected int getLayoutId() {

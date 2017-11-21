@@ -4,7 +4,6 @@ import android.util.Log;
 
 import com.example.michael.watnotes.api.core.ApiRequest;
 import com.example.michael.watnotes.api.core.SingleApiService;
-import com.example.michael.watnotes.util.IOUtil;
 
 import org.json.JSONObject;
 
@@ -20,7 +19,7 @@ public class SearchNoteService extends SingleApiService {
     public void requestService(String query,
                                DefaultCompletionCallback completionCallback,
                                DefaultFailureCallback failureCallback) {
-        ApiRequest request = new ApiRequest("search/", ApiRequest.RequestType.GET, this);
+        ApiRequest request = new ApiRequest("search", ApiRequest.RequestType.GET, this);
         request.addParam("q", query);
         request.startRequest();
     }

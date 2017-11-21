@@ -1,5 +1,7 @@
 package com.example.michael.watnotes.api.core;
 
+import android.util.Log;
+
 import com.example.michael.watnotes.util.IOUtil;
 
 import org.json.JSONException;
