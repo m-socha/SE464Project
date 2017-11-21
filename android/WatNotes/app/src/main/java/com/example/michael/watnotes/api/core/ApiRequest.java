@@ -24,17 +24,23 @@ import okhttp3.Response;
 
 public class ApiRequest {
 
+    public enum RequestType {
+        GET, POST
+    }
+
     private static final String BASE_URL = "http://watnotes.herokuapp.com/";
 
     private boolean mRequestCancelled = false;
     private String mEndpoint;
+    private RequestType mRequestType;
     private ApiService mApiService;
 
     private Map<String, String> mParamMap = new HashMap();
     private Map<String, IOUtil.FileInfo> mFileMap = new HashMap();
 
-    public ApiRequest(String endpoint, ApiService apiService) {
+    public ApiRequest(String endpoint, RequestType requestType, ApiService apiService) {
         mEndpoint = endpoint;
+        mRequestType = requestType;
         mApiService = apiService;
     }
 
@@ -57,22 +63,26 @@ public class ApiRequest {
     public void startRequest() {
         OkHttpClient httpClient = new OkHttpClient();
 
-        MultipartBody.Builder requestBodyBuilder = new MultipartBody.Builder()
-                .setType(MultipartBody.FORM);
+        Request.Builder requestBuilder = new Request.Builder()
+                .url(getCompleteEndpoint());
 
-        for (Map.Entry<String, String> param : mParamMap.entrySet()) {
-            requestBodyBuilder.addFormDataPart(param.getKey(), param.getValue());
+        if (mRequestType == RequestType.POST) {
+            MultipartBody.Builder requestBodyBuilder = new MultipartBody.Builder()
+                    .setType(MultipartBody.FORM);
+
+            for (Map.Entry<String, String> param : mParamMap.entrySet()) {
+                requestBodyBuilder.addFormDataPart(param.getKey(), param.getValue());
+            }
+
+            for (Map.Entry<String, IOUtil.FileInfo> param : mFileMap.entrySet()) {
+                IOUtil.FileInfo fileInfo = param.getValue();
+                requestBodyBuilder.addFormDataPart(param.getKey(), fileInfo.getFileUri(), RequestBody.create(MediaType.parse(fileInfo.getFileUri()), fileInfo.getFileContents()));
+            }
+
+            requestBuilder.post(requestBodyBuilder.build());
         }
 
-        for (Map.Entry<String, IOUtil.FileInfo> param : mFileMap.entrySet()) {
-            IOUtil.FileInfo fileInfo = param.getValue();
-            requestBodyBuilder.addFormDataPart(param.getKey(), fileInfo.getFileUri(), RequestBody.create(MediaType.parse(fileInfo.getFileUri()), fileInfo.getFileContents()));
-        }
-
-        final Request request = new Request.Builder()
-                .url(getCompleteEndpoint())
-                .post(requestBodyBuilder.build())
-                .build();
+        Request request = requestBuilder.build();
 
         mRequestCancelled = false;
         httpClient.newCall(request).enqueue(new Callback() {

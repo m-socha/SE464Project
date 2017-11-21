@@ -20,5 +20,4 @@ public abstract class ApiService {
 
     public abstract void onRequestFailure();
     public abstract void onRequestSuccess(JSONObject requestResponse);
-
 }
