@@ -1,7 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import {
-  Icon,
   Preloader,
 } from 'react-materialize';
 import SplitPane from 'react-split-pane';
@@ -12,7 +11,16 @@ import TxtPage from 'components/TxtPage';
 import ImagePage from 'components/ImagePage';
 
 import { fetchNotebook } from 'actions/notebook';
-import { createComment } from 'actions/comment';
+import { createComment, commentPageUpdate } from 'actions/comment';
+
+const resizerStyle = {
+  width: '11px',
+  borderLeft: '5px solid rgba(255, 255, 255, 0)',
+  borderRight: '5px solid rgba(255, 255, 255, 0)',
+  cursor: 'col-resize',
+  background: '#000',
+  opacity: '.2',
+};
 
 class NoteBook extends React.Component {
   componentWillMount() {
@@ -22,7 +30,7 @@ class NoteBook extends React.Component {
   render() {
     if (this.props.isFetching) {
       return (
-        <div className={styles.center}>
+        <div className="center">
           <Preloader size="big"/>;
         </div>
       );
@@ -45,22 +53,29 @@ class NoteBook extends React.Component {
         }
       });
     }
-    
+
     const courseCode = this.props.location.state ? this.props.location.state.courseCode : 'Course Code';
 
     return (
-      <SplitPane split="vertical" minSize={200} defaultSize={200} primary="second">
-      <div>
+      <SplitPane
+        split="vertical"
+        maxSize={300}
+        minSize={0}
+        defaultSize={this.props.commentPaneOpen ? 300 : 0}
+        step={300}
+        primary="second"
+        resizerStyle={resizerStyle}
+        onChange={size => this.props.commentPaneUpdate(size)}>
         <div>
-          {/*<Icon small>keyboard_arrow_left</Icon>*/}
-          <h3 className={styles.center}>{courseCode}</h3>
+          <div>
+            <h3 className="center">{courseCode}</h3>
+          </div>
+          <div className="container">
+            { pages }
+          </div>
         </div>
-        <div className="container">
-          { pages }
-        </div>
-      </div>
-       <div>Comments</div>
-       </SplitPane>
+        <div>Comments</div>
+      </SplitPane>
     );
   }
 }
@@ -68,7 +83,8 @@ class NoteBook extends React.Component {
 function mapStateToProps(state) {
   return {
     isFetching: state.fetch['notebook'],
-    getNotebook: getNotebook.bind(null, state)
+    getNotebook: getNotebook.bind(null, state),
+    commentPaneOpen: state.commentPaneOpen,
   };
 }
 
@@ -79,6 +95,10 @@ function mapDispatchToProps(dispatch) {
     },
     onComment: (noteID, content) => {
       dispatch(createComment(noteID, content));
+    },
+    commentPaneUpdate: (paneSize) => {
+      const paneOpen = (paneSize === 300);
+      dispatch(commentPageUpdate(paneOpen));
     },
   };
 }

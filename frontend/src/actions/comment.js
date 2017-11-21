@@ -1,5 +1,5 @@
 import { get, post } from 'services/request';
-import { REQUEST_COMMENTS, RECEIVE_COMMENTS, CREATE_COMMENT, CREATE_COMMENT_SUCCESS } from 'constants/data';
+import { REQUEST_COMMENTS, RECEIVE_COMMENTS, CREATE_COMMENT, CREATE_COMMENT_SUCCESS, COMMENT_PANE_UPDATE } from 'constants/data';
 
 function requestComments(noteID) {
   return {
@@ -53,5 +53,12 @@ export function createComment(noteID, content) {
     post(`/notes/${noteID}/comments`, { user_id: 1, content }, (response) => {
       dispatch(createCommentSuccess(noteID, response));
     });
+  };
+}
+
+export function commentPageUpdate(commentPaneOpen) {
+  return {
+    type: COMMENT_PANE_UPDATE,
+    commentPaneOpen,
   };
 }

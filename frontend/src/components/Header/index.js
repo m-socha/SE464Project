@@ -82,7 +82,7 @@ export default class Header extends React.Component {
 
   render() {
     return (
-      <Navbar className='row' brand='WatNotes' right>
+      <Navbar brand='WatNotes' right>
         <NavItem href='/'>Home</NavItem>
         <NavItem href='/login'>Login</NavItem>
         <li>

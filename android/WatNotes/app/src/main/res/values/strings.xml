@@ -22,4 +22,7 @@
 
     <!-- Notebook Feed Activity -->
     <string name="notebooks">Notebooks</string>
+
+    <!-- Note Feed Activity -->
+    <string name="notes">Notes</string>
 </resources>
