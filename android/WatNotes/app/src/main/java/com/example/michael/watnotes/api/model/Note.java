@@ -1,5 +1,7 @@
 package com.example.michael.watnotes.api.model;
 
+import android.os.Parcelable;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 

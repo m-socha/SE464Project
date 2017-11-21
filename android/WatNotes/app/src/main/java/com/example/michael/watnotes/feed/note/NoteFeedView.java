@@ -8,8 +8,6 @@ import android.widget.RelativeLayout;
 
 import com.example.michael.watnotes.R;
 import com.example.michael.watnotes.api.model.Note;
-import com.example.michael.watnotes.api.model.Notebook;
-import com.example.michael.watnotes.feed.notebook.NotebookAdapter;
 
 import java.util.List;
 

@@ -11,6 +11,8 @@ import com.example.michael.watnotes.activities.core.UiFragment;
 
 public class NoteFeedActivity extends DrawerActivity {
 
+    public static final String QUERY = "QUERY";
+
     @Override
     protected UiFragment createUiFragment() {
         return new NoteFeedUiFragment();
@@ -24,5 +26,9 @@ public class NoteFeedActivity extends DrawerActivity {
     @Override
     protected String getActionBarTitle() {
         return getString(R.string.notes);
+    }
+
+    public String getQuery() {
+        return mBundle.getString(QUERY);
     }
 }

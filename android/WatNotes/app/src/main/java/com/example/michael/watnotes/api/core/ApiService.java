@@ -1,5 +1,6 @@
 package com.example.michael.watnotes.api.core;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
@@ -19,5 +20,5 @@ public abstract class ApiService {
     protected abstract void cancelAllRequests();
 
     public abstract void onRequestFailure();
-    public abstract void onRequestSuccess(JSONObject requestResponse);
+    public abstract void onRequestSuccess(JSONObject requestResponse) throws JSONException;
 }

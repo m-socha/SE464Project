@@ -16,6 +16,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".activities.search.SearchActivity"></activity>
+        <activity android:name=".activities.notebookfeed.NotebookFeedActivity"></activity>
+        <activity android:name=".activities.notefeed.NoteFeedActivity"></activity>
     </application>
 
     <uses-permission android:name="android.permission.INTERNET" />

@@ -52,6 +52,8 @@ public abstract class BaseActivity extends AppCompatActivity {
     private UiFragment mUiFragment;
     private ServiceFragment mServiceFragment;
 
+    protected Bundle mBundle;
+
     protected abstract UiFragment createUiFragment();
     protected abstract ServiceFragment createServiceFragment();
     protected abstract int getLayoutId();
@@ -69,6 +71,8 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        mBundle = savedInstanceState;
 
         setContentView(getLayoutId());
         setupUi();
