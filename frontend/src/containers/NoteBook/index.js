@@ -84,7 +84,7 @@ function mapStateToProps(state) {
   return {
     isFetching: state.fetch['notebook'],
     getNotebook: getNotebook.bind(null, state),
-    commentPaneOpen: state.commentPaneOpen,
+    commentPaneOpen: state.ui.commentPaneOpen,
   };
 }
 
@@ -95,6 +95,7 @@ function mapDispatchToProps(dispatch) {
     },
     onComment: (noteID, content) => {
       dispatch(createComment(noteID, content));
+      dispatch(commentPageUpdate(true));
     },
     commentPaneUpdate: (paneSize) => {
       const paneOpen = (paneSize === 300);

@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from './page.css';
-import Comment from '../Comment';
+import AddComment from '../AddComment';
 
 const Page = (props) => {
   return (
@@ -8,7 +8,7 @@ const Page = (props) => {
       <div className={styles.page}>
         { props.children }
       </div>
-      <Comment onComment={value => props.onComment(props.pageID, value)}/>
+      <AddComment onComment={value => props.onComment(props.pageID, value)}/>
     </div>
   );
 };

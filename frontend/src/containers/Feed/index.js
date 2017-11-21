@@ -25,7 +25,7 @@ class Feed extends React.Component {
     if (this.props.isFetching) {
       return (
         <div className={styles.center}>
-          <Preloader size="big" />;
+          <Preloader size="big" />
         </div>
       );
     }
