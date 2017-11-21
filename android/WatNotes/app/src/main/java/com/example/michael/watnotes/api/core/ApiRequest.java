@@ -11,6 +11,7 @@ import java.util.Map;
 
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.HttpUrl;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
@@ -63,8 +64,8 @@ public class ApiRequest {
     public void startRequest() {
         OkHttpClient httpClient = new OkHttpClient();
 
-        Request.Builder requestBuilder = new Request.Builder()
-                .url(getCompleteEndpoint());
+        Request.Builder requestBuilder = new Request.Builder();
+        HttpUrl.Builder urlBuilder = HttpUrl.parse(getCompleteEndpoint()).newBuilder();
 
         if (mRequestType == RequestType.POST) {
             MultipartBody.Builder requestBodyBuilder = new MultipartBody.Builder()
@@ -80,9 +81,15 @@ public class ApiRequest {
             }
 
             requestBuilder.post(requestBodyBuilder.build());
+        } else if (mRequestType == RequestType.GET) {
+            for (Map.Entry<String, String> param : mParamMap.entrySet()) {
+                urlBuilder.addQueryParameter(param.getKey(), param.getValue());
+            }
         }
 
-        Request request = requestBuilder.build();
+        Request request = requestBuilder
+                .url(urlBuilder.build())
+                .build();
 
         mRequestCancelled = false;
         httpClient.newCall(request).enqueue(new Callback() {

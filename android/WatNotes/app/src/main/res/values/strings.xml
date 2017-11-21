@@ -15,4 +15,7 @@
     <string name="upload_notes_upload_file_prompt">Upload an existing file</string>
     <string name="upload_notes_upload_file_caption">Accepts photos, PDFs and .txt docs</string>
     <string name="upload_notes_upload_file_success">Notes uploaded successfully</string>
+
+    <!-- Search Activity -->
+    <string name="search">Search</string>
 </resources>

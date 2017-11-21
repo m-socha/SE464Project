@@ -4,10 +4,14 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.view.Gravity;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.example.michael.watnotes.R;
 import com.example.michael.watnotes.activities.core.BaseActivity;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by michael on 10/1/17.
@@ -47,6 +51,10 @@ public abstract class DrawerActivity extends BaseActivity {
         ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(this, mNavDrawer, R.string.open_drawer, R.string.close_drawer);
         mNavDrawer.addDrawerListener(drawerToggle);
         drawerToggle.syncState();
+
+        List<String> drawerListItems = new ArrayList();
+        drawerListItems.add(getString(R.string.search));
+        mNavDrawerListView.setAdapter(new DrawerListAdapter(this, drawerListItems));
     }
 
     @Override
