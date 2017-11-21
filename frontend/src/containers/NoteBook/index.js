@@ -4,6 +4,7 @@ import {
   Icon,
   Preloader,
 } from 'react-materialize';
+import SplitPane from 'react-split-pane';
 import {getNotebook} from 'selectors/notebook';
 import styles from './notebook.css';
 
@@ -48,6 +49,7 @@ class NoteBook extends React.Component {
     const courseCode = this.props.location.state ? this.props.location.state.courseCode : 'Course Code';
 
     return (
+      <SplitPane split="vertical" minSize={200} defaultSize={200} primary="second">
       <div>
         <div>
           {/*<Icon small>keyboard_arrow_left</Icon>*/}
@@ -57,6 +59,8 @@ class NoteBook extends React.Component {
           { pages }
         </div>
       </div>
+       <div>Comments</div>
+       </SplitPane>
     );
   }
 }
