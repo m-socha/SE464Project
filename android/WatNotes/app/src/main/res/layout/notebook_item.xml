@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        style="@style/standard_text_view"
+        android:id="@+id/notebook_user_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_margin="@dimen/half_standard_margin"
+        android:textSize="@dimen/subtitle_font_size" />
+
+    <TextView
+        style="@style/standard_text_view"
+        android:id="@+id/notebook_course_code"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_margin="@dimen/half_standard_margin"
+        android:textSize="@dimen/subtitle_font_size" />
+
+    <TextView
+        style="@style/standard_text_view"
+        android:id="@+id/notebook_course_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_margin="@dimen/half_standard_margin"
+        android:textSize="@dimen/subtitle_font_size" />
+
+</RelativeLayout>

@@ -19,4 +19,7 @@
 
     <!-- Search Activity -->
     <string name="search">Search</string>
+
+    <!-- Notebook Feed Activity -->
+    <string name="notebooks">Notebooks</string>
 </resources>

@@ -5,8 +5,6 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.example.michael.watnotes.R;
-import com.example.michael.watnotes.activities.core.BaseActivity;
-import com.example.michael.watnotes.activities.core.ServiceFragment;
 import com.example.michael.watnotes.activities.core.UiFragment;
 
 /**
