@@ -19,6 +19,9 @@ public class SearchNoteService extends SingleApiService {
     public void requestService(String query,
                                DefaultCompletionCallback completionCallback,
                                DefaultFailureCallback failureCallback) {
+        mCompletionCallback = completionCallback;
+        mFailureCallback = failureCallback;
+
         ApiRequest request = new ApiRequest("search", ApiRequest.RequestType.GET, this);
         request.addParam("q", query);
         request.startRequest();

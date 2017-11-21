@@ -20,6 +20,9 @@ public class UploadNoteService extends SingleApiService {
     public void requestService(int notebookId, IOUtil.FileInfo fileInfo, String fileFormat,
                                DefaultCompletionCallback completionCallback,
                                DefaultFailureCallback failureCallback) {
+        mCompletionCallback = completionCallback;
+        mFailureCallback = failureCallback;
+
         ApiRequest request = new ApiRequest("notebooks/" + notebookId + "/notes?form=1", ApiRequest.RequestType.POST, this);
         request.addFormFile("data", fileInfo);
         request.addParam("format", fileFormat);
