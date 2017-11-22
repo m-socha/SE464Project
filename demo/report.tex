@@ -1,0 +1,79 @@
+  \documentclass[12pt]{article}
+
+  \usepackage[fleqn]{amsmath}
+  \usepackage{color}
+  \usepackage{listings}
+  \usepackage[margin=1in]{geometry}
+  \usepackage{indentfirst}
+  \usepackage{graphicx}
+  \usepackage{float}
+
+  \begin{document}
+
+  \begin{center}
+  \vspace*{\fill}
+  {\Large\bf University of Waterloo}\\
+  \vspace{3mm}
+  {\large\bf SE464 Fall 2017}\\
+  \vspace{3mm}
+  {\Large\bf Project Status Report and Demo Description}\\
+  \vspace{5mm}
+  {\Large Project Name: WatNotes}\\
+  \vspace{5mm}
+  Michael Socha, Mitchell Kember, Do Gyun Kim, Myungheon Chun\\
+  \vspace{3mm}
+  msocha@edu.uwaterloo.ca, mkember@edu.uwaterloo.ca, dg3kim@edu.uwaterloo.ca, m5chun@edu.uwaterloo.ca\\
+  \vspace*{\fill}
+  \end{center}
+
+  \newpage
+
+  \section{Status Report}
+    WatNotes is a platform designed to allow students at the University of Waterloo to effectively upload, share
+    and collaboratively edit notes. WatNotes has a mobile client used primarily for uploading notes and searching
+    through other user notes. WatNotes also supports a website, which is used for activities that require greater
+    focus such as in-depth studying and collaboration. \\
+
+    Since the prototype demo, WatNotes' development team has managed to implement all key functional properties described
+    by the project's prescriptive architecture. In particular, the following features are supported:
+    
+    \begin{itemize}
+      \item
+        \textbf{Uploading and sharing notes}. As originally intended, student can use WatNotes' mobile client to upload existing
+        files of notes (e.g. .txt files or images), or to take pictures of notes and upload the resulting files. Notes are
+        automatically public, and hence viewable by other WatNotes users.
+      \item
+        \textbf{Editing and collaboration}. WatNotes' web client supports adding comments on notes to support a collaborative environment.
+        Students can leave comments to ask questions or point out inaccuracies in notes, improving overall note quality for
+        the platform's users.
+      \item
+        \textbf{Search and discoverability}. WatNotes' platforms allow users to search notes uploaded to the platform based on their content.
+        Such search functionality makes the sharing aspect of WatNotes more effective, since students are able to easily find the
+        material they want to study. Moreover, WatNotes' web platform supports search across content beyond notes, including notebooks
+        (collections of notes), users, and comments.
+    \end{itemize}
+  \newpage
+
+  \section{Demo Description}
+    The demo will open with a high-level overview of WatNotes, including a general description of the features supported by the system's web
+    and mobile platforms. The presentation will then cover some of the architectural and technical details of each platform. \\
+    
+    After that, the presentation will cover sample use cases of the platform. The main focus will be on the example use cases
+    described in the project's initial proposal. These include:
+
+    \begin{itemize}
+      \item
+        A student has missed a lecture and would like to read its notes. WatNotes allows this student to perform a simple search on
+        its mobile platform using keywords of the missed lecture, and returns a list of all relevant notes. The student is now able
+        to read through the notes and catch up on the missed lecture.
+      \item
+        A student would like to make their notes public for the good of the University community. The student uses WatNotes' mobile
+        application to upload files of their notes, which are automatically made public to other users of the platform. Later, a student
+        studying using WatNotes' website encounters these notes, and points out a minor inaccuracy. Thus, the uploader was able to help
+        the community by releasing their notes, and was also benefited by other users helping improve their notes in WatNotes' collaborative
+        environment.
+    \end{itemize}
+
+    The demo will conclude with a Q\&A session.
+
+\end{document}
