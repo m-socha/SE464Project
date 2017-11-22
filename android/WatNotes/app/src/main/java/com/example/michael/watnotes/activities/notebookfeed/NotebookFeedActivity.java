@@ -11,6 +11,9 @@ import com.example.michael.watnotes.activities.core.UiFragment;
 
 public class NotebookFeedActivity extends DrawerActivity {
 
+    public static final String USER_ID_KEY = "USER_ID_KEY";
+    public static final int NO_USER_ID = -1;
+
     @Override
     protected UiFragment createUiFragment() {
         return new NotebookFeedUiFragment();
@@ -24,5 +27,9 @@ public class NotebookFeedActivity extends DrawerActivity {
     @Override
     protected String getActionBarTitle() {
         return getString(R.string.notebooks);
+    }
+
+    public Integer getUserId() {
+        return getIntent().getIntExtra(USER_ID_KEY, NO_USER_ID);
     }
 }

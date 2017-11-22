@@ -11,7 +11,7 @@ import com.example.michael.watnotes.activities.core.UiFragment;
 
 public class NoteFeedActivity extends DrawerActivity {
 
-    public static final String QUERY = "QUERY";
+    public static final String QUERY_KEY = "QUERY_KEY";
 
     @Override
     protected UiFragment createUiFragment() {
@@ -29,6 +29,6 @@ public class NoteFeedActivity extends DrawerActivity {
     }
 
     public String getQuery() {
-        return getIntent().getStringExtra(QUERY);
+        return getIntent().getStringExtra(QUERY_KEY);
     }
 }

@@ -7,17 +7,16 @@ import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.example.michael.watnotes.R;
-import com.example.michael.watnotes.activities.core.BaseActivity;
 import com.example.michael.watnotes.activities.notebookfeed.NotebookFeedActivity;
 import com.example.michael.watnotes.activities.search.SearchActivity;
 import com.example.michael.watnotes.activities.uploadnotes.UploadNotesActivity;
 
 import java.util.ArrayList;
 import java.util.List;
+
 
 /**
  * Created by michael on 10/1/17.
@@ -78,6 +77,7 @@ public abstract class DrawerActivity extends BaseActivity {
                     }
                     case NOTEBOOKS_INDEX: {
                         Intent intent = new Intent(DrawerActivity.this, NotebookFeedActivity.class);
+                        intent.putExtra(NotebookFeedActivity.USER_ID_KEY, 1);
                         startActivity(intent);
                         break;
                     }

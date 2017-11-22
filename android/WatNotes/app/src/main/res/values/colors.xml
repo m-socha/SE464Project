@@ -21,4 +21,8 @@
     <color name="gray">#A9A9A9</color>
     <color name="gray_translucent">#88A9A9A9</color>
     <color name="gray_dark">#808080</color>
+
+    <color name="green">#009900</color>
+
+    <color name="black">#000000</color>
 </resources>

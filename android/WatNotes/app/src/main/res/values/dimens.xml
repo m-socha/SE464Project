@@ -33,4 +33,7 @@
     <!-- File upload view -->
     <dimen name="file_upload_icon_size">50dp</dimen>
 
+    <!-- Notebook Feed -->
+    <dimen name="notebook_item_height">100dp</dimen>
+
 </resources>

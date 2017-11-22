@@ -37,7 +37,7 @@ public class SearchUiFragment extends UiFragment {
                     public void performTask(BaseActivity baseActivity) {
                         final String query = mSearchBox.getText().toString().trim();
                         Intent intent = new Intent(baseActivity, NoteFeedActivity.class);
-                        intent.putExtra(NoteFeedActivity.QUERY, query);
+                        intent.putExtra(NoteFeedActivity.QUERY_KEY, query);
                         startActivity(intent);
                     }
                 });

@@ -1,5 +1,7 @@
 package com.example.michael.watnotes.api.model;
 
+import android.util.Log;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -20,7 +22,7 @@ public class Notebook extends BaseModel {
     @Override
     public void parseJSON(JSONObject json) throws JSONException {
         mId = json.getInt("id");
-        mCourse = new Course(json.getJSONObject("name"));
+        mCourse = new Course(json.getJSONObject("course"));
         mUser = new User(json.getJSONObject("user"));
     }
 

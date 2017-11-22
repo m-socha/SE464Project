@@ -26,6 +26,7 @@ public class NoteFeedUiFragment extends UiFragment {
     @Override
     protected void initializeUi(View view) {
         mFeedView = (NoteFeedView) view.findViewById(R.id.note_feed_view);
+
         withServiceFragment(new ServiceFragmentTask<NoteFeedServiceFragment>() {
             @Override
             public void performTask(final NoteFeedServiceFragment serviceFragment) {
