@@ -86,7 +86,7 @@ def es_search(query: str, page: int, per_page: int, indices: List[str]=None):
     for m in models.models:
         index = m.es_index()
         if index not in index_id_score:
-            items[index] = {}
+            items[index] = []
             continue
         id_score = index_id_score[index]
         ids = id_score.keys()
