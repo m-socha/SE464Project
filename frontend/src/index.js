@@ -28,7 +28,7 @@ const render = () => {
     <Provider store={store}>
       <HashRouter>
         <div>
-          <Header/>
+          <Header />
           <Switch>
             <Route exact path="/" component={Feed} />
             <Route path="/notes/:note_id" component={Note} />

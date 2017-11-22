@@ -6,6 +6,7 @@ import {
 } from 'react-materialize';
 import Autocomplete from 'react-autocomplete'
 import fuzzysearch from 'fuzzysearch'
+import { Link } from 'react-router-dom';
 
 import {fetchSearchResults} from 'actions/search'
 
@@ -22,7 +23,7 @@ export default class Header extends React.Component {
 
   onChange(inquiry) {
     this.setState({inquiry});
-    
+
     if (!inquiry) {
       return this.setState({data:[]});
     }
@@ -36,33 +37,49 @@ export default class Header extends React.Component {
       if (!data) return;
 
       this.state.cache.set(inquiry, data);
-      this.setState({data});
+      if (this.state.inquiry === inquiry) {
+        this.setState({data});
+      }
     });
   }
 
-  onSelect(inquiry) {
-    this.setState({inquiry});
+  onSelect(val, item) {
+    let inquiry = item.name || item.code || item.data;
+    // this.setState({inquiry});
   }
 
   renderItem(item, isHighlighted) {
+    let label;
     switch(item.type) {
       case 'users':
+        label = item.name;
+        if (label.length > 25) {
+          label = label.substring(0, 15) + '...';
+        }
         return (
-          <div key={item.id} style={{color: 'black'}}>
-            {item.name}
-          </div>
+            <a key={item.id} style={{color: 'black', fontSize: '10px'}}>
+              {label}
+            </a>
         );
       case 'courses':
+        label = item.code + ' ' + item.title;
+        if (label.length > 25) {
+          label = label.substring(0, 15) + '...';
+        }
         return (
-          <div key={item.id} style={{color: 'black'}}>
-            {item.code} {item.title}
-          </div>
+          <a key={item.id} style={{color: 'black', fontSize: '10px'}}>
+            {label}
+          </a>
         );
       case 'notes':
+        label = item.data;
+        if (label.length > 25) {
+          label = label.substring(0, 15) + '...';
+        }
         return (
-          <div key={item.id} style={{color: 'black'}}>
-            {item.data}
-          </div>
+          <Link key={item.id} to={{ pathname: `/notes/${item.notebook_id}`}} style={{color: 'black', fontSize: '10px'}}>
+            {label}
+          </Link>
         );
       case 'notebooks':
         return (
@@ -97,7 +114,7 @@ export default class Header extends React.Component {
             items={this.state.data}
             value={this.state.inquiry}
             onChange={(e) => this.onChange(e.target.value)}
-            onSelect={(val) => this.onSelect(val)}
+            onSelect={(val, item) => this.onSelect(val, item)}
             renderItem={this.renderItem}
           />
         </li>
