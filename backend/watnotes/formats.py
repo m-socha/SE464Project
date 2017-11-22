@@ -37,6 +37,17 @@ def mime_to_extension(mime: str) -> str:
     return MAP.get(mime.lower())
 
 
+def mime_to_pil_format(mime: str) -> str:
+    """Convert a MIME type to a PIL image format."""
+    MAP = {
+        'image/png': 'png',
+        'image/jpeg': 'jpeg',
+        'image/gif': 'gif'
+    }
+
+    return MAP.get(mime.lower())
+
+
 def is_valid_mime(mime: str) -> bool:
     return mime_to_extension(mime) is not None
 
