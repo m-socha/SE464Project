@@ -69,7 +69,7 @@ class NoteBook extends React.Component {
         resizerStyle={resizerStyle}
         onChange={size => this.props.commentPaneUpdate(size)}
         pane1Style={scrollingStyle}>
-        <div>
+        <div className={styles.NotebookFeed}>
           <div>
             <h3 className="center">{courseCode}</h3>
           </div>

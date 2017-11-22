@@ -1,9 +1,14 @@
-import React from 'react';
+import { connect } from 'react-redux';
+import CommentFeed from '../../components/CommentFeed';
 
-// UI-state (pane -> open/closed) Domain-state (comments)
-class CommentFeed extends React.Component {
-  
-  render() {
-    
-  }
+function mapStateToProps(state) {
+  return {
+  };
 }
+
+function mapDispatchToProps(dispatch) {
+  return {
+  };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(CommentFeed);
