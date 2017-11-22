@@ -11,7 +11,7 @@ import TxtPage from 'components/TxtPage';
 import ImagePage from 'components/ImagePage';
 
 import { fetchNotebook } from 'actions/notebook';
-import { createComment, commentPageUpdate } from 'actions/comment';
+import { createComment, commentPageUpdate, selectPageForComments } from 'actions/comment';
 const scrollingStyle = {
   overflow: 'auto',
 }
@@ -45,11 +45,11 @@ class NoteBook extends React.Component {
       pages = notebook.notes.map((page) => {
         switch (page.format) {
           case 'text/plain':
-            return <TxtPage onComment={this.props.onComment} key={page.id} page={page} />;
+            return <TxtPage selectPageForComments={this.props.selectPageForComments} onComment={this.props.onComment} key={page.id} page={page} />;
           case 'image/png':
-            return <ImagePage onComment={this.props.onComment} key={page.id} page={page} format="png" />;
+            return <ImagePage selectPageForComments={this.props.selectPageForComments} onComment={this.props.onComment} key={page.id} page={page} format="png" />;
           case 'image/jpeg':
-            return <ImagePage onComment={this.props.onComment} key={page.id} page={page} format="jpg" />;
+            return <ImagePage selectPageForComments={this.props.selectPageForComments} onComment={this.props.onComment} key={page.id} page={page} format="jpg" />;
           default:
             return null;
         }
@@ -101,9 +101,11 @@ function mapDispatchToProps(dispatch) {
       dispatch(commentPageUpdate(true));
     },
     commentPaneUpdate: (paneSize) => {
-      const paneOpen = (paneSize === 300);
-      dispatch(commentPageUpdate(paneOpen));
+      dispatch(commentPageUpdate((paneSize === 300)));
     },
+    selectPageForComments: (pageID) => {
+      dispatch(selectPageForComments(pageID));
+    }
   };
 }
 

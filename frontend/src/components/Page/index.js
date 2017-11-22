@@ -5,7 +5,7 @@ import AddComment from '../AddComment';
 const Page = (props) => {
   return (
     <div>
-      <div className={styles.page}>
+      <div onClick={() => props.selectPageForComments(props.pageID)} className={styles.page}>
         { props.children }
       </div>
       <AddComment onComment={value => props.onComment(props.pageID, value)}/>

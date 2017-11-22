@@ -1,5 +1,6 @@
 import { get, post } from 'services/request';
-import { REQUEST_COMMENTS, RECEIVE_COMMENTS, CREATE_COMMENT, CREATE_COMMENT_SUCCESS, COMMENT_PANE_UPDATE } from 'constants/data';
+import { REQUEST_COMMENTS, RECEIVE_COMMENTS, CREATE_COMMENT, CREATE_COMMENT_SUCCESS, 
+  COMMENT_PANE_UPDATE, SELECT_PAGE_FOR_COMMENTS } from 'constants/data';
 
 function requestComments(noteID) {
   return {
@@ -60,5 +61,12 @@ export function commentPageUpdate(commentPaneOpen) {
   return {
     type: COMMENT_PANE_UPDATE,
     commentPaneOpen,
+  };
+}
+
+export function selectPageForComments(pageID) {
+  return {
+    type: SELECT_PAGE_FOR_COMMENTS,
+    pageID,
   };
 }
