@@ -12,7 +12,9 @@ import ImagePage from 'components/ImagePage';
 
 import { fetchNotebook } from 'actions/notebook';
 import { createComment, commentPageUpdate } from 'actions/comment';
-
+const scrollingStyle = {
+  overflow: 'auto',
+}
 const resizerStyle = {
   width: '11px',
   borderLeft: '5px solid rgba(255, 255, 255, 0)',
@@ -65,7 +67,8 @@ class NoteBook extends React.Component {
         step={300}
         primary="second"
         resizerStyle={resizerStyle}
-        onChange={size => this.props.commentPaneUpdate(size)}>
+        onChange={size => this.props.commentPaneUpdate(size)}
+        pane1Style={scrollingStyle}>
         <div>
           <div>
             <h3 className="center">{courseCode}</h3>

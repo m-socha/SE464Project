@@ -8,7 +8,7 @@ import {
   Switch,
   HashRouter,
 } from 'react-router-dom';
-
+import './index.css';
 import configureStore from './store';
 import Header from './components/Header';
 import Feed from './containers/Feed';
@@ -21,7 +21,7 @@ import configuration from '../config';
 
 config.set(configuration);
 
-const store = configureStore({}); 
+const store = configureStore({});
 
 const render = () => {
   ReactDOM.render(
