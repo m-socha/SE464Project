@@ -21,20 +21,22 @@ export default class Header extends React.Component {
   }
 
   onChange(inquiry) {
+    this.setState({inquiry});
+    
     if (!inquiry) {
-      return this.setState({inquiry, data:[]});
+      return this.setState({data:[]});
     }
 
     let data = this.state.cache.get(inquiry);
     if (data) {
-      return this.setState({inquiry, data});
+      return this.setState({data});
     }
 
     fetchSearchResults(inquiry, (data) => {
       if (!data) return;
 
       this.state.cache.set(inquiry, data);
-      this.setState({inquiry, data});
+      this.setState({data});
     });
   }
 
