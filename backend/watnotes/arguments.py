@@ -26,6 +26,11 @@ def is_attachment() -> bool:
     return request.args.get('dl') == '1'
 
 
+def is_flat() -> bool:
+    """Return true if the client requested flat search results."""
+    return request.args.get('flat') == '1'
+
+
 def get_preloads():
     """Return the list of preloads specified in the query parameters."""
     names = request.args.get('load')

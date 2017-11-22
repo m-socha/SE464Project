@@ -10,7 +10,7 @@ from elasticsearch import Elasticsearch
 import certifi
 
 from watnotes import app, crud_helpers, models
-from watnotes.arguments import get_preloads
+from watnotes.arguments import get_preloads, is_flat
 
 
 # Use a single type for Elasticsearch 6.
@@ -81,18 +81,26 @@ def es_search(query: str, page: int, per_page: int, indices: List[str]=None):
             index_id_score[index] = {}
         index_id_score[index][int(hit['_id'])] = hit['_score']
 
+    flat = is_flat()
     preloads = get_preloads()
-    items = {}
+    items = [] if flat else {}
     for m in models.models:
         index = m.es_index()
         if index not in index_id_score:
-            items[index] = []
+            if not flat:
+                items[index] = []
             continue
         id_score = index_id_score[index]
         ids = id_score.keys()
         objs = m.preloaded(preloads).filter(m.id.in_(ids)).all()
         objs.sort(key=lambda o: id_score[o.id], reverse=True)
-        items[index] = [o.serialize(preloads) for o in objs]
+        if flat:
+            serial = [o.serialize(preloads) for o in objs]
+            for s in serial:
+                s['type'] = index
+            items.extend(serial)
+        else:
+            items[index] = [o.serialize(preloads) for o in objs]
 
     total = response['hits']['total']
     return dict(
