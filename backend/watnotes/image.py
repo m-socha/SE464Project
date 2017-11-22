@@ -6,7 +6,7 @@ from typing import Tuple
 from PIL import Image
 
 from watnotes import app
-from watnotes.formats import convert_mime, mime_to_extension
+from watnotes.formats import convert_mime, mime_to_pil_format
 
 
 # Maximum width and height.
@@ -21,7 +21,7 @@ def process_image_data(data: bytes, format: str) -> Tuple[bytes, str]:
 
     output = BytesIO()
     format = convert_mime(format)
-    image.save(output, format=mime_to_extension(format))
+    image.save(output, format=mime_to_pil_format(format))
     data = output.getvalue()
     output.close()
 

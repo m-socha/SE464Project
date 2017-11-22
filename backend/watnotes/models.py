@@ -218,10 +218,13 @@ class Notebook(BaseModel):
         return result
 
     def serialize_es(self):
+        # TODO: why doesn't self.user, self.course work?
+        user = User.query.get(self.user_id)
+        course = Course.query.get(self.course_id)
         return {
-            'name': self.user.name,
-            'code': self.course.code,
-            'title': self.course.title
+            'name': user.name,
+            'code': course.code,
+            'title': course.title
         }
 
     def __repr__(self):
