@@ -8,6 +8,9 @@
     <!-- Drawer Layout -->
     <string name="open_drawer">Open drawer</string>
     <string name="close_drawer">Close drawer</string>
+    <string name="drawer_upload">Upload</string>
+    <string name="drawer_search">Search</string>
+    <string name="drawer_notebooks">Notebooks</string>
 
     <!-- Upload Notes Activity -->
     <string name="upload_notes_title">Upload Notes</string>

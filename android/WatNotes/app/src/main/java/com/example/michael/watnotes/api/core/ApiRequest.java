@@ -1,10 +1,7 @@
 package com.example.michael.watnotes.api.core;
 
-import android.app.Activity;
-import android.content.ContextWrapper;
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Log;
 
 import com.example.michael.watnotes.util.IOUtil;
 
