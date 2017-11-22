@@ -10,10 +10,11 @@ function requestComments(noteID) {
   };
 }
 
-function receiveComments(comments) {
+function receiveComments(noteID, comments) {
   return {
     type: RECEIVE_COMMENTS,
     comments,
+    noteID,
     source: 'comments',
   };
 }
@@ -26,7 +27,7 @@ export function fetchComments(noteID, page) {
         console.log(`Error while fetching comments for ${noteID} - ${err}`);
       }
 
-      dispatch(receiveComments(data.items));
+      dispatch(receiveComments(noteID, data.items));
     });
   };
 }
@@ -39,10 +40,9 @@ function requestCreateComment(noteID) {
   };
 }
 
-function createCommentSuccess(noteID, newComment) {
+function createCommentSuccess(newComment) {
   return {
     type: CREATE_COMMENT_SUCCESS,
-    noteID,
     newComment,
     source: 'create_comment',
   };
@@ -52,7 +52,7 @@ export function createComment(noteID, content) {
   return (dispatch) => {
     dispatch(requestCreateComment(noteID));
     post(`/notes/${noteID}/comments`, { user_id: 1, content }, (response) => {
-      dispatch(createCommentSuccess(noteID, response));
+      dispatch(createCommentSuccess(response));
     });
   };
 }
