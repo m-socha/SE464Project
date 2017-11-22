@@ -7,6 +7,7 @@ function mapStateToProps(state) {
   return {
     commentsToShow,
     comments: state.comments.byId,
+    users: state.users.byId,
   };
 }
 

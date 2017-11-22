@@ -11,6 +11,7 @@ import ImagePage from 'components/ImagePage';
 import CommentFeedContainer from '../../containers/CommentFeedContainer';
 import { fetchNotebook } from 'actions/notebook';
 import { fetchComments } from '../../actions/comment';
+import { fetchUsers } from '../../actions/users';
 import { createComment, commentPageUpdate, selectPageForComments } from 'actions/comment';
 
 const scrollingStyle = {
@@ -28,6 +29,7 @@ const resizerStyle = {
 class NoteBook extends React.Component {
   componentWillMount() {
     this.props.fetchNotebook(this.props.match.params.note_id);
+    this.props.fetchUsers();
   }
 
   render() {
@@ -110,6 +112,9 @@ function mapDispatchToProps(dispatch) {
       dispatch(selectPageForComments(pageID));
       dispatch(fetchComments(pageID, 1));
       dispatch(commentPageUpdate(true));
+    },
+    fetchUsers: () => {
+      dispatch(fetchUsers());
     },
   };
 }

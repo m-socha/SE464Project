@@ -6,6 +6,7 @@ import pages from './pages';
 import notebook from './notebook';
 import comments from './comments';
 import ui from './ui';
+import users from './users';
 
 export default combineReducers({
   fetch,
@@ -14,4 +15,5 @@ export default combineReducers({
   comments,
   pages,
   ui,
+  users,
 });
