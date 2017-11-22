@@ -12,7 +12,9 @@ import android.widget.ListView;
 
 import com.example.michael.watnotes.R;
 import com.example.michael.watnotes.activities.core.BaseActivity;
+import com.example.michael.watnotes.activities.notebookfeed.NotebookFeedActivity;
 import com.example.michael.watnotes.activities.search.SearchActivity;
+import com.example.michael.watnotes.activities.uploadnotes.UploadNotesActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +24,10 @@ import java.util.List;
  */
 
 public abstract class DrawerActivity extends BaseActivity {
+
+    private static final int UPLOAD_INDEX = 0;
+    private static final int NOTEBOOKS_INDEX = 1;
+    private static final int SEARCH_INDEX = 2;
 
     private DrawerLayout mNavDrawer;
     private ListView mNavDrawerListView;
@@ -57,16 +63,29 @@ public abstract class DrawerActivity extends BaseActivity {
         drawerToggle.syncState();
 
         List<String> drawerListItems = new ArrayList();
-        drawerListItems.add(getString(R.string.search));
+        drawerListItems.add(getString(R.string.drawer_upload));
+        drawerListItems.add(getString(R.string.drawer_notebooks));
+        drawerListItems.add(getString(R.string.drawer_search));
         mNavDrawerListView.setAdapter(new DrawerListAdapter(this, drawerListItems));
         mNavDrawerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 switch (position) {
-                    case 0:
+                    case UPLOAD_INDEX: {
+                        Intent intent = new Intent(DrawerActivity.this, UploadNotesActivity.class);
+                        startActivity(intent);
+                        break;
+                    }
+                    case NOTEBOOKS_INDEX: {
+                        Intent intent = new Intent(DrawerActivity.this, NotebookFeedActivity.class);
+                        startActivity(intent);
+                        break;
+                    }
+                    case SEARCH_INDEX: {
                         Intent intent = new Intent(DrawerActivity.this, SearchActivity.class);
                         startActivity(intent);
                         break;
+                    }
                 }
             }
         });

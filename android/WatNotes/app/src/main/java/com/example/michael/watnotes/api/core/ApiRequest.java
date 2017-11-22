@@ -1,6 +1,7 @@
 package com.example.michael.watnotes.api.core;
 
-import android.util.Log;
+import android.os.Handler;
+import android.os.Looper;
 
 import com.example.michael.watnotes.util.IOUtil;
 
@@ -64,7 +65,7 @@ public class ApiRequest {
     }
 
     public void startRequest() {
-        OkHttpClient httpClient = new OkHttpClient();
+        final OkHttpClient httpClient = new OkHttpClient();
 
         Request.Builder requestBuilder = new Request.Builder();
         HttpUrl.Builder urlBuilder = HttpUrl.parse(getCompleteEndpoint()).newBuilder();
@@ -89,38 +90,55 @@ public class ApiRequest {
             }
         }
 
-        Request request = requestBuilder
+        final Request request = requestBuilder
                 .url(urlBuilder.build())
                 .build();
 
         mRequestCancelled = false;
-        httpClient.newCall(request).enqueue(new Callback() {
+        final Handler mainHandler = new Handler(Looper.getMainLooper());
+        Thread networkingThread = new Thread(new Runnable() {
             @Override
-            public void onFailure(Call call, IOException e) {
-                if (!mRequestCancelled) {
-                    e.printStackTrace();
-                    mApiService.onRequestFailure();
-                }
-            }
-
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                if (!mRequestCancelled) {
-                    if (response.isSuccessful()) {
-                        try {
-                            String responseString = response.body().string().toString();
-                            JSONObject responseJson = new JSONObject(responseString);
-                            mApiService.onRequestSuccess(responseJson);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                            mApiService.onRequestFailure();
-                        }
-                    } else {
-                        mApiService.onRequestFailure();
+            public void run() {
+                httpClient.newCall(request).enqueue(new Callback() {
+                    @Override
+                    public void onFailure(Call call, final IOException e) {
+                        mainHandler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (!mRequestCancelled) {
+                                    e.printStackTrace();
+                                    mApiService.onRequestFailure();
+                                }
+                            }
+                        });
                     }
-                }
+
+                    @Override
+                    public void onResponse(Call call, final Response response) {
+                        mainHandler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (!mRequestCancelled) {
+                                    if (response.isSuccessful()) {
+                                        try {
+                                            String responseString = response.body().string().toString();
+                                            JSONObject responseJson = new JSONObject(responseString);
+                                            mApiService.onRequestSuccess(responseJson);
+                                        } catch (JSONException|IOException e) {
+                                            e.printStackTrace();
+                                            mApiService.onRequestFailure();
+                                        }
+                                    } else {
+                                        mApiService.onRequestFailure();
+                                    }
+                                }
+                            }
+                        });
+                    }
+                });
             }
         });
+        networkingThread.start();
     }
 
     public void cancelRequest() {
