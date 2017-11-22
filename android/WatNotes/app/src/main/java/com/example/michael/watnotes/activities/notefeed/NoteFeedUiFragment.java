@@ -33,7 +33,11 @@ public class NoteFeedUiFragment extends UiFragment {
                 withActivity(new ActivityTask<NoteFeedActivity>() {
                     @Override
                     public void performTask(NoteFeedActivity baseActivity) {
-                        serviceFragment.searchNotes(baseActivity.getQuery());
+                        if (baseActivity.getQuery() != null) {
+                            serviceFragment.searchNotes(baseActivity.getQuery());
+                        } else {
+                            serviceFragment.loadNotebookNotes(baseActivity.getNotebookId());
+                        }
                     }
                 });
             }

@@ -12,6 +12,8 @@ import com.example.michael.watnotes.activities.core.UiFragment;
 public class NoteFeedActivity extends DrawerActivity {
 
     public static final String QUERY_KEY = "QUERY_KEY";
+    public static final String NOTEBOOK_ID_KEY = "NOTEBOOK_ID_KEY";
+    private static final int NO_NOTEBOOK_ID = -1;
 
     @Override
     protected UiFragment createUiFragment() {
@@ -30,5 +32,9 @@ public class NoteFeedActivity extends DrawerActivity {
 
     public String getQuery() {
         return getIntent().getStringExtra(QUERY_KEY);
+    }
+
+    public int getNotebookId() {
+        return getIntent().getIntExtra(NOTEBOOK_ID_KEY, NO_NOTEBOOK_ID);
     }
 }

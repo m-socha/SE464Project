@@ -1,6 +1,7 @@
 package com.example.michael.watnotes.api.model;
 
 import android.os.Parcelable;
+import android.util.Log;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -26,10 +27,14 @@ public class Note extends BaseModel {
     public void parseJSON(JSONObject json) throws JSONException {
         mId = json.getInt("id");
         mNotebookId = json.getInt("notebook_id");
-        mData = json.getString("data");
+        mData = json.optString("data");
         mExtension = json.getString("extension");
         mFormat = json.getString("format");
         mIndex = json.getDouble("index");
+    }
+
+    public int getId() {
+        return mId;
     }
 
     public String getData() {

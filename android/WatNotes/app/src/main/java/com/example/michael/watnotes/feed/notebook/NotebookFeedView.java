@@ -3,6 +3,8 @@ package com.example.michael.watnotes.feed.notebook;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 
@@ -16,6 +18,13 @@ import java.util.List;
  */
 
 public class NotebookFeedView extends RelativeLayout {
+
+    public interface NotebookFeedViewOnClickCallback {
+        void onNotebookClicked(Notebook notebook);
+    }
+
+    private List<Notebook> mNotebooks;
+    private NotebookFeedViewOnClickCallback mClickCallback;
 
     private ListView mNotebookListView;
 
@@ -40,6 +49,20 @@ public class NotebookFeedView extends RelativeLayout {
     }
 
     public void setup(List<Notebook> notebooks) {
+        mNotebooks = notebooks;
         mNotebookListView.setAdapter(new NotebookAdapter(getContext(), notebooks));
+        mNotebookListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if (mClickCallback != null) {
+                    Notebook notebook = mNotebooks.get(position);
+                    mClickCallback.onNotebookClicked(notebook);
+                }
+            }
+        });
+    }
+
+    public void setOnClickCallback(NotebookFeedViewOnClickCallback clickCallback) {
+        mClickCallback = clickCallback;
     }
 }

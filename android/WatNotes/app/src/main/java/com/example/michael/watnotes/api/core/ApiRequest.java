@@ -32,7 +32,7 @@ public class ApiRequest {
         GET, POST
     }
 
-    private static final String BASE_URL = "http://watnotes.herokuapp.com/";
+    public static final String BASE_URL = "http://watnotes.herokuapp.com/";
 
     private boolean mRequestCancelled = false;
     private String mEndpoint;
@@ -67,8 +67,8 @@ public class ApiRequest {
     public void startRequest() {
         final OkHttpClient httpClient = new OkHttpClient();
 
-        Request.Builder requestBuilder = new Request.Builder();
-        HttpUrl.Builder urlBuilder = HttpUrl.parse(getCompleteEndpoint()).newBuilder();
+        final Request.Builder requestBuilder = new Request.Builder();
+        final HttpUrl.Builder urlBuilder = HttpUrl.parse(getCompleteEndpoint()).newBuilder();
 
         if (mRequestType == RequestType.POST) {
             MultipartBody.Builder requestBodyBuilder = new MultipartBody.Builder()
@@ -90,15 +90,15 @@ public class ApiRequest {
             }
         }
 
-        final Request request = requestBuilder
-                .url(urlBuilder.build())
-                .build();
-
         mRequestCancelled = false;
         final Handler mainHandler = new Handler(Looper.getMainLooper());
         Thread networkingThread = new Thread(new Runnable() {
             @Override
             public void run() {
+                final Request request = requestBuilder
+                        .url(urlBuilder.build())
+                        .build();
+
                 httpClient.newCall(request).enqueue(new Callback() {
                     @Override
                     public void onFailure(Call call, final IOException e) {
@@ -115,25 +115,39 @@ public class ApiRequest {
 
                     @Override
                     public void onResponse(Call call, final Response response) {
-                        mainHandler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                if (!mRequestCancelled) {
-                                    if (response.isSuccessful()) {
-                                        try {
-                                            String responseString = response.body().string().toString();
-                                            JSONObject responseJson = new JSONObject(responseString);
-                                            mApiService.onRequestSuccess(responseJson);
-                                        } catch (JSONException|IOException e) {
-                                            e.printStackTrace();
+                        try {
+                            String responseString = response.body().string().toString();
+                            if (!mRequestCancelled) {
+                                if (response.isSuccessful()) {
+                                    final JSONObject responseJson = new JSONObject(responseString);
+                                    mainHandler.post(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            try {
+                                                mApiService.onRequestSuccess(responseJson);
+                                            } catch (JSONException e) {
+                                                e.printStackTrace();
+                                            }
+                                        }
+                                    });
+                                } else {
+                                    mainHandler.post(new Runnable() {
+                                        @Override
+                                        public void run() {
                                             mApiService.onRequestFailure();
                                         }
-                                    } else {
-                                        mApiService.onRequestFailure();
-                                    }
+                                    });
                                 }
                             }
-                        });
+                        } catch (JSONException|IOException e) {
+                            e.printStackTrace();
+                            mainHandler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    mApiService.onRequestFailure();
+                                }
+                            });
+                        }
                     }
                 });
             }
