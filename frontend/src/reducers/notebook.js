@@ -1,10 +1,20 @@
+import { combineReducers } from 'redux';
 import { RECEIVE_NOTEBOOK } from '../constants/data';
 import { createReducer } from './util';
 
-function receiveNotebook(notebookState, action) {
-  return Object.assign({}, notebookState, { [action.notebookID]: action.notebook });
+function receiveNotebook(state, action) {
+  return {
+    ...state,
+    [action.notebookID]: {
+      ...action.notebook,
+    },
+  };
 }
 
-export default createReducer([], {
-  RECEIVE_NOTEBOOK: receiveNotebook,
+const notebookByIdsReducer = createReducer({}, {
+  [RECEIVE_NOTEBOOK]: receiveNotebook,
+});
+
+export default combineReducers({
+  byId: notebookByIdsReducer,
 });

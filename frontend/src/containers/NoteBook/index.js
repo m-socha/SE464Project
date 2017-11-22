@@ -4,17 +4,18 @@ import {
   Preloader,
 } from 'react-materialize';
 import SplitPane from 'react-split-pane';
-import {getNotebook} from 'selectors/notebook';
+import { getNotebook } from 'selectors/notebook';
 import styles from './notebook.css';
-
 import TxtPage from 'components/TxtPage';
 import ImagePage from 'components/ImagePage';
-
+import CommentFeedContainer from '../../containers/CommentFeedContainer';
 import { fetchNotebook } from 'actions/notebook';
+import { fetchComments } from '../../actions/comment';
 import { createComment, commentPageUpdate, selectPageForComments } from 'actions/comment';
+
 const scrollingStyle = {
   overflow: 'auto',
-}
+};
 const resizerStyle = {
   width: '11px',
   borderLeft: '5px solid rgba(255, 255, 255, 0)',
@@ -77,7 +78,7 @@ class NoteBook extends React.Component {
             { pages }
           </div>
         </div>
-        <div>Comments</div>
+        <CommentFeedContainer />
       </SplitPane>
     );
   }
@@ -85,7 +86,7 @@ class NoteBook extends React.Component {
 
 function mapStateToProps(state) {
   return {
-    isFetching: state.fetch['notebook'],
+    isFetching: state.fetch.notebook,
     getNotebook: getNotebook.bind(null, state),
     commentPaneOpen: state.ui.commentPaneOpen,
   };
@@ -105,7 +106,8 @@ function mapDispatchToProps(dispatch) {
     },
     selectPageForComments: (pageID) => {
       dispatch(selectPageForComments(pageID));
-    }
+      dispatch(fetchComments(pageID, 1));
+    },
   };
 }
 

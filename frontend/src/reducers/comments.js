@@ -1,13 +1,16 @@
-import { RECEIVE_COMMENTS, CREATE_COMMENT_SUCCESS } from '../constants/data';
 import { combineReducers } from 'redux';
+import { RECEIVE_COMMENTS, CREATE_COMMENT_SUCCESS } from '../constants/data';
 import { createReducer } from './util';
 
 function receiveCommentsIds(state, action) {
-  // TODO
-  // console.log('receiveCommentsIds')
-  // console.log(action);
+  const comments = {};
+  action.comments.forEach((comment) => {
+    comments[comment.id] = comment;
+  });
+
   return {
     ...state,
+    ...comments,
   };
 }
 
@@ -19,12 +22,12 @@ function createCommentSuccessIds(state, action) {
 }
 
 function receiveCommentsAllIds(state, action) {
-  // TODO
-  // console.log('receiveCommentsAllIds')
-  // console.log(action);
-  return {
+  const commentIds = action.comments.map(comment => comment.id);
+
+  return [
     ...state,
-  };
+    commentIds, // TODO: will have to merge, not concatenate here
+  ];
 }
 
 function createCommentSuccessAllIds(state, action) {
