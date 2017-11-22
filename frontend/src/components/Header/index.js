@@ -49,7 +49,7 @@ export default class Header extends React.Component {
   }
 
   renderItem(item, isHighlighted) {
-    let label;
+    let label = item.name;
     switch(item.type) {
       case 'users':
         label = item.name;
