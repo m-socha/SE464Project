@@ -355,8 +355,9 @@ class Comment(BaseModel):
         return result
 
     def serialize_es(self):
+        user = User.query.get(self.user_id)
         return {
-            'name': self.user.name,
+            'name': user.name,
             'content': self.content
         }
 
