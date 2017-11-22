@@ -1,5 +1,7 @@
 package com.example.michael.watnotes.api.standalone;
 
+import android.util.Log;
+
 import com.example.michael.watnotes.api.core.ApiRequest;
 import com.example.michael.watnotes.api.core.SingleApiService;
 import com.example.michael.watnotes.api.model.Note;

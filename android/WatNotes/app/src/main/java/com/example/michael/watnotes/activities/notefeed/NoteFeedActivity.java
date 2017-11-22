@@ -29,6 +29,6 @@ public class NoteFeedActivity extends DrawerActivity {
     }
 
     public String getQuery() {
-        return mBundle.getString(QUERY);
+        return getIntent().getStringExtra(QUERY);
     }
 }

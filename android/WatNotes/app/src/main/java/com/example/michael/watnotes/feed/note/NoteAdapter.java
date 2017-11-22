@@ -1,6 +1,7 @@
 package com.example.michael.watnotes.feed.note;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,7 +36,7 @@ public class NoteAdapter extends ArrayAdapter<Note> {
 
         Note note = mNotes.get(position);
 
-        if (note.getExtension().equals("text/plain")) {
+        if (note.getFormat().equals("text/plain")) {
             String data = note.getData();
             TextView dataTextView = (TextView) convertView.findViewById(R.id.note_data);
             dataTextView.setText(data);
