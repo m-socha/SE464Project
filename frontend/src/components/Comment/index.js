@@ -5,7 +5,7 @@ const Comment = props => (
   <div className={styles.comment}>
     <p>{props.comment.content}</p>
     <br />
-    <p>{props.commenterName}</p>
+    <p className={styles.commenterName}>{props.commenterName}</p>
   </div>
 );
 
