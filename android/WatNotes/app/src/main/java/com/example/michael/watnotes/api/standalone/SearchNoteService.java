@@ -48,7 +48,7 @@ public class SearchNoteService extends SingleApiService {
     @Override
     public void onRequestSuccess(JSONObject requestResponse) throws JSONException {
         if (mCompletionCallback != null) {
-            JSONArray noteJsonArray = requestResponse.getJSONArray("items");
+            JSONArray noteJsonArray = requestResponse.getJSONObject("items").getJSONArray("notes");
             List<Note> notes = new ArrayList<>();
             for (int i = 0; i < noteJsonArray.length(); i++) {
                 Note note = new Note(noteJsonArray.getJSONObject(i));

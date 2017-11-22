@@ -2,6 +2,7 @@ package com.example.michael.watnotes.api.core;
 
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 
 import com.example.michael.watnotes.util.IOUtil;
 
@@ -52,7 +53,7 @@ public class ApiRequest {
         mParamMap.put(key, String.valueOf(value));
     }
 
-    public void addParam(String key, float value) {
+    public void addParam(String key, double value) {
         mParamMap.put(key, String.valueOf(value));
     }
 
@@ -117,6 +118,8 @@ public class ApiRequest {
                     public void onResponse(Call call, final Response response) {
                         try {
                             String responseString = response.body().string().toString();
+                            Log.d("ResponseString", responseString);
+                            Log.d("Response", response.message() + " " + response.code());
                             if (!mRequestCancelled) {
                                 if (response.isSuccessful()) {
                                     final JSONObject responseJson = new JSONObject(responseString);

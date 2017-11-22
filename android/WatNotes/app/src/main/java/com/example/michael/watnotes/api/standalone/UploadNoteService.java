@@ -26,6 +26,7 @@ public class UploadNoteService extends SingleApiService {
         ApiRequest request = new ApiRequest("notebooks/" + notebookId + "/notes?form=1", ApiRequest.RequestType.POST, this);
         request.addFormFile("data", fileInfo);
         request.addParam("format", fileFormat);
+        request.addParam("index", 0.0);
         request.startRequest();
     }
 

@@ -21,9 +21,6 @@ public class ServiceFragment extends WatNotesFragment {
         mUploadNoteService.requestService(notebookId, fileInfo, fileFormat, new ApiService.DefaultCompletionCallback() {
             @Override
             public void onSuccess() {
-                Toast toast = new Toast(getActivity());
-                toast.setText(R.string.upload_notes_upload_file_success);
-                toast.show();
             }
         }, null);
     }
