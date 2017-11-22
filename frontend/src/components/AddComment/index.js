@@ -11,6 +11,7 @@ class AddComment extends React.Component {
   handleSubmit(event) {
     event.preventDefault();
     this.props.onComment(this.state.content);
+    this.setState({ content: '' });
   }
 
   handleChange(event) {
@@ -22,7 +23,7 @@ class AddComment extends React.Component {
       <form onSubmit={this.handleSubmit}>
         <label>
           Add Comment:
-          <textarea onChange={this.handleChange} />
+          <textarea value={this.state.content} onChange={this.handleChange} />
         </label>
         <input type="submit" value="Submit" />
       </form>
