@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux';
-import { RECEIVE_NOTEBOOK, RECEIVE_COMMENTS } from '../constants/data';
+import { RECEIVE_NOTEBOOK, RECEIVE_COMMENTS, CREATE_COMMENT_SUCCESS } from '../constants/data';
 import { createReducer } from './util';
 
 function receiveNotebook(state, action) {
@@ -29,9 +29,22 @@ function receiveComments(state, action) {
   };
 }
 
+function createCommentForPage(state, action) {
+  const currentComments = state[action.newComment.note_id].comments;
+
+  return {
+    ...state,
+    [action.newComment.note_id]: {
+      ...state[action.newComment.note_id],
+      comments: currentComments.concat(action.newComment.id),
+    },
+  };
+}
+
 const pagesByIdsReducer = createReducer({}, {
   [RECEIVE_NOTEBOOK]: receiveNotebook,
   [RECEIVE_COMMENTS]: receiveComments,
+  [CREATE_COMMENT_SUCCESS]: createCommentForPage,
 });
 
 export default combineReducers({

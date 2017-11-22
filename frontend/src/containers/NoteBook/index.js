@@ -98,6 +98,8 @@ function mapDispatchToProps(dispatch) {
       dispatch(fetchNotebook(notebookID));
     },
     onComment: (noteID, content) => {
+      dispatch(fetchComments(noteID, 1));
+      dispatch(selectPageForComments(noteID));
       dispatch(createComment(noteID, content));
       dispatch(commentPageUpdate(true));
     },
@@ -107,6 +109,7 @@ function mapDispatchToProps(dispatch) {
     selectPageForComments: (pageID) => {
       dispatch(selectPageForComments(pageID));
       dispatch(fetchComments(pageID, 1));
+      dispatch(commentPageUpdate(true));
     },
   };
 }
