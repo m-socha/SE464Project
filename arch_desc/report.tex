@@ -109,7 +109,7 @@
   \subsection{Android Application}
     The Android application is written primarily in Java, which is the most commonly used
     language in Android development. Alternatives such as Kotlin seemed somewhat immature, and
-    Java meets to requirements of being object-oriented and being well known by members of
+    Java meets the requirements of being object-oriented and being well-known by members of
     the group. \\
 
     UI layouts are primarily built using XML files, which generate layout resources
@@ -121,9 +121,17 @@
     Since the backend communicates through a JSON-based REST API, two key components of the
     Android application are an HTTP client and a JSON parser. For the HTTP client, Square's
     OkHttp is used, and a thin wrapper is formed around its instances in the ApiRequest class.
-    For a JSON parser, GSON is used. Both of these libraries are loaded as external dependencies
-    in the application's gradle file. \\
+    This library is loaded as an external dependency in the application's gradle file.
+    For JSON parsing functionality, the built-in org.json package is used. \\
 
+    The class-level organization of the Android application is described in more detail in the Design section,
+    so a high-level overview is provided below. In short, each Activity (the fundamental building block of Android apps)
+    has an associated UiFragment and ServiceFragment. UiFragments are responsible for initializing and managing the UI
+    for an activity, while ServiceFragments are responsible for handling all of an activity's networking calls. A common
+    execution sequence is that the UiFragment makes a request to a ServiceFragment, which in turn makes a call to
+    the UiFragment to update its UI based on the returned information (e.g. to populate a feed). \\
+
+    A high-level overview of the functional components of the Android application is shown below: \\
   \subsection{Website}
 
   The front-end architecture consists of mainly three components: Login, Feed and Note. As the name suggested, the login component is responsible for authenticating the user via acquiring JWT from the web server. Feed Component handles all the main actions which users can perform in our application. The actions include discovering the user's customized notes and searching through specific notes via tagging. Finally, note component is where users can view and edit the published notes and collaborate with other users. \\
