@@ -189,7 +189,7 @@
     device on which the application is operating (no distributed logic). \\
 
     One major design decision of the app concerns how the application handles Android's activity lifecycle. In short, activities are the basic building blocks of
-    an Android app, providing a user with a UI, resource management and handling certain OS events. Much of this logic is common to all activities, and
+    an Android app, providing a user with a UI, resource management and handling for certain OS events. Much of this logic is common to all activities, and
     hence is abstracted into a common BaseActivity class. BaseActivity is an abstract class that follows a template design pattern, with functionality
     such as getting the UI layout container (getLayoutId) and initializing the UI once it is loaded (setupUi) implemented by concrete subclasses. DrawerActivity
     is an abstract subclass that extends from BaseActivity, and implements a side navigation drawer - most activity classes in WatNotes inherit from DrawerActivity. \\
@@ -200,6 +200,11 @@
     within the activity. UiFragment and ServiceFragment are both abstract base classes, with concrete UiFragment and ServiceFragment instances associated with each
     concrete class. \\
 
+    \begin{figure}[H]
+      \includegraphics[width=\textwidth]{assets/android-activity-class.pdf}
+      \caption{Class diagram diagram of the Android application's activity and fragment design}
+    \end{figure}
+
     Another major design decision concerns how the app's networking layer is organized. An abstract base class called ApiRequest defined from which the abstract
     SingleApiService and MultiApiService classes extend. SingleApiService classes are services for which there are never expected to be more than one active request. Thus, whenever
     a service is started through a call to startRequest(), any pre-existing service is canceled. On the other hand, MultiApiServices may have multiple requests active,
@@ -207,14 +212,18 @@
     SingleApiService or MultiApiService classes, following a template design pattern. \\
 
     \begin{figure}[H]
-      \includegraphics[width=\textwidth]{assets/android-activity-class.pdf}
-      \caption{Class diagram diagram of the Android application's activity and fragment design}
-    \end{figure}
-
-    \begin{figure}[H]
       \includegraphics[width=\textwidth]{assets/android-network-class.pdf}
       \caption{Class diagram diagram of the Android application's networking and service design}
     \end{figure}
+
+    As shown by the examples above, the design of the Android application relies heavily on the template design pattern to abstract away common functionality. This can help
+    accommodate future requirements by speeding up and simplifying the development of new activities, fragments and services. Moreover, where applicable, the Android application
+    favours composition over inheritance. For instance, some feed views (e.g. the notebook feed view) support a custom callback for when a notebook is selected, allowing the same
+    feed to be used for multiple purposes. Favouring composition over inheritance tends to increase the flexibility and evolvability of the application, allowing it to effectively
+    accommodate a variety of future features. \\
+
+    Organizing the application as single-purpose classes helps increase cohesiveness. Coupling is decreased through the use of well-defined, high-level interfaces (often enforced
+    through the template design pattern).
 
   \subsection{Website}
   The front-end of WatNotes is a react-redux application that runs on a node server and uses webpack for dependency management. The source code for the project is under the src directory. In src, the main index.js file can be found which initializes the react router and redux store. Other important subdirectories in the src directory include store, containers, and components. Any new dependencies required in the project are handled using npm and should be added to the webpack build as required (look in the webpack directory).\\
@@ -233,7 +242,8 @@
 
   \section{Participation journal}
     \subsection{Mobile}
-      Michael Socha
+      Michael Socha was responsible for developing the mobile (Android) application for the project. The mobile architecture, design and implementation-level artifacts
+      have been built by him.
     \subsection{Backend}
       Mitchell Kember 
     \subsection{Web}
