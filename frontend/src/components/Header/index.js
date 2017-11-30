@@ -48,6 +48,10 @@ export default class Header extends React.Component {
     // this.setState({inquiry});
   }
 
+  handleClick() {
+    console.log('clicked');
+  }
+
   renderItem(item, isHighlighted) {
     let label = item.name;
     switch(item.type) {
@@ -67,9 +71,9 @@ export default class Header extends React.Component {
           label = label.substring(0, 15) + '...';
         }
         return (
-          <a key={item.id} style={{color: 'black', fontSize: '10px'}}>
+          <Link key={item.id} to={{ pathname: `/`}} style={{color: 'black', fontSize: '10px'}}>
             {label}
-          </a>
+          </Link>
         );
       case 'notes':
         label = item.data;
@@ -77,7 +81,7 @@ export default class Header extends React.Component {
           label = label.substring(0, 15) + '...';
         }
         return (
-          <Link key={item.id} to={{ pathname: `/notes/${item.notebook_id}`}} style={{color: 'black', fontSize: '10px'}}>
+          <Link key={item.id} to={{ pathname: `/notes/${item.notebook_id}`}}  style={{color: 'black', fontSize: '10px'}}>
             {label}
           </Link>
         );
