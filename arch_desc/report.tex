@@ -132,6 +132,11 @@
     the UiFragment to update its UI based on the returned information (e.g. to populate a feed). \\
 
     A high-level overview of the functional components of the Android application is shown below: \\
+    \begin{figure}[H]
+      \includegraphics[width=\textwidth]{assets/android-arch.pdf}
+      \caption{Architecture of WatNotes Android application}
+    \end{figure}
+
   \subsection{Website}
 
   The front-end architecture consists of mainly three components: Login, Feed and Note. As the name suggested, the login component is responsible for authenticating the user via acquiring JWT from the web server. Feed Component handles all the main actions which users can perform in our application. The actions include discovering the user's customized notes and searching through specific notes via tagging. Finally, note component is where users can view and edit the published notes and collaborate with other users. \\
