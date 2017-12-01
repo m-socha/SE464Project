@@ -239,9 +239,9 @@
     through the template design pattern).
 
   \subsection{Website}
-  The front-end of WatNotes is a react-redux application that runs on a node server and uses webpack for dependency management. The source code for the project is under the src directory. In src, the main index.js file can be found which initializes the react router and redux store. Other important subdirectories in the src directory include store, containers, and components. Any new dependencies required in the project are handled using npm and should be added to the webpack build as required (look in the webpack directory).\\
+  The front-end of WatNotes is a react-redux application that runs on a node server and uses webpack for dependency management. The source code for the project is under the src directory. In src, the main index.js file can be found which initializes the react router and redux store. Other important subdirectories in the src directory include containers, components, reducers, and actions. Any new dependencies required in the project are handled using npm and should be added to the webpack build as required (look in the webpack directory).\\
 
-  The react router implements the logic for deciding which components to render based on the url. When the browser goes to a specific url, a container is chosen to render. The react router is an example of the strategy design pattern. Containers define the data that will be passed down to components to render. They define the data to be passed down by referencing the redux store and are responsible for actions such as fetching data from an api and bootstraping the components with the fetched data. This is an example of one way directional data flow where components only receive data and cannot modify the data received. This pattern decreases complexity since the developer only has to manage 1 data state (the redux store) and can think of components as only having the responsibility of rendering the ui (single responsibility principle). A component is a class that represents what you see visually only. Components are designed to be reusable and has no dependencies other than the properites passed into the class constructor. This minimizes coupling as ui components have no dependencies and it also maximizes flexibility which helps accommodate for future requirement changes. If a new ui component or an existing requirement for a ui component is changed, minimal changes are needed since the UI would be broken up into small components.\\
+  The react router implements the logic for deciding which components to render based on the url. When the browser goes to a specific url, a container is chosen to render. The react router is an example of the strategy design pattern since containers (strategies) are swapped during run-time based on the url. Containers define the data that will be passed down to components to render. They refer to the redux store and are responsible for dispatching actions such as fetching data from an api and bootstraping the components with the fetched data. This is an example of one way directional data flow where components only receive data and cannot modify the data received. This pattern decreases complexity since the developer only has to manage 1 data state (the redux store) and can think of components as only having the responsibility of rendering the ui (single responsibility principle). A component is a class that represents what you see visually only. Components are designed to be reusable and have no dependencies other than the properties passed into the class constructor. This minimizes coupling as the number of dependencies for ui components is decreased and it also maximizes flexibility which helps accommodate for future requirement changes. If a new ui component or an existing requirement for a ui component is changed, minimal changes are needed since the UI would be broken up into small components.\\
 
   The use of react and redux separates the the ui logic from the data state logic. Redux containers can fetch data using the backend api and pass it down to the components. As more features are added, more properties will have to be added to the state along with more containers to decide how to pass down those new properties down to components. Since there is a single store, adding more data to the store will not affect other parts of the application.
 
@@ -255,8 +255,19 @@
     Below are two sequence diagrams based on the two use cases defined in the application's prescriptive architecture.
 
     \subsubsection{Student uploads notes}
+      \begin{figure}[H]
+        \centering
+        \includegraphics[width=\textwidth]{assets/upload-notes-sequence.pdf}
+        \caption{Sequence diagram for a student uploading notes view the mobile client}
+      \end{figure}
 
     \subsubsection{Student receives feedback on uploaded notes}
+      \begin{figure}[H]
+        \centering
+        \includegraphics[width=\textwidth]{assets/comments-sequence.pdf}
+        \caption{Sequence diagram for a student commenting on a note via the web client}
+      \end{figure}
+
 
   \newpage
 
@@ -273,7 +284,8 @@
       Do Gyun Kim was responsible working on feed, search and login portion of the front-end. He was also layed out the general structure
       of the front-end architecture. 
 
+      Myungheon Chun worked on the web application for WatNotes. Specifically, he worked on the notebook component and comments component in the notebook view.\\
       
-      Myungheon Chun
+      Both Do Gyun and Myungheon made use of the React library to create these visual components and used Redux to implement the data layer in the web application. 
     
 \end{document}
